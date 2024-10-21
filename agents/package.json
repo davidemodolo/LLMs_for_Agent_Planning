@@ -1,0 +1,14 @@
+{
+    "name": "thesis_project",
+    "version": "1.0.0",
+    "description": "",
+    "main": "raw_llm_agent.js",
+    "type": "module",
+    "scripts": {
+      "start": "node raw_llm_agent.js"
+    },
+    "dependencies": {
+      "@unitn-asa/deliveroo-js-client":"^0.0.37"
+    }
+  }
+  

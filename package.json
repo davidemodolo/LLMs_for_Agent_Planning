@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@unitn-asa/deliveroo-js-client": "^0.0.37",
+    "axios": "^1.7.7"
+  }
+}
