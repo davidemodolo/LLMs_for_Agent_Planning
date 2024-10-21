@@ -45,11 +45,13 @@ client.onParcelsSensing(async (perceived_parcels) => {
 });
 
 // use llm to select next action
+const conversationHistory = [];
+
 async function askLLM(prompt) {
   const url = "http://localhost:11434/api/generate";
   const data = {
-    model: "llama3.2",
-    prompt: prompt,
+    model: "mistral", //"llama3.2",
+    prompt: conversationHistory.concat(prompt).join("\n"),
     stream: false,
     options: { num_predict: 100, seed: -1 },
   };
@@ -60,12 +62,14 @@ async function askLLM(prompt) {
         "Content-Type": "application/json",
       },
     });
-    // console.log("Response from LLM:", response.data);
-    return response.data;
+    const llmResponse = response.data;
+    conversationHistory.push(prompt, llmResponse.response);
+    return llmResponse;
   } catch (error) {
     console.error("Error in response:", error);
   }
 }
+
 function buildMap() {
   // check if the map is not defined
   if (!mapGame) {
@@ -83,8 +87,9 @@ function buildMap() {
     newMap[me.y][me.x] == "P"
       ? "X"
       : mapGame[me.y][me.x] == DELIVERY
-      ? "Q"
+      ? "A" // "Q"
       : "A";
+
   return newMap.map((row) => row.join(" ")).join("\n");
 }
 
@@ -92,18 +97,29 @@ async function agentLoop() {
   while (true) {
     var prompt = `
 You are a delivery agent in a web-based game and I want to test your ability. You are in a grid world (represented with a matrix) with some obstacles and some parcels to deliver.
-- you are in position (${me.x}, ${me.y}) (A in the matrix);
-- parcels are in positions marked with P in the matrix; You can pickup parcels only if you are in the same cell of the parcel and in that case the letter displayed is X;
-- you can move in any cell that is 2 or 1 in the matrix (1 is walkable, 2 is any place you can deliver);
-- cells marked with 0 are obstacles, you CAN'T move there;
-- if you are in a cell that is a delivery zone, the letter displayed is Q;
-The list of actions you can perform are: up (U), down (D), left (L), right (R), pickup (P), shipped (S).
-The matrix is the following:
+MAP:
 ${buildMap()}
-You want to maximize your score.  You can ship parcels only if you are in the same cell of the delivery point.
-Answer with only the letter of best action to perform between U, D, L, R, P, S. Put the letter between parentheses, like (U) for up.
-Don't explain your reasoning.
-Example: (D)
+LEGEND:
+- A: you are in this position;
+- 1: you can move in this position;
+- 2: you can deliver a parcel in this position (and also move there);
+- 0: is blocked, you cannot move in this position;
+- P: a parcel is in this position;
+- X: you are in the same position of a parcel;
+- Q: you are in the delivery point;
+
+ACTIONS:
+- U: move up;
+- D: move down;
+- L: move left;
+- R: move right;
+- T: take a parcel (only if you are in the same cell of a parcel);
+- S: ship a parcel (only if you are in a delivery zone).
+
+You want to maximize your score by delivering the most possible number of parcels. You can pickup multiple parcels and deliver them in the same delivery point.
+Don't explain the reasoning and don't add any comment, just provide the action between parentheses.
+Example: if you want to go down, just answer '(D)'.
+What is your next action?
 `;
     console.log(prompt);
 
