@@ -50,7 +50,7 @@ const conversationHistory = [];
 async function askLLM(prompt) {
   const url = "http://localhost:11434/api/generate";
   const data = {
-    model: "mistral", //"llama3.2",
+    model: "llama3.2",
     prompt: conversationHistory.concat(prompt).join("\n"),
     stream: false,
     options: { num_predict: 100, seed: -1 },
