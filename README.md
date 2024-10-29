@@ -11,3 +11,11 @@ Started with raw input and raw output with llama 3.2 and Mistral.
      prompt without that action.
 
 Selecting only the top choice is called “greedy sampling” and actually doesn’t produce language that seems as human, despite being more reliable.
+
+https://github.com/unitn-ASA/DeliverooAgent.js
+
+DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead. -> IGNORED
+
+Cannot use batch API (50% discount) since I need to perform everything and I need to check the state of the environment after each action.
+
+Add prompt caching

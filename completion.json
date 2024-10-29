@@ -1,0 +1,260 @@
+{
+  "id": "chatcmpl-ANlQXbmCizBdCyneeFc6jg5HEwtVw",
+  "object": "chat.completion",
+  "created": 1730227217,
+  "model": "gpt-4o-mini-2024-07-18",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "Pop",
+        "refusal": null
+      },
+      "logprobs": {
+        "content": [
+          {
+            "token": "Pop",
+            "logprob": -9999,
+            "bytes": [
+              80,
+              111,
+              112
+            ],
+            "top_logprobs": [
+              {
+                "token": "Functions",
+                "logprob": -1.2004406,
+                "bytes": [
+                  70,
+                  117,
+                  110,
+                  99,
+                  116,
+                  105,
+                  111,
+                  110,
+                  115
+                ]
+              },
+              {
+                "token": "Code",
+                "logprob": -1.3254406,
+                "bytes": [
+                  67,
+                  111,
+                  100,
+                  101
+                ]
+              },
+              {
+                "token": "In",
+                "logprob": -2.2004406,
+                "bytes": [
+                  73,
+                  110
+                ]
+              },
+              {
+                "token": "Function",
+                "logprob": -2.3254406,
+                "bytes": [
+                  70,
+                  117,
+                  110,
+                  99,
+                  116,
+                  105,
+                  111,
+                  110
+                ]
+              },
+              {
+                "token": "End",
+                "logprob": -2.7004406,
+                "bytes": [
+                  69,
+                  110,
+                  100
+                ]
+              },
+              {
+                "token": "Calls",
+                "logprob": -3.8254406,
+                "bytes": [
+                  67,
+                  97,
+                  108,
+                  108,
+                  115
+                ]
+              },
+              {
+                "token": "Loops",
+                "logprob": -3.8254406,
+                "bytes": [
+                  76,
+                  111,
+                  111,
+                  112,
+                  115
+                ]
+              },
+              {
+                "token": "Nested",
+                "logprob": -3.9504406,
+                "bytes": [
+                  78,
+                  101,
+                  115,
+                  116,
+                  101,
+                  100
+                ]
+              },
+              {
+                "token": "A",
+                "logprob": -4.0754404,
+                "bytes": [
+                  65
+                ]
+              },
+              {
+                "token": "Call",
+                "logprob": -4.2004404,
+                "bytes": [
+                  67,
+                  97,
+                  108,
+                  108
+                ]
+              },
+              {
+                "token": "Infinite",
+                "logprob": -4.4504404,
+                "bytes": [
+                  73,
+                  110,
+                  102,
+                  105,
+                  110,
+                  105,
+                  116,
+                  101
+                ]
+              },
+              {
+                "token": "Calling",
+                "logprob": -4.5754404,
+                "bytes": [
+                  67,
+                  97,
+                  108,
+                  108,
+                  105,
+                  110,
+                  103
+                ]
+              },
+              {
+                "token": "Lines",
+                "logprob": -4.9504404,
+                "bytes": [
+                  76,
+                  105,
+                  110,
+                  101,
+                  115
+                ]
+              },
+              {
+                "token": "Deep",
+                "logprob": -5.0754404,
+                "bytes": [
+                  68,
+                  101,
+                  101,
+                  112
+                ]
+              },
+              {
+                "token": "Loop",
+                "logprob": -5.4504404,
+                "bytes": [
+                  76,
+                  111,
+                  111,
+                  112
+                ]
+              },
+              {
+                "token": "Wh",
+                "logprob": -5.5754404,
+                "bytes": [
+                  87,
+                  104
+                ]
+              },
+              {
+                "token": "Depth",
+                "logprob": -5.5754404,
+                "bytes": [
+                  68,
+                  101,
+                  112,
+                  116,
+                  104
+                ]
+              },
+              {
+                "token": "Layers",
+                "logprob": -5.9504404,
+                "bytes": [
+                  76,
+                  97,
+                  121,
+                  101,
+                  114,
+                  115
+                ]
+              },
+              {
+                "token": "Inside",
+                "logprob": -6.4504404,
+                "bytes": [
+                  73,
+                  110,
+                  115,
+                  105,
+                  100,
+                  101
+                ]
+              },
+              {
+                "token": "B",
+                "logprob": -6.7004404,
+                "bytes": [
+                  66
+                ]
+              }
+            ]
+          }
+        ],
+        "refusal": null
+      },
+      "finish_reason": "length"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 26,
+    "completion_tokens": 1,
+    "total_tokens": 27,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0
+    }
+  },
+  "system_fingerprint": "fp_f59a81427f"
+}

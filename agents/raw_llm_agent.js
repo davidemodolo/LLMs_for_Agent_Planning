@@ -1,47 +1,62 @@
 import { DeliverooApi } from "@unitn-asa/deliveroo-js-client";
 import axios from "axios";
 import OpenAI from "openai";
-const openai = new OpenAI();
+import fs from "fs";
+const apiKey = fs.readFileSync("key.txt", "utf8").trim();
+const openai = new OpenAI({
+  apiKey: apiKey,
+});
 // import { planner, goalParser, mapParser, readDomain } from "./PDDL_planner.js";
 // import { findDeliveryPoint } from "./astar_utils.js";
 
-async function queryLLM(
-  prompt,
-  max_tokens = 256,
-  logprobs = null,
-  logit_bias = {},
-  model = "GPT_MODEL",
-  temperature = 0.0,
-  old_messages = []
-) {
-  old_messages.push({
-    role: "user",
-    content: prompt,
-  });
+/*
+gpt-3.5-turbo-0125 - $0.50 / 1M tokens - $1.50 / 1M tokens
+gpt-4o-mini - $0.150 / 1M input tokens - $0.075 / 1M input tokens
 
-  const data = {
-    model: model,
-    messages: old_messages,
-    stream: false,
-    max_tokens: max_tokens,
-    temperature: temperature,
-    logprobs: logprobs,
-    top_logprobs: logprobs ? 20 : null,
-    logit_bias: logit_bias,
-  };
 
-  try {
-    const response = await openai.chat.completions.create(data);
-    old_messages.push({
-      role: "assistant",
-      content: response.choices[0].message.content,
-    });
-    return [response.choices[0].message.content, response, old_messages];
-  } catch (error) {
-    console.error("Error querying LLM:", error);
-  }
-}
-
+*/
+const MODEL = "gpt-3.5-turbo-0125";
+// async function askGPT(prompt) {
+//   const completion = await openai.chat.completions.create({
+//     model: MODEL,
+//     messages: [
+//       { role: "system", content: "You are a helpful assistant." },
+//       {
+//         role: "user",
+//         content: prompt,
+//       },
+//     ],
+//     max_tokens: 1,
+//     logprobs: true,
+//     top_logprobs: 256,
+//   });
+//   return completion;
+// }
+const completion = await openai.chat.completions.create({
+  model: "gpt-4o-mini",
+  messages: [
+    { role: "system", content: "You are a helpful assistant." },
+    {
+      role: "user",
+      content: "Write a haiku about recursion in programming.",
+    },
+  ],
+  max_tokens: 1,
+  logprobs: true,
+  top_logprobs: 20,
+  logit_bias: { 33: 0, 10640: 100 },
+});
+console.log("-- CONTENT --");
+console.log(completion.choices[0].message.content);
+console.log("-- LOGPROBS --");
+console.log(completion.choices[0].logprobs);
+console.log("-- LOGPROBS first --");
+console.log(completion.choices[0].logprobs.content[0].top_logprobs);
+console.log("-- RESPONSE --");
+console.log(completion);
+// save the entire completion on a file
+fs.writeFileSync("completion.json", JSON.stringify(completion, null, 2));
+process.exit(0);
 const client = new DeliverooApi(
   "http://localhost:8080/?name=god",
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImM1NzY4ZGQwZGU2IiwibmFtZSI6ImdvZCIsImlhdCI6MTcyODY3MzMyOH0.XB9dASMeXdgTYemUXmjBc7uBUA6kj5RPkzyFUjz0h2s"
