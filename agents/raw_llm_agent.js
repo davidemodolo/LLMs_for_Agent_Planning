@@ -1,7 +1,46 @@
 import { DeliverooApi } from "@unitn-asa/deliveroo-js-client";
 import axios from "axios";
+import OpenAI from "openai";
+const openai = new OpenAI();
 // import { planner, goalParser, mapParser, readDomain } from "./PDDL_planner.js";
 // import { findDeliveryPoint } from "./astar_utils.js";
+
+async function queryLLM(
+  prompt,
+  max_tokens = 256,
+  logprobs = null,
+  logit_bias = {},
+  model = "GPT_MODEL",
+  temperature = 0.0,
+  old_messages = []
+) {
+  old_messages.push({
+    role: "user",
+    content: prompt,
+  });
+
+  const data = {
+    model: model,
+    messages: old_messages,
+    stream: false,
+    max_tokens: max_tokens,
+    temperature: temperature,
+    logprobs: logprobs,
+    top_logprobs: logprobs ? 20 : null,
+    logit_bias: logit_bias,
+  };
+
+  try {
+    const response = await openai.chat.completions.create(data);
+    old_messages.push({
+      role: "assistant",
+      content: response.choices[0].message.content,
+    });
+    return [response.choices[0].message.content, response, old_messages];
+  } catch (error) {
+    console.error("Error querying LLM:", error);
+  }
+}
 
 const client = new DeliverooApi(
   "http://localhost:8080/?name=god",
@@ -100,13 +139,13 @@ You are a delivery agent in a web-based game and I want to test your ability. Yo
 MAP:
 ${buildMap()}
 LEGEND:
-- A: you are in this position;
+- A: you (the Agent) are in this position;
 - 1: you can move in this position;
 - 2: you can deliver a parcel in this position (and also move there);
 - 0: is blocked, you cannot move in this position;
 - P: a parcel is in this position;
 - X: you are in the same position of a parcel;
-- Q: you are in the delivery point;
+- Q: you are in the delivery/shipping point;
 
 ACTIONS:
 - U: move up;

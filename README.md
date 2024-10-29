@@ -9,3 +9,5 @@ Started with raw input and raw output with llama 3.2 and Mistral.
 
    - by performing the action and checking if the state changed, if not, repurpose the
      prompt without that action.
+
+Selecting only the top choice is called “greedy sampling” and actually doesn’t produce language that seems as human, despite being more reliable.
