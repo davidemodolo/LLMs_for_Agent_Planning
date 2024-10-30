@@ -180,7 +180,7 @@ function buildActionsText(allowedActions) {
     .join("\n");
 }
 
-function getLegalActions() {
+function getLegalActions(antiLoop = false) {
   // The agent can perform the following actions:
   // - if there is a parcel in the same position of the agent, add T
   // - if there is a delivery point in the same position of the agent and the agent has some parcels (numParcels > 0), add S
@@ -207,12 +207,33 @@ function getLegalActions() {
   if (me.x < mapGame.length - 1 && mapGame[me.y][me.x + 1] != BLOCK) {
     legalActions.push("R");
   }
+
+  // if antiLoop is true, remove the opposite action of the last action
+  if (antiLoop && lastActions.length > 0) {
+    const oppositeActions = {
+      U: "D",
+      D: "U",
+      L: "R",
+      R: "L",
+    };
+    const lastAction = lastActions[lastActions.length - 1];
+    const oppositeAction = oppositeActions[lastAction];
+    if (legalActions.includes(oppositeAction) && legalActions.length > 1) {
+      legalActions.splice(legalActions.indexOf(oppositeAction), 1);
+    }
+  }
+
   return legalActions;
 }
 
 var availableActions = [...POSSIBLE_ACTIONS];
 var prevAction = null;
 var previousEnvironment = null;
+
+// create a moving window of the last 10 actions
+const lastActions = [];
+const MAX_ACTIONS = 10;
+
 async function agentLoop() {
   while (true) {
     const currentEnvironment = buildMap();
@@ -225,7 +246,7 @@ async function agentLoop() {
     if (currentEnvironment == previousEnvironment) {
       availableActions = availableActions.filter((a) => a != prevAction);
     } else {
-      availableActions = getLegalActions(); //[...POSSIBLE_ACTIONS];
+      availableActions = getLegalActions(true); //[...POSSIBLE_ACTIONS];
     }
     previousEnvironment = currentEnvironment;
     var prompt = `You are a delivery agent in a web-based game and I want to test your ability. You are in a grid world (represented with a matrix) with some obstacles and some parcels to deliver.
@@ -282,6 +303,12 @@ What is your next action?
         console.log("Error in action:", decidedAction);
     }
     prevAction = decidedAction;
+    lastActions.push(decidedAction);
+    if (lastActions.length > MAX_ACTIONS) {
+      lastActions
+        .splice(0, lastActions.length - MAX_ACTIONS)
+        .forEach((action) => availableActions.push(action));
+    }
     await client.timer(500);
   }
 }
