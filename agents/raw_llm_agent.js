@@ -75,16 +75,6 @@ async function getCompletion(
     top_logprobs: 20,
     logit_bias: logits_bias_dictionary,
   });
-
-  // console.log("-- CONTENT --");
-  // console.log(completion.choices[0].message.content);
-  // console.log("-- LOGPROBS --");
-  // console.log(completion.choices[0].logprobs);
-  // console.log("-- LOGPROBS first --");
-  // console.log(completion.choices[0].logprobs.content[0].top_logprobs);
-  // console.log("-- RESPONSE --");
-  // console.log(completion);
-
   return completion.choices[0].message.content;
 }
 
@@ -121,11 +111,23 @@ client.onYou(({ id, name, x, y, score }) => {
   me.score = score;
 });
 
+var numParcels = 0;
+var parcelBelow = false;
+
 // add the parcel sensing method to remember the list of parcels
 const parcels = new Map();
 client.onParcelsSensing(async (perceived_parcels) => {
+  numParcels = 0;
+  parcelBelow = false;
   for (const p of perceived_parcels) {
     parcels.set(p.id, p);
+    if (p.carriedBy == me.id) {
+      numParcels++;
+    } else {
+      if (p.x == me.x && heightMax - 1 - p.y == me.y) {
+        parcelBelow = true;
+      }
+    }
   }
 });
 
@@ -178,6 +180,36 @@ function buildActionsText(allowedActions) {
     .join("\n");
 }
 
+function getLegalActions() {
+  // The agent can perform the following actions:
+  // - if there is a parcel in the same position of the agent, add T
+  // - if there is a delivery point in the same position of the agent and the agent has some parcels (numParcels > 0), add S
+  // - if the agent can move up, add U
+  // - if the agent can move down, add D
+  // - if the agent can move left, add L
+  // - if the agent can move right, add R
+  const legalActions = [];
+  if (mapGame[me.y][me.x] == DELIVERY && numParcels > 0) {
+    legalActions.push("S");
+  }
+  if (parcelBelow) {
+    legalActions.push("T");
+  }
+  if (me.y > 0 && mapGame[me.y - 1][me.x] != BLOCK) {
+    legalActions.push("U");
+  }
+  if (me.y < heightMax - 1 && mapGame[me.y + 1][me.x] != BLOCK) {
+    legalActions.push("D");
+  }
+  if (me.x > 0 && mapGame[me.y][me.x - 1] != BLOCK) {
+    legalActions.push("L");
+  }
+  if (me.x < mapGame.length - 1 && mapGame[me.y][me.x + 1] != BLOCK) {
+    legalActions.push("R");
+  }
+  return legalActions;
+}
+
 var availableActions = [...POSSIBLE_ACTIONS];
 var prevAction = null;
 var previousEnvironment = null;
@@ -193,7 +225,7 @@ async function agentLoop() {
     if (currentEnvironment == previousEnvironment) {
       availableActions = availableActions.filter((a) => a != prevAction);
     } else {
-      availableActions = [...POSSIBLE_ACTIONS];
+      availableActions = getLegalActions(); //[...POSSIBLE_ACTIONS];
     }
     previousEnvironment = currentEnvironment;
     var prompt = `You are a delivery agent in a web-based game and I want to test your ability. You are in a grid world (represented with a matrix) with some obstacles and some parcels to deliver.
@@ -203,7 +235,7 @@ LEGEND:
 - A: you (the Agent) are in this position;
 - 1: you can move in this position;
 - 2: you can deliver a parcel in this position (and also move there);
-- /: is blocked, you cannot move in this position;
+- /: is blocked, you CAN NOT move towards this position;
 - P: a parcel is in this position;
 - X: you are in the same position of a parcel;
 - Q: you are in the delivery/shipping point;
@@ -211,19 +243,21 @@ LEGEND:
 ACTIONS:
 ${buildActionsText(availableActions)}
 
+You have ${numParcels} parcels to deliver. If you have at least 1 parcel, you should deliver it to the closest delivery point (2).
+
 You want to maximize your score by delivering the most possible number of parcels. You can pickup multiple parcels and deliver them in the same delivery point.
 Don't explain the reasoning and don't add any comment, just provide the action.
 Example: if you want to go down, just answer 'D'.
 What is your next action?
 `;
-    // console.log(prompt);
+    console.log(prompt);
 
     const decidedAction = await getCompletion(
       prompt,
       createLogitsBiasDict(availableActions)
     );
     console.log("Possible actions: ", availableActions);
-    console.log("currentEnvironment: \n", currentEnvironment);
+    // console.log("currentEnvironment: \n", currentEnvironment);
     console.log("Decided action: ", decidedAction);
     switch (decidedAction) {
       case "U":
