@@ -24,5 +24,6 @@ TODO in order:
 
 - [ ] parametrize helping levels
 - [ ] use chat history (parametrize)
+- [ ] using the server configuration infos, reduce the dimension of the map given to the LLM depending on the max(PARCELS_OBSERVATION_DISTANCE, AGENTS_OBSERVATION_DISTANCE)
 
 POSSIBLE TITLE: "Using LLM as choice selector for an agent in a web-based game environment, at different level of freedom, weighted by confidence"

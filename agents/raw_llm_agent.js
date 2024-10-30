@@ -20,6 +20,61 @@ gpt-4o-mini - $0.150 / 1M input tokens - $0.075 / 1M input tokens
 const ANTI_LOOP = true; // set to true to avoid the agent to go back and forth
 const HELP_THE_BOT = true; // set to true to force the bot to take the parcel if it is below the agent or to ship the parcel if the agent is in the delivery point
 const SELECT_ONLY_ACTION = true; // set to true to select the only action if the list of available actions has only one element
+const USE_HISTORY = true; // TODO: use the history of the conversation to improve the response
+
+async function knowno_OpenAI(
+  prompt,
+  tokens_to_check,
+  qhat = 0.928,
+  temp = 3.0,
+  model = MODEL
+) {
+  const LOGIT_BIAS = 20;
+  const logits_bias_dict = createLogitsBiasDict(tokens_to_check);
+
+  const completion = getCompletion(prompt, logits_bias_dict); // TODO: change so that it returns the raw completion
+
+  const top_logprobs_full = completion.choices[0].logprobs.top_logprobs[0];
+  const top_tokens = Object.keys(top_logprobs_full).slice(0, LOGIT_BIAS);
+  const top_logprobs = Object.values(top_logprobs_full).slice(0, LOGIT_BIAS);
+
+  const results_dict = {};
+  top_tokens.forEach((token, i) => {
+    const character = token.trim().toUpperCase();
+    if (tokens_to_check.includes(character) && !results_dict[character]) {
+      results_dict[character] = top_logprobs[i];
+    }
+  });
+
+  tokens_to_check.forEach((token) => {
+    if (!results_dict[token]) {
+      results_dict[token] =
+        top_logprobs[top_logprobs.length - 1] +
+        top_logprobs[top_logprobs.length - 2];
+    }
+  });
+
+  const top_logprobs_norm = Object.values(results_dict).map((logprob) =>
+    Math.exp(logprob / 10)
+  );
+  const sum_exp = top_logprobs_norm.reduce((a, b) => a + b, 0);
+  const normalized_probs = top_logprobs_norm.map((prob) => prob / sum_exp);
+
+  const mc_smx_all = normalized_probs.map(
+    (prob) =>
+      Math.exp(prob / temp) /
+      normalized_probs.reduce((a, b) => a + Math.exp(b / temp), 0)
+  );
+
+  const final = Object.keys(results_dict).map((element, i) => [
+    element,
+    mc_smx_all[i] >= 1 - qhat,
+    mc_smx_all[i],
+  ]);
+  final.sort((a, b) => b[2] - a[2]);
+
+  return final;
+}
 
 async function askLocalLLM(prompt) {
   const url = "http://localhost:11434/api/generate";
