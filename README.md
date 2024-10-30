@@ -18,4 +18,4 @@ DeprecationWarning: The `punycode` module is deprecated. Please use a userland a
 
 Cannot use batch API (50% discount) since I need to perform everything and I need to check the state of the environment after each action.
 
-Add prompt caching
+TODO: Add prompt caching

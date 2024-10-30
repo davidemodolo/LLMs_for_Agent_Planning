@@ -2,6 +2,7 @@
   "dependencies": {
     "@unitn-asa/deliveroo-js-client": "^0.0.37",
     "axios": "^1.7.7",
-    "openai": "^4.68.4"
+    "openai": "^4.68.4",
+    "tiktoken": "^1.0.17"
   }
 }
