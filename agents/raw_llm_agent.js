@@ -17,6 +17,10 @@ gpt-4o-mini - $0.150 / 1M input tokens - $0.075 / 1M input tokens
 
 */
 
+const ANTI_LOOP = true; // set to true to avoid the agent to go back and forth
+const HELP_THE_BOT = true; // set to true to force the bot to take the parcel if it is below the agent or to ship the parcel if the agent is in the delivery point
+const SELECT_ONLY_ACTION = true; // set to true to select the only action if the list of available actions has only one element
+
 async function askLocalLLM(prompt) {
   const url = "http://localhost:11434/api/generate";
   const data = {
@@ -45,12 +49,13 @@ const MODEL = "gpt-4o-mini";
 const tokens_to_check = ["U", "D", "L", "R", "T", "S"];
 
 function createLogitsBiasDict(elements) {
-  const encoding = tiktoken.encoding_for_model("gpt-3.5-turbo-0125");
+  const encoding = tiktoken.encoding_for_model(MODEL);
   const logitsBiasDict = {};
 
   elements.forEach((element) => {
     logitsBiasDict[encoding.encode(element)[0]] = 100;
   });
+  console.log("Logits bias dictionary: ", logitsBiasDict);
 
   return logitsBiasDict;
 }
@@ -166,7 +171,6 @@ function buildMap() {
   for (const parcel of parcels.values()) {
     newMap[heightMax - 1 - parcel.y][parcel.x] = "P";
   }
-  // TODO: save the parcel somewhere so that I can ignore them if they are already picked up by anyone
   // put an A in the position of the agent, X if there already is a parcel
   newMap[me.y][me.x] =
     newMap[me.y][me.x] == "P"
@@ -201,7 +205,7 @@ function buildActionsText(allowedActions) {
     .join("\n");
 }
 
-function getLegalActions(antiLoop = true, helpTheBot = true) {
+function getLegalActions(antiLoop = ANTI_LOOP, helpTheBot = HELP_THE_BOT) {
   // The agent can perform the following actions:
   // - if there is a parcel in the same position of the agent, add T
   // - if there is a delivery point in the same position of the agent and the agent has some parcels (numParcels > 0), add S
@@ -305,15 +309,10 @@ What is your next action?
 `;
     console.log(prompt);
     // decidedAction depends on wether there are multiple actions available or not
-    // TODO: set this as parameter (to use the only action available or not)
     const decidedAction =
-      availableActions.length > 1
+      availableActions.length > 1 || !SELECT_ONLY_ACTION
         ? await getCompletion(prompt, createLogitsBiasDict(availableActions))
         : availableActions[0];
-    // const decidedAction = await getCompletion(
-    //   prompt,
-    //   createLogitsBiasDict(availableActions)
-    // );
     console.log("Possible actions: ", availableActions);
     // console.log("currentEnvironment: \n", currentEnvironment);
     console.log("Decided action: ", decidedAction);
