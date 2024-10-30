@@ -122,7 +122,9 @@ client.onParcelsSensing(async (perceived_parcels) => {
   numParcels = 0;
   parcelBelow = false;
   for (const p of perceived_parcels) {
-    parcels.set(p.id, p);
+    if (!p.carriedBy) {
+      parcels.set(p.id, p);
+    }
     if (p.carriedBy == me.id) {
       numParcels++;
     } else {
@@ -164,6 +166,7 @@ function buildMap() {
   for (const parcel of parcels.values()) {
     newMap[heightMax - 1 - parcel.y][parcel.x] = "P";
   }
+  // TODO: save the parcel somewhere so that I can ignore them if they are already picked up by anyone
   // put an A in the position of the agent, X if there already is a parcel
   newMap[me.y][me.x] =
     newMap[me.y][me.x] == "P"
@@ -288,7 +291,12 @@ LEGEND:
 ACTIONS:
 ${buildActionsText(availableActions)}
 
-You have ${numParcels} parcels to deliver. If you have at least 1 parcel, you should deliver it to the closest delivery point (2).
+You have ${numParcels} parcels to deliver.
+If you have zero parcels, you must look for the closest parcel to pick up.
+If you are going to deliver a parcel, you should deliver it to the closest delivery point.
+If you are going to deliver a parcel and on the way you find a parcel, you should go and pick it up before shipping.
+If you have at least 1 parcel, you should deliver them to the closest delivery point. The more parcels you have, the more important it is to deliver them as soon as possible.
+If there is no parcel in the map, just move around to explore the map until one parcel spawns, then go and get it.
 
 You want to maximize your score by delivering the most possible number of parcels. You can pickup multiple parcels and deliver them in the same delivery point.
 Don't explain the reasoning and don't add any comment, just provide the action.

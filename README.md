@@ -18,6 +18,11 @@ DeprecationWarning: The `punycode` module is deprecated. Please use a userland a
 
 Cannot use batch API (50% discount) since I need to perform everything and I need to check the state of the environment after each action.
 
-TODO: Add prompt caching
+Add prompt caching - **nope**, under 1000 tokens prompt
+
+TODO in order:
+
+- [ ] parametrize helping levels
+- [ ] use chat history (parametrize)
 
 POSSIBLE TITLE: "Using LLM as choice selector for an agent in a web-based game environment, at different level of freedom, weighted by confidence"
