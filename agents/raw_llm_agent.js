@@ -88,6 +88,7 @@ const BLOCK = 0;
 const WALKABLE = 1;
 var mapGame;
 var heightMax;
+var mapOriginal = null;
 client.onMap((width, height, tiles) => {
   // create a matrix wxh
   heightMax = height;
@@ -98,6 +99,7 @@ client.onMap((width, height, tiles) => {
     const adjustedY = height - 1 - tile.y;
     mapGame[adjustedY][tile.x] = tile.delivery ? DELIVERY : WALKABLE;
   }
+  mapOriginal = mapGame.map((row) => row.slice());
 });
 setTimeout(() => {}, 2000);
 
@@ -128,6 +130,22 @@ client.onParcelsSensing(async (perceived_parcels) => {
         parcelBelow = true;
       }
     }
+  }
+});
+
+const enemyAgents = new Map();
+client.onAgentsSensing(async (perceived_agents) => {
+  // reset all the enemy agents coordinates as the original values
+  for (const a of enemyAgents.values()) {
+    mapGame[heightMax - 1 - a[1]][a[0]] =
+      mapOriginal[heightMax - 1 - a[1]][a[0]];
+  }
+  for (const a of perceived_agents) {
+    a.x = Math.round(a.x);
+    a.y = Math.round(a.y);
+    enemyAgents.set(a.id, [a.x, a.y]);
+    // set a block in the position of the agent
+    mapGame[heightMax - 1 - a.y][a.x] = BLOCK;
   }
 });
 
@@ -171,8 +189,8 @@ const POSSIBLE_ACTIONS_DESCRIPTION = {
   D: "move down",
   L: "move left",
   R: "move right",
-  T: "take a parcel (only if there is an X in the map)",
-  S: "ship a parcel (only if there is a Q in the map)",
+  T: "take a parcel",
+  S: "ship a parcel",
 };
 function buildActionsText(allowedActions) {
   return POSSIBLE_ACTIONS.filter((a) => allowedActions.includes(a))
@@ -180,7 +198,7 @@ function buildActionsText(allowedActions) {
     .join("\n");
 }
 
-function getLegalActions(antiLoop = false) {
+function getLegalActions(antiLoop = true, helpTheBot = true) {
   // The agent can perform the following actions:
   // - if there is a parcel in the same position of the agent, add T
   // - if there is a delivery point in the same position of the agent and the agent has some parcels (numParcels > 0), add S
@@ -191,9 +209,15 @@ function getLegalActions(antiLoop = false) {
   const legalActions = [];
   if (mapGame[me.y][me.x] == DELIVERY && numParcels > 0) {
     legalActions.push("S");
+    if (helpTheBot) {
+      return legalActions;
+    }
   }
   if (parcelBelow) {
     legalActions.push("T");
+    if (helpTheBot) {
+      return legalActions;
+    }
   }
   if (me.y > 0 && mapGame[me.y - 1][me.x] != BLOCK) {
     legalActions.push("U");
@@ -228,7 +252,7 @@ function getLegalActions(antiLoop = false) {
 
 var availableActions = [...POSSIBLE_ACTIONS];
 var prevAction = null;
-var previousEnvironment = null;
+var previousEnvironment = null; // put this inside the loop to test without the filtering
 
 // create a moving window of the last 10 actions
 const lastActions = [];
@@ -246,10 +270,10 @@ async function agentLoop() {
     if (currentEnvironment == previousEnvironment) {
       availableActions = availableActions.filter((a) => a != prevAction);
     } else {
-      availableActions = getLegalActions(true); //[...POSSIBLE_ACTIONS];
+      availableActions = getLegalActions(); //[...POSSIBLE_ACTIONS];
     }
     previousEnvironment = currentEnvironment;
-    var prompt = `You are a delivery agent in a web-based game and I want to test your ability. You are in a grid world (represented with a matrix) with some obstacles and some parcels to deliver.
+    var prompt = `You are a delivery agent in a web-based game and I want to test your ability. You are in a grid world (represented with a matrix) with some obstacles and some parcels to deliver. Parcels are generated at random on random free spots.
 MAP:
 ${currentEnvironment}
 LEGEND:
@@ -272,11 +296,16 @@ Example: if you want to go down, just answer 'D'.
 What is your next action?
 `;
     console.log(prompt);
-
-    const decidedAction = await getCompletion(
-      prompt,
-      createLogitsBiasDict(availableActions)
-    );
+    // decidedAction depends on wether there are multiple actions available or not
+    // TODO: set this as parameter (to use the only action available or not)
+    const decidedAction =
+      availableActions.length > 1
+        ? await getCompletion(prompt, createLogitsBiasDict(availableActions))
+        : availableActions[0];
+    // const decidedAction = await getCompletion(
+    //   prompt,
+    //   createLogitsBiasDict(availableActions)
+    // );
     console.log("Possible actions: ", availableActions);
     // console.log("currentEnvironment: \n", currentEnvironment);
     console.log("Decided action: ", decidedAction);
