@@ -189,9 +189,11 @@ setTimeout(() => {}, 2000);
 
 var AGENTS_OBSERVATION_DISTANCE = null;
 var PARCELS_OBSERVATION_DISTANCE = null;
+var PARCEL_REWARD_AVG = null;
 client.onConfig((conf) => {
   AGENTS_OBSERVATION_DISTANCE = conf.AGENTS_OBSERVATION_DISTANCE; //Agent observation distance
   PARCELS_OBSERVATION_DISTANCE = conf.PARCELS_OBSERVATION_DISTANCE; //Parcel observation distance
+  PARCEL_REWARD_AVG = conf.PARCEL_REWARD_AVG; //Parcel reward average
 });
 setTimeout(() => {}, 1000);
 
@@ -244,9 +246,9 @@ client.onAgentsSensing(async (perceived_agents) => {
 });
 
 function getParcelCharacter(parcel) {
-  if (parcel.reward > 9) {
+  if (parcel.reward > (PARCEL_REWARD_AVG * 2) / 3) {
     return "H";
-  } else if (parcel.reward > 5) {
+  } else if (parcel.reward > PARCEL_REWARD_AVG / 2) {
     return "M";
   } else {
     return "L";
