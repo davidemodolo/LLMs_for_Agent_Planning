@@ -18,7 +18,7 @@ DeprecationWarning: The `punycode` module is deprecated. Please use a userland a
 
 Cannot use batch API (50% discount) since I need to perform everything and I need to check the state of the environment after each action.
 
-Add prompt caching - **nope**, under 1000 tokens prompt
+Add prompt caching - not under 1000 tokens prompt, but used when using conversation history.
 
 TODO in order:
 
@@ -29,3 +29,5 @@ TODO in order:
 - [ ] if no delivery point in sight, append the distance and the direction to the nearest one
 
 POSSIBLE TITLE: "Using LLM as choice selector for an agent in a web-based game environment, at different level of freedom, weighted by confidence"
+
+Add cost in $$$ and token of every run

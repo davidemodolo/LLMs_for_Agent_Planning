@@ -28,7 +28,7 @@ const conversationHistory = [];
 function addHistory(roleAdd, contentAdd) {
   conversationHistory.push({ role: roleAdd, content: contentAdd });
   if (conversationHistory.length > 5) {
-    conversationHistory.shift();
+    conversationHistory.splice(0, 2);
   }
 }
 
@@ -158,6 +158,8 @@ async function getCompletion(
     logit_bias: logits_bias_dictionary,
   });
   addHistory("assistant", completion.choices[0].message.content);
+  // save the completion to completion.json
+  fs.writeFileSync("completion.json", JSON.stringify(completion, null, 2));
   return completion.choices[0].message.content;
 }
 
@@ -190,10 +192,12 @@ setTimeout(() => {}, 2000);
 var AGENTS_OBSERVATION_DISTANCE = null;
 var PARCELS_OBSERVATION_DISTANCE = null;
 var PARCEL_REWARD_AVG = null;
+var ACTION_DELAY = null;
 client.onConfig((conf) => {
   AGENTS_OBSERVATION_DISTANCE = conf.AGENTS_OBSERVATION_DISTANCE; //Agent observation distance
   PARCELS_OBSERVATION_DISTANCE = conf.PARCELS_OBSERVATION_DISTANCE; //Parcel observation distance
   PARCEL_REWARD_AVG = conf.PARCEL_REWARD_AVG; //Parcel reward average
+  ACTION_DELAY = conf.MOVEMENT_DURATION;
 });
 setTimeout(() => {}, 1000);
 
@@ -202,8 +206,8 @@ const me = {};
 client.onYou(({ id, name, x, y, score }) => {
   me.id = id;
   me.name = name;
-  me.x = x;
-  me.y = heightMax - 1 - y; // Adjust the y coordinate
+  me.x = Math.round(x);
+  me.y = Math.round(heightMax - 1 - y); // Adjust the y coordinate
   me.score = score;
 });
 
@@ -360,7 +364,7 @@ function getLegalActions(antiLoop = ANTI_LOOP, helpTheBot = HELP_THE_BOT) {
   }
 
   // if antiLoop is true, remove the opposite action of the last action
-  if (antiLoop && lastActions.length > 0) {
+  if (antiLoop && lastActions.length > 1) {
     const oppositeActions = {
       U: "D",
       D: "U",
@@ -435,7 +439,6 @@ Example: if you want to go down, just answer 'D'.
 What is your next action?
 `;
     console.log(prompt);
-    //return;
     // decidedAction depends on wether there are multiple actions available or not
     const decidedAction =
       availableActions.length > 1 || !SELECT_ONLY_ACTION
@@ -473,7 +476,7 @@ What is your next action?
         .splice(0, lastActions.length - MAX_ACTIONS)
         .forEach((action) => availableActions.push(action));
     }
-    await client.timer(100);
+    await client.timer(ACTION_DELAY);
   }
 }
 
