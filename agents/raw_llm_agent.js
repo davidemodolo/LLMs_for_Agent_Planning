@@ -22,6 +22,8 @@ const HELP_THE_BOT = true; // set to true to force the bot to take the parcel if
 const SELECT_ONLY_ACTION = true; // set to true to select the only action if the list of available actions has only one element
 const USE_HISTORY = true; // set to true to use the conversation history
 const REDUCED_MAP = true; // using the server configuration infos, reduce the dimension of the map given to the LLM depending on the max(PARCELS_OBSERVATION_DISTANCE, AGENTS_OBSERVATION_DISTANCE)
+const HELP_FIND_DELIVERY = true; // set to true to add to the prompt the closest delivery point even if it is not in the field of view
+const HELP_SIMULATE_NEXT_ACTIONS = true; // set to true to add to the prompt the effect (the resulting environment) of every action
 
 const conversationHistory = [];
 
@@ -172,6 +174,7 @@ const DELIVERY = 2;
 const BLOCK = 0;
 const WALKABLE = 1;
 const ENEMY = "E";
+const deliveryZones = set();
 var mapGame;
 var heightMax;
 var mapOriginal = null;
@@ -184,10 +187,27 @@ client.onMap((width, height, tiles) => {
   for (var tile of tiles) {
     const adjustedY = height - 1 - tile.y;
     mapGame[adjustedY][tile.x] = tile.delivery ? DELIVERY : WALKABLE;
+    if (tile.delivery) {
+      deliveryZones.add([tile.x, adjustedY]);
+    }
   }
   mapOriginal = mapGame.map((row) => row.slice());
 });
 setTimeout(() => {}, 2000);
+
+function getClosestDeliveryPoint() {
+  let closestDeliveryPoint = null;
+  let minDistance = Number.MAX_VALUE;
+  for (const deliveryPoint of deliveryZones) {
+    const distance =
+      Math.abs(me.x - deliveryPoint[0]) + Math.abs(me.y - deliveryPoint[1]);
+    if (distance < minDistance) {
+      minDistance = distance;
+      closestDeliveryPoint = deliveryPoint;
+    }
+  }
+  return closestDeliveryPoint;
+}
 
 var AGENTS_OBSERVATION_DISTANCE = null;
 var PARCELS_OBSERVATION_DISTANCE = null;
@@ -330,13 +350,6 @@ function buildActionsText(allowedActions) {
 }
 
 function getLegalActions(antiLoop = ANTI_LOOP, helpTheBot = HELP_THE_BOT) {
-  // The agent can perform the following actions:
-  // - if there is a parcel in the same position of the agent, add T
-  // - if there is a delivery point in the same position of the agent and the agent has some parcels (numParcels > 0), add S
-  // - if the agent can move up, add U
-  // - if the agent can move down, add D
-  // - if the agent can move left, add L
-  // - if the agent can move right, add R
   const legalActions = [];
   if (mapGame[me.y][me.x] == DELIVERY && numParcels > 0) {
     legalActions.push("S");
@@ -438,6 +451,10 @@ Try to not go back and forth, it's a waste of time, so use the conversation hist
 Example: if you want to go down, just answer 'D'.
 What is your next action?
 `;
+    if (HELP_FIND_DELIVERY && numParcels > 0) {
+      const closestDeliveryPoint = getClosestDeliveryPoint();
+      prompt += `The closest delivery point is at position (${closestDeliveryPoint[0]}, ${closestDeliveryPoint[1]}).`;
+    }
     console.log(prompt);
     // decidedAction depends on wether there are multiple actions available or not
     const decidedAction =
