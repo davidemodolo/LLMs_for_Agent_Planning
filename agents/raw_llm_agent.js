@@ -20,7 +20,17 @@ gpt-4o-mini - $0.150 / 1M input tokens - $0.075 / 1M input tokens
 const ANTI_LOOP = true; // set to true to avoid the agent to go back and forth
 const HELP_THE_BOT = true; // set to true to force the bot to take the parcel if it is below the agent or to ship the parcel if the agent is in the delivery point
 const SELECT_ONLY_ACTION = true; // set to true to select the only action if the list of available actions has only one element
-const USE_HISTORY = true; // TODO: use the history of the conversation to improve the response
+const USE_HISTORY = true; // set to true to use the conversation history
+const REDUCED_MAP = true; // using the server configuration infos, reduce the dimension of the map given to the LLM depending on the max(PARCELS_OBSERVATION_DISTANCE, AGENTS_OBSERVATION_DISTANCE)
+
+const conversationHistory = [];
+
+function addHistory(roleAdd, contentAdd) {
+  conversationHistory.push({ role: roleAdd, content: contentAdd });
+  if (conversationHistory.length > 5) {
+    conversationHistory.shift();
+  }
+}
 
 async function knowno_OpenAI(
   prompt,
@@ -32,7 +42,19 @@ async function knowno_OpenAI(
   const LOGIT_BIAS = 20;
   const logits_bias_dict = createLogitsBiasDict(tokens_to_check);
 
-  const completion = getCompletion(prompt, logits_bias_dict); // TODO: change so that it returns the raw completion
+  const completion = await openai.chat.completions.create({
+    model: model,
+    messages: [
+      {
+        role: "user",
+        content: prompt,
+      },
+    ],
+    max_tokens: 1,
+    logprobs: true,
+    top_logprobs: LOGIT_BIAS,
+    logit_bias: logits_bias_dict,
+  });
 
   const top_logprobs_full = completion.choices[0].logprobs.top_logprobs[0];
   const top_tokens = Object.keys(top_logprobs_full).slice(0, LOGIT_BIAS);
@@ -106,6 +128,9 @@ const tokens_to_check = ["U", "D", "L", "R", "T", "S"];
 function createLogitsBiasDict(elements) {
   const encoding = tiktoken.encoding_for_model(MODEL);
   const logitsBiasDict = {};
+  if (elements.length == 0) {
+    return logitsBiasDict;
+  }
 
   elements.forEach((element) => {
     logitsBiasDict[encoding.encode(element)[0]] = 100;
@@ -121,31 +146,30 @@ async function getCompletion(
   prompt,
   logits_bias_dictionary = logits_bias_dict
 ) {
+  addHistory("user", prompt);
   const completion = await openai.chat.completions.create({
     model: MODEL,
-    messages: [
-      { role: "system", content: "You are a helpful assistant." },
-      {
-        role: "user",
-        content: prompt,
-      },
-    ],
+    messages: USE_HISTORY
+      ? conversationHistory
+      : [{ role: "user", content: prompt }],
     max_tokens: 1,
     logprobs: true,
     top_logprobs: 20,
     logit_bias: logits_bias_dictionary,
   });
+  addHistory("assistant", completion.choices[0].message.content);
   return completion.choices[0].message.content;
 }
 
 const client = new DeliverooApi(
-  "http://localhost:8080/?name=god",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImM1NzY4ZGQwZGU2IiwibmFtZSI6ImdvZCIsImlhdCI6MTcyODY3MzMyOH0.XB9dASMeXdgTYemUXmjBc7uBUA6kj5RPkzyFUjz0h2s"
+  "http://localhost:8080/?name=raw_llm_agent",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijc1ZDRlNzhlZDhlIiwibmFtZSI6InJhd19sbG1fYWdlbnQiLCJpYXQiOjE3MzAzODc4Njd9.4EQlPWKgOFGBUn0MpXOZQI2CkPHBjggnDKu76kpPrkI"
 );
 
 const DELIVERY = 2;
 const BLOCK = 0;
 const WALKABLE = 1;
+const ENEMY = "E";
 var mapGame;
 var heightMax;
 var mapOriginal = null;
@@ -162,6 +186,14 @@ client.onMap((width, height, tiles) => {
   mapOriginal = mapGame.map((row) => row.slice());
 });
 setTimeout(() => {}, 2000);
+
+var AGENTS_OBSERVATION_DISTANCE = null;
+var PARCELS_OBSERVATION_DISTANCE = null;
+client.onConfig((conf) => {
+  AGENTS_OBSERVATION_DISTANCE = conf.AGENTS_OBSERVATION_DISTANCE; //Agent observation distance
+  PARCELS_OBSERVATION_DISTANCE = conf.PARCELS_OBSERVATION_DISTANCE; //Parcel observation distance
+});
+setTimeout(() => {}, 1000);
 
 const me = {};
 
@@ -207,12 +239,43 @@ client.onAgentsSensing(async (perceived_agents) => {
     a.y = Math.round(a.y);
     enemyAgents.set(a.id, [a.x, a.y]);
     // set a block in the position of the agent
-    mapGame[heightMax - 1 - a.y][a.x] = BLOCK;
+    mapGame[heightMax - 1 - a.y][a.x] = ENEMY;
   }
 });
 
-// use llm to select next action
-const conversationHistory = [];
+function getParcelCharacter(parcel) {
+  if (parcel.reward > 9) {
+    return "H";
+  } else if (parcel.reward > 5) {
+    return "M";
+  } else {
+    return "L";
+  }
+}
+
+function reduceMap(bigMap) {
+  const radius =
+    Math.max(AGENTS_OBSERVATION_DISTANCE, PARCELS_OBSERVATION_DISTANCE) - 1;
+  const x = me.x;
+  const y = me.y;
+
+  // compute the size on the right of the agent
+  const right = Math.min(x + radius, bigMap[0].length - 1);
+  // compute the size on the left of the agent
+  const left = Math.max(x - radius, 0);
+  // compute the size on the top of the agent
+  const top = Math.max(y - radius, 0);
+  // compute the size on the bottom of the agent
+  const bottom = Math.min(y + radius, bigMap.length - 1);
+
+  // create a new map of the right size
+  const newMap = [];
+  for (let i = top; i <= bottom; i++) {
+    newMap.push(bigMap[i].slice(left, right + 1));
+  }
+  // return the new map as string
+  return newMap.map((row) => row.join(" ")).join("\n");
+}
 
 function buildMap() {
   // check if the map is not defined
@@ -224,15 +287,14 @@ function buildMap() {
 
   // cycle through the parcels and set their parcel.reward at parcel.x, parcel.y position. If a value is higher than 9, set it to 9
   for (const parcel of parcels.values()) {
-    newMap[heightMax - 1 - parcel.y][parcel.x] = "P";
+    newMap[heightMax - 1 - parcel.y][parcel.x] = getParcelCharacter(parcel);
   }
   // put an A in the position of the agent, X if there already is a parcel
-  newMap[me.y][me.x] =
-    newMap[me.y][me.x] == "P"
-      ? "X"
-      : mapGame[me.y][me.x] == DELIVERY
-      ? "Q" // if the agent is in the delivery point
-      : "A";
+  newMap[me.y][me.x] = parcelBelow
+    ? "X"
+    : mapGame[me.y][me.x] == DELIVERY
+    ? "Q" // if the agent is in the delivery point
+    : "A";
   // change every 0 to /
   newMap.forEach((row) => {
     for (let i = 0; i < row.length; i++) {
@@ -241,8 +303,9 @@ function buildMap() {
       }
     }
   });
-
-  return newMap.map((row) => row.join(" ")).join("\n");
+  return REDUCED_MAP
+    ? reduceMap(newMap)
+    : newMap.map((row) => row.join(" ")).join("\n");
 }
 
 const POSSIBLE_ACTIONS = ["U", "D", "L", "R", "T", "S"];
@@ -336,33 +399,41 @@ async function agentLoop() {
     }
     previousEnvironment = currentEnvironment;
     var prompt = `You are a delivery agent in a web-based game and I want to test your ability. You are in a grid world (represented with a matrix) with some obstacles and some parcels to deliver. Parcels are generated at random on random free spots.
+The value of the parcels lowers as the time passes, so you should deliver them as soon as possible.
+Your view of the world is limited to a certain distance, so you can only see the parcels and the delivery points that are close to you.
 MAP:
 ${currentEnvironment}
 LEGEND:
 - A: you (the Agent) are in this position;
 - 1: you can move in this position;
 - 2: you can deliver a parcel in this position (and also move there);
+- E: an enemy agent is blocking this position, this means you cannot move in this position now, but very soon it will move and you will be able to move in this position;
 - /: is blocked, you CAN NOT move towards this position;
-- P: a parcel is in this position;
+- H: a parcel with High value is in this position;
+- M: a parcel with Medium value is in this position;
+- L: a parcel with Low value is in this position, so it could disappear soon and it may be a good idea to ignore it;
 - X: you are in the same position of a parcel;
 - Q: you are in the delivery/shipping point;
 
-ACTIONS:
+ACTIONS you can do:
 ${buildActionsText(availableActions)}
 
 You have ${numParcels} parcels to deliver.
-If you have zero parcels, you must look for the closest parcel to pick up.
-If you are going to deliver a parcel, you should deliver it to the closest delivery point.
-If you are going to deliver a parcel and on the way you find a parcel, you should go and pick it up before shipping.
-If you have at least 1 parcel, you should deliver them to the closest delivery point. The more parcels you have, the more important it is to deliver them as soon as possible.
-If there is no parcel in the map, just move around to explore the map until one parcel spawns, then go and get it.
+Important rules:
+- If you have 0 parcels, you must look for the closest parcel to pick up.
+- If you are going to deliver >0 parcels and on the way you find 1 parcel, you should go and pick it up before shipping.
+- If you have at least 1 parcel, your goal should be to deliver it/them to the closest delivery point. The more parcels you have, the more important it is to deliver them as soon as possible.
+- If you can't see any delivery point, just move around to explore the map until one enters your field of view, then go and deliver the parcels.
+- If there is no parcel in the map, just move around to explore the map until one parcel spawns, then go and get it.
 
 You want to maximize your score by delivering the most possible number of parcels. You can pickup multiple parcels and deliver them in the same delivery point.
 Don't explain the reasoning and don't add any comment, just provide the action.
+Try to not go back and forth, it's a waste of time, so use the conversation history to your advantage.
 Example: if you want to go down, just answer 'D'.
 What is your next action?
 `;
     console.log(prompt);
+    //return;
     // decidedAction depends on wether there are multiple actions available or not
     const decidedAction =
       availableActions.length > 1 || !SELECT_ONLY_ACTION
@@ -400,7 +471,7 @@ What is your next action?
         .splice(0, lastActions.length - MAX_ACTIONS)
         .forEach((action) => availableActions.push(action));
     }
-    await client.timer(500);
+    await client.timer(100);
   }
 }
 
