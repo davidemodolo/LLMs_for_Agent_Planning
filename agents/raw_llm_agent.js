@@ -612,9 +612,9 @@ Example: if you want to go down, just answer 'D'.
     }
     prompt += `\n\nWhat is your next action?`;
     console.log(prompt);
+    //TODO: implement all the "ask for help" logic
+    //await knowno_OpenAI(prompt, availableActions);
     // decidedAction depends on wether there are multiple actions available or not
-    await knowno_OpenAI(prompt, availableActions);
-    continue;
     const decidedAction =
       availableActions.length > 1 || !SELECT_ONLY_ACTION
         ? await getCompletion(prompt, createLogitsBiasDict(availableActions))
