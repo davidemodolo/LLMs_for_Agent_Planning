@@ -31,3 +31,5 @@ TODO in order:
 POSSIBLE TITLE: "Using LLM as choice selector for an agent in a web-based game environment, at different level of freedom, weighted by confidence"
 
 Add cost in $$$ and token of every run
+
+Expand with RAG

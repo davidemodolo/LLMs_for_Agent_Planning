@@ -22,9 +22,18 @@ const HELP_THE_BOT = true; // set to true to force the bot to take the parcel if
 const SELECT_ONLY_ACTION = true; // set to true to select the only action if the list of available actions has only one element
 const USE_HISTORY = true; // set to true to use the conversation history
 const REDUCED_MAP = true; // using the server configuration infos, reduce the dimension of the map given to the LLM depending on the max(PARCELS_OBSERVATION_DISTANCE, AGENTS_OBSERVATION_DISTANCE)
+// see this help as "the robot always knows where it started and can always go back to the starting point"
 const HELP_FIND_DELIVERY = true; // set to true to add to the prompt the closest delivery point even if it is not in the field of view
 const HELP_SIMULATE_NEXT_ACTIONS = true; // set to true to add to the prompt the effect (the resulting environment) of every action
 
+const results = new Map();
+results.set("ANTI_LOOP", ANTI_LOOP);
+results.set("HELP_THE_BOT", HELP_THE_BOT);
+results.set("SELECT_ONLY_ACTION", SELECT_ONLY_ACTION);
+results.set("USE_HISTORY", USE_HISTORY);
+results.set("REDUCED_MAP", REDUCED_MAP);
+results.set("HELP_FIND_DELIVERY", HELP_FIND_DELIVERY);
+results.set("HELP_SIMULATE_NEXT_ACTIONS", HELP_SIMULATE_NEXT_ACTIONS);
 const conversationHistory = [];
 
 function addHistory(roleAdd, contentAdd) {
@@ -143,7 +152,7 @@ function createLogitsBiasDict(elements) {
 }
 
 const logits_bias_dict = createLogitsBiasDict(tokens_to_check);
-
+var total_tokens = 0;
 async function getCompletion(
   prompt,
   logits_bias_dictionary = logits_bias_dict
@@ -160,6 +169,7 @@ async function getCompletion(
     logit_bias: logits_bias_dictionary,
   });
   addHistory("assistant", completion.choices[0].message.content);
+  total_tokens += completion.usage.total_tokens;
   // save the completion to completion.json
   fs.writeFileSync("completion.json", JSON.stringify(completion, null, 2));
   return completion.choices[0].message.content;
@@ -174,7 +184,7 @@ const DELIVERY = 2;
 const BLOCK = 0;
 const WALKABLE = 1;
 const ENEMY = "E";
-const deliveryZones = set();
+const deliveryZones = new Set();
 var mapGame;
 var heightMax;
 var mapOriginal = null;
@@ -403,7 +413,12 @@ const lastActions = [];
 const MAX_ACTIONS = 10;
 
 async function agentLoop() {
-  while (true) {
+  var num_actions = 0;
+  // get current time
+  const start = new Date().getTime();
+  // stop after 5 minutes
+  // while (new Date().getTime() - start < 5 * 60 * 1000) {
+  while (new Date().getTime() - start < 1 * 5 * 1000) {
     const currentEnvironment = buildMap();
     // if currentEnvironment is null, wait for the next map
     if (!currentEnvironment) {
@@ -486,6 +501,7 @@ What is your next action?
       default:
         console.log("Error in action:", decidedAction);
     }
+    num_actions++;
     prevAction = decidedAction;
     lastActions.push(decidedAction);
     if (lastActions.length > MAX_ACTIONS) {
@@ -493,8 +509,18 @@ What is your next action?
         .splice(0, lastActions.length - MAX_ACTIONS)
         .forEach((action) => availableActions.push(action));
     }
+    results.set("score", me.score);
+    results.set("actions", num_actions);
+    results.set("token", total_tokens);
+    console.log("Results: ", results);
+    fs.writeFileSync(
+      "results.json",
+      JSON.stringify(Object.fromEntries(results), null, 2)
+    );
     await client.timer(ACTION_DELAY);
   }
+  // end the program
+  process.exit();
 }
 
 agentLoop();

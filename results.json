@@ -1,0 +1,12 @@
+{
+  "ANTI_LOOP": true,
+  "HELP_THE_BOT": true,
+  "SELECT_ONLY_ACTION": true,
+  "USE_HISTORY": true,
+  "REDUCED_MAP": true,
+  "HELP_FIND_DELIVERY": true,
+  "HELP_SIMULATE_NEXT_ACTIONS": true,
+  "score": 0,
+  "actions": 3,
+  "token": 4257
+}
