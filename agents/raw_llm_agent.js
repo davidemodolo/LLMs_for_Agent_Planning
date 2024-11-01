@@ -3,6 +3,7 @@ import axios from "axios";
 import OpenAI from "openai";
 import fs from "fs";
 import tiktoken from "tiktoken";
+import { exit } from "process";
 const apiKey = fs.readFileSync("key.txt", "utf8").trim();
 const openai = new OpenAI({
   apiKey: apiKey,
@@ -35,9 +36,10 @@ results.set("REDUCED_MAP", REDUCED_MAP);
 results.set("HELP_FIND_DELIVERY", HELP_FIND_DELIVERY);
 results.set("HELP_SIMULATE_NEXT_ACTIONS", HELP_SIMULATE_NEXT_ACTIONS);
 const conversationHistory = [];
-
+const fullConversationHistory = [];
 function addHistory(roleAdd, contentAdd) {
   conversationHistory.push({ role: roleAdd, content: contentAdd });
+  fullConversationHistory.push({ role: roleAdd, content: contentAdd });
   if (conversationHistory.length > 5) {
     conversationHistory.splice(0, 2);
   }
@@ -45,12 +47,9 @@ function addHistory(roleAdd, contentAdd) {
 
 function simulateActions(mapString, testActions) {
   const simulatedMaps = {};
-  console.log("testActions: ", testActions);
   for (let action of testActions) {
     // convert back the mapString to a matrix
     const nextMap = mapString.split("\n").map((row) => row.split(" "));
-    console.log("nextMap: ", nextMap);
-
     // get the current position of the agent from the nextMap by finding the A, X or Q character
     let agentPosition = null;
     for (let row in nextMap) {
@@ -65,12 +64,8 @@ function simulateActions(mapString, testActions) {
         }
       }
     }
-    console.log("agentPosition: ", agentPosition);
-    console.log("nextMap.length: ", nextMap.length);
-    console.log("nextMap[0].length: ", nextMap[0].length);
     var newY = agentPosition[1];
     var newX = agentPosition[0];
-    console.log("agentPosition: ", newX, newY);
     nextMap[newY][newX] = mapOriginal[me.y][me.x];
     switch (action) {
       case "U":
@@ -98,7 +93,6 @@ function simulateActions(mapString, testActions) {
     // these are the coordinates of the agent in the original map when the new action is simulated
     const originalX = me.x + deltaX;
     const originalY = me.y + deltaY;
-    console.log("originalX, originalY: ", originalX, originalY);
 
     var parcelBelowSimul = false;
     for (const parcel of parcels.values()) {
@@ -310,7 +304,6 @@ client.onMap((width, height, tiles) => {
     }
   }
   mapOriginal = mapGame.map((row) => row.slice());
-  console.log("Map game: ", mapOriginal);
 });
 setTimeout(() => {}, 2000);
 
@@ -347,7 +340,6 @@ client.onYou(({ id, name, x, y, score }) => {
   me.name = name;
   me.x = Math.round(x);
   me.y = heightMax - 1 - Math.round(y); // Adjust the y coordinate
-  console.log("Me: ", me);
   me.score = score;
 });
 
@@ -359,6 +351,8 @@ const parcels = new Map();
 client.onParcelsSensing(async (perceived_parcels) => {
   numParcels = 0;
   parcelBelow = false;
+  // reset parcels
+  parcels.clear();
   for (const p of perceived_parcels) {
     const parcelX = Math.round(p.x);
     const parcelY = heightMax - 1 - Math.round(p.y);
@@ -431,12 +425,13 @@ function buildMap() {
     return null;
   }
   // create a copy of the map
-  const newMap = mapGame.map((row) => row.slice());
-
+  const newMap = mapOriginal.map((row) => row.slice());
+  console.log("newMap: ", newMap);
   // cycle through the parcels and set their parcel.reward at parcel.x, parcel.y position. If a value is higher than 9, set it to 9
   for (const parcel of parcels.values()) {
-    // TODO: FIX ALL THE MAP STUFF WITH DELTA BECAUSE THE UPDATED FUNCTIONS DOES NOT HANDLE THE CORRECT MATRIX
+    console.log("Parcel X and Y: ", parcel.x, parcel.y);
     newMap[heightMax - 1 - parcel.y][parcel.x] = getParcelCharacter(parcel);
+    console.log("newMap: ", newMap);
   }
   // put an A in the position of the agent, X if there already is a parcel
   newMap[me.y][me.x] = parcelBelow
@@ -557,6 +552,14 @@ async function agentLoop() {
   // stop after 5 minutes
   // while (new Date().getTime() - start < 5 * 60 * 1000) {
   while (new Date().getTime() - start < 1 * 60 * 1000) {
+    if (me.score > 0) {
+      console.log(
+        "Time elapsed:",
+        (new Date().getTime() - start) / 1000,
+        "seconds"
+      );
+      break;
+    }
     const currentEnvironment = buildMap();
     // if currentEnvironment is null, wait for the next map
     if (!currentEnvironment) {
@@ -570,6 +573,7 @@ async function agentLoop() {
       availableActions = getLegalActions(); //[...POSSIBLE_ACTIONS];
     }
     previousEnvironment = currentEnvironment;
+    // TODO: create the prompt with a function so that the first part is only sent once
     var prompt = `You are a delivery agent in a web-based game and I want to test your ability. You are in a grid world (represented with a matrix) with some obstacles and some parcels to deliver. Parcels are generated at random on random free spots.
 The value of the parcels lowers as the time passes, so you should deliver them as soon as possible.
 Your view of the world is limited to a certain distance, so you can only see the parcels and the delivery points that are close to you.
@@ -648,6 +652,11 @@ Example: if you want to go down, just answer 'D'.
       availableActions.length > 1 || !SELECT_ONLY_ACTION
         ? await getCompletion(prompt, createLogitsBiasDict(availableActions))
         : availableActions[0];
+    if (SELECT_ONLY_ACTION) {
+      // fake the conversation history
+      addHistory("user", prompt);
+      addHistory("assistant", decidedAction);
+    }
     // console.log("currentEnvironment: \n", currentEnvironment);
     console.log("Decided action: ", decidedAction);
     switch (decidedAction) {
@@ -683,19 +692,19 @@ Example: if you want to go down, just answer 'D'.
     results.set("score", me.score);
     results.set("actions", num_actions);
     results.set("tokens", total_tokens);
-    console.log("Results: ", results);
+    results.set("elapsed_time_seconds", (new Date().getTime() - start) / 1000);
     fs.writeFileSync(
       "results.json",
       JSON.stringify(Object.fromEntries(results), null, 2)
     );
-    if (me.score > 0) {
-      print("Starting time:", start);
-      print("Current time:", new Date().getTime());
-      print("Time elapsed:", new Date().getTime() - start);
-      break;
-    }
+
     await client.timer(ACTION_DELAY);
   }
+  // save the conversation history to a file
+  fs.writeFileSync(
+    "conversationHistory.json",
+    JSON.stringify(fullConversationHistory, null, 2)
+  );
   // end the program
   process.exit();
 }
