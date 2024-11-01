@@ -1,173 +1,167 @@
 {
-  "id": "chatcmpl-AOn68DzjHEWX2c9Mu2XTbLEcLUQ8J",
+  "id": "chatcmpl-AOouvlMLJVBwgFJ67Txbk367WFk5x",
   "object": "chat.completion",
-  "created": 1730471968,
+  "created": 1730478961,
   "model": "gpt-4o-mini-2024-07-18",
   "choices": [
     {
       "index": 0,
       "message": {
         "role": "assistant",
-        "content": "D",
+        "content": "U",
         "refusal": null
       },
       "logprobs": {
         "content": [
           {
-            "token": "D",
-            "logprob": -0.006717029,
+            "token": "U",
+            "logprob": -0.9752593,
             "bytes": [
-              68
+              85
             ],
             "top_logprobs": [
               {
                 "token": "D",
-                "logprob": -0.006717029,
+                "logprob": -0.4752593,
                 "bytes": [
                   68
                 ]
               },
               {
-                "token": "R",
-                "logprob": -5.006717,
-                "bytes": [
-                  82
-                ]
-              },
-              {
-                "token": "S",
-                "logprob": -13.631717,
-                "bytes": [
-                  83
-                ]
-              },
-              {
-                "token": "L",
-                "logprob": -15.381717,
-                "bytes": [
-                  76
-                ]
-              },
-              {
                 "token": "U",
-                "logprob": -15.881717,
+                "logprob": -0.9752593,
                 "bytes": [
                   85
                 ]
               },
               {
-                "token": "E",
-                "logprob": -16.256718,
+                "token": "H",
+                "logprob": -7.2252593,
                 "bytes": [
-                  69
+                  72
+                ]
+              },
+              {
+                "token": "R",
+                "logprob": -7.7252593,
+                "bytes": [
+                  82
+                ]
+              },
+              {
+                "token": "L",
+                "logprob": -11.47526,
+                "bytes": [
+                  76
                 ]
               },
               {
                 "token": "I",
-                "logprob": -17.881718,
+                "logprob": -14.22526,
                 "bytes": [
                   73
                 ]
               },
               {
+                "token": "A",
+                "logprob": -14.47526,
+                "bytes": [
+                  65
+                ]
+              },
+              {
+                "token": "S",
+                "logprob": -16.35026,
+                "bytes": [
+                  83
+                ]
+              },
+              {
+                "token": "V",
+                "logprob": -16.60026,
+                "bytes": [
+                  86
+                ]
+              },
+              {
+                "token": "C",
+                "logprob": -16.85026,
+                "bytes": [
+                  67
+                ]
+              },
+              {
+                "token": "W",
+                "logprob": -16.97526,
+                "bytes": [
+                  87
+                ]
+              },
+              {
+                "token": " U",
+                "logprob": -17.22526,
+                "bytes": [
+                  32,
+                  85
+                ]
+              },
+              {
+                "token": "Up",
+                "logprob": -17.22526,
+                "bytes": [
+                  85,
+                  112
+                ]
+              },
+              {
+                "token": "E",
+                "logprob": -17.35026,
+                "bytes": [
+                  69
+                ]
+              },
+              {
+                "token": "UP",
+                "logprob": -17.47526,
+                "bytes": [
+                  85,
+                  80
+                ]
+              },
+              {
+                "token": "B",
+                "logprob": -17.72526,
+                "bytes": [
+                  66
+                ]
+              },
+              {
+                "token": "G",
+                "logprob": -17.72526,
+                "bytes": [
+                  71
+                ]
+              },
+              {
+                "token": "N",
+                "logprob": -18.47526,
+                "bytes": [
+                  78
+                ]
+              },
+              {
                 "token": " D",
-                "logprob": -18.506718,
+                "logprob": -18.47526,
                 "bytes": [
                   32,
                   68
                 ]
               },
               {
-                "token": "B",
-                "logprob": -18.881718,
+                "token": "K",
+                "logprob": -18.60026,
                 "bytes": [
-                  66
-                ]
-              },
-              {
-                "token": "A",
-                "logprob": -19.256718,
-                "bytes": [
-                  65
-                ]
-              },
-              {
-                "token": "C",
-                "logprob": -19.506718,
-                "bytes": [
-                  67
-                ]
-              },
-              {
-                "token": "Down",
-                "logprob": -19.756718,
-                "bytes": [
-                  68,
-                  111,
-                  119,
-                  110
-                ]
-              },
-              {
-                "token": "G",
-                "logprob": -20.381718,
-                "bytes": [
-                  71
-                ]
-              },
-              {
-                "token": "F",
-                "logprob": -20.631718,
-                "bytes": [
-                  70
-                ]
-              },
-              {
-                "token": "H",
-                "logprob": -21.131718,
-                "bytes": [
-                  72
-                ]
-              },
-              {
-                "token": "V",
-                "logprob": -21.381718,
-                "bytes": [
-                  86
-                ]
-              },
-              {
-                "token": "Right",
-                "logprob": -21.381718,
-                "bytes": [
-                  82,
-                  105,
-                  103,
-                  104,
-                  116
-                ]
-              },
-              {
-                "token": "Д",
-                "logprob": -21.506718,
-                "bytes": [
-                  208,
-                  148
-                ]
-              },
-              {
-                "token": " R",
-                "logprob": -21.506718,
-                "bytes": [
-                  32,
-                  82
-                ]
-              },
-              {
-                "token": "M",
-                "logprob": -22.006718,
-                "bytes": [
-                  77
+                  75
                 ]
               }
             ]
@@ -179,11 +173,11 @@
     }
   ],
   "usage": {
-    "prompt_tokens": 1357,
+    "prompt_tokens": 739,
     "completion_tokens": 1,
-    "total_tokens": 1358,
+    "total_tokens": 740,
     "prompt_tokens_details": {
-      "cached_tokens": 1152
+      "cached_tokens": 0
     },
     "completion_tokens_details": {
       "reasoning_tokens": 0

@@ -24,7 +24,7 @@ const USE_HISTORY = true; // set to true to use the conversation history
 const REDUCED_MAP = true; // using the server configuration infos, reduce the dimension of the map given to the LLM depending on the max(PARCELS_OBSERVATION_DISTANCE, AGENTS_OBSERVATION_DISTANCE)
 // see this help as "the robot always knows where it started and can always go back to the starting point"
 const HELP_FIND_DELIVERY = true; // set to true to add to the prompt the closest delivery point even if it is not in the field of view
-const HELP_SIMULATE_NEXT_ACTIONS = false; // set to true to add to the prompt the effect (the resulting environment) of every action
+const HELP_SIMULATE_NEXT_ACTIONS = true; // set to true to add to the prompt the effect (the resulting environment) of every action
 
 const results = new Map();
 results.set("ANTI_LOOP", ANTI_LOOP);
@@ -49,24 +49,29 @@ function simulateActions(mapString, testActions) {
   for (let action of testActions) {
     // convert back the mapString to a matrix
     const nextMap = mapString.split("\n").map((row) => row.split(" "));
+    console.log("nextMap: ", nextMap);
+
     // get the current position of the agent from the nextMap by finding the A, X or Q character
     let agentPosition = null;
-    for (let i = 0; i < nextMap.length; i++) {
-      for (let j = 0; j < nextMap[i].length; j++) {
+    for (let row in nextMap) {
+      for (let col in nextMap[row]) {
         if (
-          nextMap[i][j] == "A" ||
-          nextMap[i][j] == "X" ||
-          nextMap[i][j] == "Q"
+          nextMap[row][col] == "A" ||
+          nextMap[row][col] == "X" ||
+          nextMap[row][col] == "Q"
         ) {
-          agentPosition = [i, j];
+          agentPosition = [col, row];
           break;
         }
       }
     }
+    console.log("agentPosition: ", agentPosition);
+    console.log("nextMap.length: ", nextMap.length);
+    console.log("nextMap[0].length: ", nextMap[0].length);
     var newY = agentPosition[1];
     var newX = agentPosition[0];
     console.log("agentPosition: ", newX, newY);
-    nextMap[newY][newX] = mapOriginal[me.y][me.x];
+    nextMap[newX][newY] = mapOriginal[me.x][me.y];
     switch (action) {
       case "U":
         newY--;
@@ -88,7 +93,6 @@ function simulateActions(mapString, testActions) {
         console.log("Error in action:", action);
     }
     console.log("newX, newY: ", newX, newY);
-
     const deltaX = newX - agentPosition[0];
     const deltaY = newY - agentPosition[1];
     // these are the coordinates of the agent in the original map when the new action is simulated
@@ -98,7 +102,7 @@ function simulateActions(mapString, testActions) {
 
     var parcelBelowSimul = false;
     for (const parcel of parcels.values()) {
-      if (parcel.x == originalX && heightMax - 1 - parcel.y == originalY) {
+      if (parcel.x == originalX && parcel.y == originalY) {
         parcelBelowSimul = true;
         break;
       }
@@ -287,20 +291,26 @@ const deliveryZones = new Set();
 var mapGame;
 var heightMax;
 var mapOriginal = null;
+// TODO: FIX ALL THE MAP STUFF WITH DELTA BECAUSE THE UPDATED FUNCTIONS DOES NOT HANDLE THE CORRECT MATRIX
 client.onMap((width, height, tiles) => {
+  console.log("Map received: ", width, height, tiles);
   // create a matrix wxh
   heightMax = height;
-  mapGame = new Array(width)
+  mapGame = new Array(height)
     .fill(BLOCK)
-    .map(() => new Array(height).fill(BLOCK));
+    .map(() => new Array(width).fill(BLOCK));
+
   for (var tile of tiles) {
-    const adjustedY = height - 1 - tile.y;
-    mapGame[adjustedY][tile.x] = tile.delivery ? DELIVERY : WALKABLE;
+    const tileX = tile.x;
+    const tileY = height - 1 - tile.y;
+    console.log("Tile: ", tileX, tileY, tile.delivery);
+    mapGame[tileX][tileY] = tile.delivery ? DELIVERY : WALKABLE;
     if (tile.delivery) {
-      deliveryZones.add([tile.x, adjustedY]);
+      deliveryZones.add([tileX, tileY]);
     }
   }
   mapOriginal = mapGame.map((row) => row.slice());
+  console.log("Map game: ", mapOriginal);
 });
 setTimeout(() => {}, 2000);
 
@@ -309,6 +319,7 @@ function getClosestDeliveryPoint() {
   let minDistance = Number.MAX_VALUE;
   for (const deliveryPoint of deliveryZones) {
     const distance =
+      // TODO: FIX ALL THE MAP STUFF WITH DELTA BECAUSE THE UPDATED FUNCTIONS DOES NOT HANDLE THE CORRECT MATRIX
       Math.abs(me.x - deliveryPoint[0]) + Math.abs(me.y - deliveryPoint[1]);
     if (distance < minDistance) {
       minDistance = distance;
@@ -335,8 +346,10 @@ const me = {};
 client.onYou(({ id, name, x, y, score }) => {
   me.id = id;
   me.name = name;
+  // TODO: FIX ALL THE MAP STUFF WITH DELTA BECAUSE THE UPDATED FUNCTIONS DOES NOT HANDLE THE CORRECT MATRIX
   me.x = Math.round(x);
-  me.y = Math.round(heightMax - 1 - y); // Adjust the y coordinate
+  me.y = Math.round(y); // Adjust the y coordinate
+  console.log("Me: ", me);
   me.score = score;
 });
 
@@ -355,6 +368,7 @@ client.onParcelsSensing(async (perceived_parcels) => {
     if (p.carriedBy == me.id) {
       numParcels++;
     } else {
+      // TODO: FIX ALL THE MAP STUFF WITH DELTA BECAUSE THE UPDATED FUNCTIONS DOES NOT HANDLE THE CORRECT MATRIX
       if (p.x == me.x && heightMax - 1 - p.y == me.y) {
         parcelBelow = true;
       }
@@ -370,6 +384,7 @@ client.onAgentsSensing(async (perceived_agents) => {
       mapOriginal[heightMax - 1 - a[1]][a[0]];
   }
   for (const a of perceived_agents) {
+    // TODO: FIX ALL THE MAP STUFF WITH DELTA BECAUSE THE UPDATED FUNCTIONS DOES NOT HANDLE THE CORRECT MATRIX
     a.x = Math.round(a.x);
     a.y = Math.round(a.y);
     enemyAgents.set(a.id, [a.x, a.y]);
@@ -422,6 +437,7 @@ function buildMap() {
 
   // cycle through the parcels and set their parcel.reward at parcel.x, parcel.y position. If a value is higher than 9, set it to 9
   for (const parcel of parcels.values()) {
+    // TODO: FIX ALL THE MAP STUFF WITH DELTA BECAUSE THE UPDATED FUNCTIONS DOES NOT HANDLE THE CORRECT MATRIX
     newMap[heightMax - 1 - parcel.y][parcel.x] = getParcelCharacter(parcel);
   }
   // put an A in the position of the agent, X if there already is a parcel
@@ -623,10 +639,10 @@ Example: if you want to go down, just answer 'D'.
     console.log("Decided action: ", decidedAction);
     switch (decidedAction) {
       case "U":
-        await client.move("up");
+        await client.move("down");
         break;
       case "D":
-        await client.move("down");
+        await client.move("up");
         break;
       case "L":
         await client.move("left");
@@ -659,6 +675,12 @@ Example: if you want to go down, just answer 'D'.
       "results.json",
       JSON.stringify(Object.fromEntries(results), null, 2)
     );
+    if (me.score > 0) {
+      print("Starting time:", start);
+      print("Current time:", new Date().getTime());
+      print("Time elapsed:", new Date().getTime() - start);
+      break;
+    }
     await client.timer(ACTION_DELAY);
   }
   // end the program

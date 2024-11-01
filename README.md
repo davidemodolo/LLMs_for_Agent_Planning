@@ -33,3 +33,6 @@ POSSIBLE TITLE: "Using LLM as choice selector for an agent in a web-based game e
 Add cost in $$$ and token of every run
 
 Expand with RAG
+
+// TODO: FIX ALL THE MAP STUFF WITH DELTA BECAUSE THE UPDATED FUNCTIONS DOES NOT HANDLE THE NEW MATRIX
+Probably just on the onMe, onParcelSensing and all the server related functions is enough
