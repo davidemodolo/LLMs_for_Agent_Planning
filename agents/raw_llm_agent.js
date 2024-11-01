@@ -546,15 +546,25 @@ Try to not go back and forth, it's a waste of time, so use the conversation hist
 Example: if you want to go down, just answer 'D'.
 
 `;
-    //TODO: change this to be "bottom right"/"top left" ecc
     if (HELP_FIND_DELIVERY && numParcels > 0) {
       const closestDeliveryPoint = getClosestDeliveryPoint();
-      prompt += `The closest delivery point is at position (${
-        closestDeliveryPoint[0]
-      }, ${closestDeliveryPoint[1]}) and you are ${
-        Math.abs(me.x - closestDeliveryPoint[0]) +
-        Math.abs(me.y - closestDeliveryPoint[1])
-      } steps away.`;
+      const deltaX = closestDeliveryPoint[0] - me.x;
+      const deltaY = closestDeliveryPoint[1] - me.y;
+      let direction = "";
+
+      if (deltaX > 0) {
+        direction += "right";
+      } else if (deltaX < 0) {
+        direction += "left";
+      }
+
+      if (deltaY > 0) {
+        direction += direction ? " and down" : "down";
+      } else if (deltaY < 0) {
+        direction += direction ? " and up" : "up";
+      }
+
+      prompt += `The closest delivery point is ${direction} from you.`;
     }
 
     console.log("Possible actions: ", availableActions);
