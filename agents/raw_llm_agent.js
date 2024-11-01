@@ -24,7 +24,7 @@ const USE_HISTORY = true; // set to true to use the conversation history
 const REDUCED_MAP = true; // using the server configuration infos, reduce the dimension of the map given to the LLM depending on the max(PARCELS_OBSERVATION_DISTANCE, AGENTS_OBSERVATION_DISTANCE)
 // see this help as "the robot always knows where it started and can always go back to the starting point"
 const HELP_FIND_DELIVERY = true; // set to true to add to the prompt the closest delivery point even if it is not in the field of view
-const HELP_SIMULATE_NEXT_ACTIONS = true; // set to true to add to the prompt the effect (the resulting environment) of every action
+const HELP_SIMULATE_NEXT_ACTIONS = false; // set to true to add to the prompt the effect (the resulting environment) of every action
 
 const results = new Map();
 results.set("ANTI_LOOP", ANTI_LOOP);
@@ -71,7 +71,7 @@ function simulateActions(mapString, testActions) {
     var newY = agentPosition[1];
     var newX = agentPosition[0];
     console.log("agentPosition: ", newX, newY);
-    nextMap[newX][newY] = mapOriginal[me.x][me.y];
+    nextMap[newY][newX] = mapOriginal[me.y][me.x];
     switch (action) {
       case "U":
         newY--;
@@ -291,7 +291,7 @@ const deliveryZones = new Set();
 var mapGame;
 var heightMax;
 var mapOriginal = null;
-// TODO: FIX ALL THE MAP STUFF WITH DELTA BECAUSE THE UPDATED FUNCTIONS DOES NOT HANDLE THE CORRECT MATRIX
+
 client.onMap((width, height, tiles) => {
   console.log("Map received: ", width, height, tiles);
   // create a matrix wxh
@@ -304,9 +304,9 @@ client.onMap((width, height, tiles) => {
     const tileX = tile.x;
     const tileY = height - 1 - tile.y;
     console.log("Tile: ", tileX, tileY, tile.delivery);
-    mapGame[tileX][tileY] = tile.delivery ? DELIVERY : WALKABLE;
+    mapGame[tileY][tileX] = tile.delivery ? DELIVERY : WALKABLE;
     if (tile.delivery) {
-      deliveryZones.add([tileX, tileY]);
+      deliveryZones.add([tileY, tileX]);
     }
   }
   mapOriginal = mapGame.map((row) => row.slice());
@@ -319,7 +319,6 @@ function getClosestDeliveryPoint() {
   let minDistance = Number.MAX_VALUE;
   for (const deliveryPoint of deliveryZones) {
     const distance =
-      // TODO: FIX ALL THE MAP STUFF WITH DELTA BECAUSE THE UPDATED FUNCTIONS DOES NOT HANDLE THE CORRECT MATRIX
       Math.abs(me.x - deliveryPoint[0]) + Math.abs(me.y - deliveryPoint[1]);
     if (distance < minDistance) {
       minDistance = distance;
@@ -346,9 +345,8 @@ const me = {};
 client.onYou(({ id, name, x, y, score }) => {
   me.id = id;
   me.name = name;
-  // TODO: FIX ALL THE MAP STUFF WITH DELTA BECAUSE THE UPDATED FUNCTIONS DOES NOT HANDLE THE CORRECT MATRIX
   me.x = Math.round(x);
-  me.y = Math.round(y); // Adjust the y coordinate
+  me.y = heightMax - 1 - Math.round(y); // Adjust the y coordinate
   console.log("Me: ", me);
   me.score = score;
 });
@@ -362,14 +360,16 @@ client.onParcelsSensing(async (perceived_parcels) => {
   numParcels = 0;
   parcelBelow = false;
   for (const p of perceived_parcels) {
+    const parcelX = Math.round(p.x);
+    const parcelY = heightMax - 1 - Math.round(p.y);
+
     if (!p.carriedBy) {
       parcels.set(p.id, p);
     }
     if (p.carriedBy == me.id) {
       numParcels++;
     } else {
-      // TODO: FIX ALL THE MAP STUFF WITH DELTA BECAUSE THE UPDATED FUNCTIONS DOES NOT HANDLE THE CORRECT MATRIX
-      if (p.x == me.x && heightMax - 1 - p.y == me.y) {
+      if (parcelX == me.x && parcelY == me.y) {
         parcelBelow = true;
       }
     }
@@ -380,16 +380,14 @@ const enemyAgents = new Map();
 client.onAgentsSensing(async (perceived_agents) => {
   // reset all the enemy agents coordinates as the original values
   for (const a of enemyAgents.values()) {
-    mapGame[heightMax - 1 - a[1]][a[0]] =
-      mapOriginal[heightMax - 1 - a[1]][a[0]];
+    mapGame[a[0]][a[1]] = mapOriginal[a[0]][a[1]];
   }
   for (const a of perceived_agents) {
-    // TODO: FIX ALL THE MAP STUFF WITH DELTA BECAUSE THE UPDATED FUNCTIONS DOES NOT HANDLE THE CORRECT MATRIX
     a.x = Math.round(a.x);
-    a.y = Math.round(a.y);
-    enemyAgents.set(a.id, [a.x, a.y]);
+    a.y = height - 1 - Math.round(a.y);
+    enemyAgents.set(a.id, [a.y, a.x]);
     // set a block in the position of the agent
-    mapGame[heightMax - 1 - a.y][a.x] = ENEMY;
+    mapGame[a.y][a.x] = ENEMY;
   }
 });
 
@@ -489,22 +487,38 @@ function getLegalActions(antiLoop = ANTI_LOOP, helpTheBot = HELP_THE_BOT) {
       return legalActions;
     }
   }
-  if (me.y > 0 && mapGame[me.y - 1][me.x] != BLOCK) {
+  if (
+    me.y > 0 &&
+    me.y - 1 < mapGame.length &&
+    mapGame[me.y - 1][me.x] != BLOCK
+  ) {
     if (!enemyAgentsPositions.some((a) => a[0] == me.x && a[1] == me.y - 1)) {
       legalActions.push("U");
     }
   }
-  if (me.y < heightMax - 1 && mapGame[me.y + 1][me.x] != BLOCK) {
+  if (
+    me.y < heightMax - 1 &&
+    me.y + 1 < mapGame.length &&
+    mapGame[me.y + 1][me.x] != BLOCK
+  ) {
     if (!enemyAgentsPositions.some((a) => a[0] == me.x && a[1] == me.y + 1)) {
       legalActions.push("D");
     }
   }
-  if (me.x > 0 && mapGame[me.y][me.x - 1] != BLOCK) {
+  if (
+    me.x > 0 &&
+    me.x - 1 < mapGame[0].length &&
+    mapGame[me.y][me.x - 1] != BLOCK
+  ) {
     if (!enemyAgentsPositions.some((a) => a[0] == me.x - 1 && a[1] == me.y)) {
       legalActions.push("L");
     }
   }
-  if (me.x < mapGame.length - 1 && mapGame[me.y][me.x + 1] != BLOCK) {
+  if (
+    me.x < mapGame[0].length - 1 &&
+    me.x + 1 < mapGame[0].length &&
+    mapGame[me.y][me.x + 1] != BLOCK
+  ) {
     if (!enemyAgentsPositions.some((a) => a[0] == me.x + 1 && a[1] == me.y)) {
       legalActions.push("R");
     }
@@ -542,7 +556,7 @@ async function agentLoop() {
   const start = new Date().getTime();
   // stop after 5 minutes
   // while (new Date().getTime() - start < 5 * 60 * 1000) {
-  while (new Date().getTime() - start < 1 * 5 * 1000) {
+  while (new Date().getTime() - start < 1 * 60 * 1000) {
     const currentEnvironment = buildMap();
     // if currentEnvironment is null, wait for the next map
     if (!currentEnvironment) {
@@ -588,7 +602,6 @@ You want to maximize your score by delivering the most possible number of parcel
 Don't explain the reasoning and don't add any comment, just provide the action.
 Try to not go back and forth, it's a waste of time, so use the conversation history to your advantage.
 Example: if you want to go down, just answer 'D'.
-
 `;
     if (HELP_FIND_DELIVERY && numParcels > 0) {
       const closestDeliveryPoint = getClosestDeliveryPoint();
@@ -626,7 +639,7 @@ Example: if you want to go down, just answer 'D'.
         )
         .join("\n\n")}`;
     }
-    prompt += `\n\nWhat is your next action?`;
+    prompt += `\nWhat is your next action?`;
     console.log(prompt);
     //TODO: implement all the "ask for help" logic
     //await knowno_OpenAI(prompt, availableActions);
@@ -639,10 +652,10 @@ Example: if you want to go down, just answer 'D'.
     console.log("Decided action: ", decidedAction);
     switch (decidedAction) {
       case "U":
-        await client.move("down");
+        await client.move("up");
         break;
       case "D":
-        await client.move("up");
+        await client.move("down");
         break;
       case "L":
         await client.move("left");

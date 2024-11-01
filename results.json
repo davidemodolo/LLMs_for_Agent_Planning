@@ -5,8 +5,8 @@
   "USE_HISTORY": true,
   "REDUCED_MAP": true,
   "HELP_FIND_DELIVERY": true,
-  "HELP_SIMULATE_NEXT_ACTIONS": true,
+  "HELP_SIMULATE_NEXT_ACTIONS": false,
   "score": 0,
-  "actions": 1,
-  "tokens": 740
+  "actions": 5,
+  "tokens": 7027
 }
