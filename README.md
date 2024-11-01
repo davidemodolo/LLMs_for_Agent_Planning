@@ -26,7 +26,7 @@ TODO in order:
 - [x] use chat history (parametrize)
 - [x] using the server configuration infos, reduce the dimension of the map given to the LLM depending on the max(PARCELS_OBSERVATION_DISTANCE, AGENTS_OBSERVATION_DISTANCE)
 - [x] using the server configuration infos, better map the parcel reward to H, M, L
-- [ ] if no delivery point in sight, append the distance and the direction to the nearest one
+- [x] if no delivery point in sight, append the distance and the direction to the nearest one
 
 POSSIBLE TITLE: "Using LLM as choice selector for an agent in a web-based game environment, at different level of freedom, weighted by confidence"
 

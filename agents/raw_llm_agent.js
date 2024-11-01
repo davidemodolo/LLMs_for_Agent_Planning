@@ -43,6 +43,77 @@ function addHistory(roleAdd, contentAdd) {
   }
 }
 
+function simulateActions(mapString, testActions) {
+  const simulatedMaps = {};
+  console.log("testActions: ", testActions);
+  for (let action of testActions) {
+    // convert back the mapString to a matrix
+    const nextMap = mapString.split("\n").map((row) => row.split(" "));
+    // get the current position of the agent from the nextMap by finding the A, X or Q character
+    let agentPosition = null;
+    for (let i = 0; i < nextMap.length; i++) {
+      for (let j = 0; j < nextMap[i].length; j++) {
+        if (
+          nextMap[i][j] == "A" ||
+          nextMap[i][j] == "X" ||
+          nextMap[i][j] == "Q"
+        ) {
+          agentPosition = [i, j];
+          break;
+        }
+      }
+    }
+    var newY = agentPosition[1];
+    var newX = agentPosition[0];
+    console.log("agentPosition: ", newX, newY);
+    nextMap[newY][newX] = mapOriginal[me.y][me.x];
+    switch (action) {
+      case "U":
+        newY--;
+        break;
+      case "D":
+        newY++;
+        break;
+      case "L":
+        newX--;
+        break;
+      case "R":
+        newX++;
+        break;
+      case "T":
+        break;
+      case "S":
+        break;
+      default:
+        console.log("Error in action:", action);
+    }
+    console.log("newX, newY: ", newX, newY);
+
+    const deltaX = newX - agentPosition[0];
+    const deltaY = newY - agentPosition[1];
+    // these are the coordinates of the agent in the original map when the new action is simulated
+    const originalX = me.x + deltaX;
+    const originalY = me.y + deltaY;
+    console.log("originalX, originalY: ", originalX, originalY);
+
+    var parcelBelowSimul = false;
+    for (const parcel of parcels.values()) {
+      if (parcel.x == originalX && heightMax - 1 - parcel.y == originalY) {
+        parcelBelowSimul = true;
+        break;
+      }
+    }
+
+    nextMap[newY][newX] = parcelBelowSimul
+      ? "X"
+      : mapOriginal[originalY][originalX] == "" + DELIVERY
+      ? "Q"
+      : "A";
+    simulatedMaps[action] = nextMap;
+  }
+  return simulatedMaps;
+}
+
 async function knowno_OpenAI(
   prompt,
   tokens_to_check,
@@ -360,6 +431,7 @@ function buildActionsText(allowedActions) {
 }
 
 function getLegalActions(antiLoop = ANTI_LOOP, helpTheBot = HELP_THE_BOT) {
+  const enemyAgentsPositions = Array.from(enemyAgents.values());
   const legalActions = [];
   if (mapGame[me.y][me.x] == DELIVERY && numParcels > 0) {
     legalActions.push("S");
@@ -374,16 +446,24 @@ function getLegalActions(antiLoop = ANTI_LOOP, helpTheBot = HELP_THE_BOT) {
     }
   }
   if (me.y > 0 && mapGame[me.y - 1][me.x] != BLOCK) {
-    legalActions.push("U");
+    if (!enemyAgentsPositions.some((a) => a[0] == me.x && a[1] == me.y - 1)) {
+      legalActions.push("U");
+    }
   }
   if (me.y < heightMax - 1 && mapGame[me.y + 1][me.x] != BLOCK) {
-    legalActions.push("D");
+    if (!enemyAgentsPositions.some((a) => a[0] == me.x && a[1] == me.y + 1)) {
+      legalActions.push("D");
+    }
   }
   if (me.x > 0 && mapGame[me.y][me.x - 1] != BLOCK) {
-    legalActions.push("L");
+    if (!enemyAgentsPositions.some((a) => a[0] == me.x - 1 && a[1] == me.y)) {
+      legalActions.push("L");
+    }
   }
   if (me.x < mapGame.length - 1 && mapGame[me.y][me.x + 1] != BLOCK) {
-    legalActions.push("R");
+    if (!enemyAgentsPositions.some((a) => a[0] == me.x + 1 && a[1] == me.y)) {
+      legalActions.push("R");
+    }
   }
 
   // if antiLoop is true, remove the opposite action of the last action
@@ -464,19 +544,41 @@ You want to maximize your score by delivering the most possible number of parcel
 Don't explain the reasoning and don't add any comment, just provide the action.
 Try to not go back and forth, it's a waste of time, so use the conversation history to your advantage.
 Example: if you want to go down, just answer 'D'.
-What is your next action?
+
 `;
+    //TODO: change this to be "bottom right"/"top left" ecc
     if (HELP_FIND_DELIVERY && numParcels > 0) {
       const closestDeliveryPoint = getClosestDeliveryPoint();
-      prompt += `The closest delivery point is at position (${closestDeliveryPoint[0]}, ${closestDeliveryPoint[1]}).`;
+      prompt += `The closest delivery point is at position (${
+        closestDeliveryPoint[0]
+      }, ${closestDeliveryPoint[1]}) and you are ${
+        Math.abs(me.x - closestDeliveryPoint[0]) +
+        Math.abs(me.y - closestDeliveryPoint[1])
+      } steps away.`;
     }
+
+    console.log("Possible actions: ", availableActions);
+    if (HELP_SIMULATE_NEXT_ACTIONS) {
+      const simulatedActions = simulateActions(
+        currentEnvironment,
+        availableActions
+      );
+      prompt += `\n\nSIMULATED ACTIONS:\n${Object.entries(simulatedActions)
+        .map(
+          ([action, map]) =>
+            `If you do action ${action} you will end up in this situation:\n${map
+              .map((row) => row.join(" "))
+              .join("\n")}`
+        )
+        .join("\n\n")}`;
+    }
+    prompt += `\n\nWhat is your next action?`;
     console.log(prompt);
     // decidedAction depends on wether there are multiple actions available or not
     const decidedAction =
       availableActions.length > 1 || !SELECT_ONLY_ACTION
         ? await getCompletion(prompt, createLogitsBiasDict(availableActions))
         : availableActions[0];
-    console.log("Possible actions: ", availableActions);
     // console.log("currentEnvironment: \n", currentEnvironment);
     console.log("Decided action: ", decidedAction);
     switch (decidedAction) {
