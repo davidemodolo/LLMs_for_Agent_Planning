@@ -24,7 +24,7 @@ const USE_HISTORY = true; // set to true to use the conversation history
 const REDUCED_MAP = true; // using the server configuration infos, reduce the dimension of the map given to the LLM depending on the max(PARCELS_OBSERVATION_DISTANCE, AGENTS_OBSERVATION_DISTANCE)
 // see this help as "the robot always knows where it started and can always go back to the starting point"
 const HELP_FIND_DELIVERY = true; // set to true to add to the prompt the closest delivery point even if it is not in the field of view
-const HELP_SIMULATE_NEXT_ACTIONS = true; // set to true to add to the prompt the effect (the resulting environment) of every action
+const HELP_SIMULATE_NEXT_ACTIONS = false; // set to true to add to the prompt the effect (the resulting environment) of every action
 
 const results = new Map();
 results.set("ANTI_LOOP", ANTI_LOOP);
@@ -138,9 +138,21 @@ async function knowno_OpenAI(
     logit_bias: logits_bias_dict,
   });
 
-  const top_logprobs_full = completion.choices[0].logprobs.top_logprobs[0];
-  const top_tokens = Object.keys(top_logprobs_full).slice(0, LOGIT_BIAS);
-  const top_logprobs = Object.values(top_logprobs_full).slice(0, LOGIT_BIAS);
+  const top_logprobs_full =
+    completion.choices[0].logprobs.content[0].top_logprobs;
+  /*Top logprobs:  [
+  { token: 'D', logprob: -0.0015024792, bytes: [ 68 ] },
+  { token: 'R', logprob: -6.5015025, bytes: [ 82 ] },
+  { token: 'L', logprob: -16.376503, bytes: [ 76 ] }, */
+  const top_tokens = [];
+  const top_logprobs = [];
+  for (const element of top_logprobs_full) {
+    top_tokens.push(element.token);
+    top_logprobs.push(element.logprob);
+  }
+
+  console.log("Top tokens: ", top_tokens);
+  console.log("Top logprobs: ", top_logprobs);
 
   const results_dict = {};
   top_tokens.forEach((token, i) => {
@@ -149,6 +161,7 @@ async function knowno_OpenAI(
       results_dict[character] = top_logprobs[i];
     }
   });
+  console.log("Results dict: ", results_dict);
 
   tokens_to_check.forEach((token) => {
     if (!results_dict[token]) {
@@ -157,27 +170,42 @@ async function knowno_OpenAI(
         top_logprobs[top_logprobs.length - 2];
     }
   });
+  console.log("Results dict: ", results_dict);
 
-  const top_logprobs_norm = Object.values(results_dict).map((logprob) =>
-    Math.exp(logprob / 10)
+  const temperature_softmax = 10; // Define the temperature
+  const exp_logprobs = Object.values(results_dict).map((logprob) =>
+    Math.exp(logprob / temperature_softmax)
   );
-  const sum_exp = top_logprobs_norm.reduce((a, b) => a + b, 0);
-  const normalized_probs = top_logprobs_norm.map((prob) => prob / sum_exp);
-
-  const mc_smx_all = normalized_probs.map(
-    (prob) =>
-      Math.exp(prob / temp) /
-      normalized_probs.reduce((a, b) => a + Math.exp(b / temp), 0)
-  );
+  const sum_exp_logprobs = exp_logprobs.reduce((sum, val) => sum + val, 0);
+  const top_logprobs_norm = exp_logprobs.map((val) => val / sum_exp_logprobs);
+  console.log("Top logprobs norm: ", top_logprobs_norm);
+  const mc_smx_all = temperatureScaling(top_logprobs_norm);
+  console.log("MC SMX all: ", mc_smx_all);
 
   const final = Object.keys(results_dict).map((element, i) => [
     element,
-    mc_smx_all[i] >= 1 - qhat,
+    mc_smx_all[i] >= 1 - (qhat || 0.928),
     mc_smx_all[i],
   ]);
   final.sort((a, b) => b[2] - a[2]);
-
+  console.log("Final: ", final);
   return final;
+}
+
+function temperatureScaling(logits, temperature = 0.1) {
+  // Scale logits by temperature
+  logits = logits.map((logit) => logit / temperature);
+
+  // Subtract max to avoid numerical overflow
+  const maxLogit = Math.max(...logits);
+  logits = logits.map((logit) => logit - maxLogit);
+
+  // Calculate softmax
+  const expLogits = logits.map((logit) => Math.exp(logit));
+  const sumExpLogits = expLogits.reduce((a, b) => a + b, 0);
+  const softmax = expLogits.map((expLogit) => expLogit / sumExpLogits);
+
+  return softmax;
 }
 
 async function askLocalLLM(prompt) {
@@ -521,7 +549,7 @@ LEGEND:
 - A: you (the Agent) are in this position;
 - 1: you can move in this position;
 - 2: you can deliver a parcel in this position (and also move there);
-- E: an enemy agent is blocking this position, this means you cannot move in this position now, but very soon it will move and you will be able to move in this position;
+- ${ENEMY}: an enemy agent is blocking this position, this means you cannot move in this position now, but very soon it will move and you will be able to move in this position;
 - /: is blocked, you CAN NOT move towards this position;
 - H: a parcel with High value is in this position;
 - M: a parcel with Medium value is in this position;
@@ -585,6 +613,8 @@ Example: if you want to go down, just answer 'D'.
     prompt += `\n\nWhat is your next action?`;
     console.log(prompt);
     // decidedAction depends on wether there are multiple actions available or not
+    await knowno_OpenAI(prompt, availableActions);
+    continue;
     const decidedAction =
       availableActions.length > 1 || !SELECT_ONLY_ACTION
         ? await getCompletion(prompt, createLogitsBiasDict(availableActions))
@@ -623,7 +653,7 @@ Example: if you want to go down, just answer 'D'.
     }
     results.set("score", me.score);
     results.set("actions", num_actions);
-    results.set("token", total_tokens);
+    results.set("tokens", total_tokens);
     console.log("Results: ", results);
     fs.writeFileSync(
       "results.json",
