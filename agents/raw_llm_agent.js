@@ -4,6 +4,7 @@ import OpenAI from "openai";
 import fs from "fs";
 import tiktoken from "tiktoken";
 import { exit } from "process";
+import { log } from "console";
 const apiKey = fs.readFileSync("key.txt", "utf8").trim();
 const openai = new OpenAI({
   apiKey: apiKey,
@@ -35,6 +36,12 @@ results.set("USE_HISTORY", USE_HISTORY);
 results.set("REDUCED_MAP", REDUCED_MAP);
 results.set("HELP_FIND_DELIVERY", HELP_FIND_DELIVERY);
 results.set("HELP_SIMULATE_NEXT_ACTIONS", HELP_SIMULATE_NEXT_ACTIONS);
+
+const LEVELS = ["NO_PLAN", "ONLY_GOAL", "FULL_PLAN"];
+const LEVEL = LEVELS[0];
+const POSSIBLE_LOGICS = ["raw", "random", "threshold"];
+const LOGIC = POSSIBLE_LOGICS[1];
+
 const conversationHistory = [];
 const fullConversationHistory = [];
 function addHistory(roleAdd, contentAdd) {
@@ -544,7 +551,7 @@ function getLegalActions(antiLoop = ANTI_LOOP, helpTheBot = HELP_THE_BOT) {
 }
 
 // goal = ["goalType", [x, y]]
-function getPrompt(level, goal = [null, null]) {
+function getPrompt(goal = [null, null], level = LEVEL) {
   var prompt = "";
   if (conversationHistory.length == 0 || !USE_HISTORY) {
     var prompt = `You are a delivery agent in a web-based game and I want to test your ability. You are in a grid world (represented with a matrix) with some obstacles and some parcels to deliver. Parcels are generated at random on random free spots.
@@ -629,6 +636,7 @@ Example: if you want to go down, just answer 'D'.
       return [prompt, null];
 
     case "ONLY_GOAL":
+      // TODO: if no parcel in sight and no parcel carried, move to the other part of the map
       var tmpX = me.x;
       var tmpY = me.y;
       console.log("me.x, me.y: ", me.x, me.y);
@@ -720,8 +728,44 @@ Example: if you want to go up, then right, then right again then ship the parcel
   }
 }
 
-const POSSIBLE_LOGICS = ["raw", "random", "threshold"];
-function uncertaintyLogic(response, logic) {}
+function uncertaintyLogic(response, threshold = null, logic = LOGIC) {
+  // if the logic is raw, return the response[0][0]
+  if (logic == "raw") {
+    return response[0][0];
+  }
+  const filteredResponse = response.filter((r) => r[1] == true);
+  if (filteredResponse.length == 1) {
+    return filteredResponse[0][0];
+  }
+  // if the logic is random, return a random element from the response elements having response[x][1] == true
+  if (logic == "random") {
+    if (!threshold) {
+      return filteredResponse[
+        Math.floor(Math.random() * filteredResponse.length)
+      ][0];
+    } else {
+      const filteredResponseT = filteredResponse.filter(
+        (r) => r[2] >= threshold
+      );
+      return filteredResponseT[
+        Math.floor(Math.random() * filteredResponseT.length)
+      ][0];
+    }
+  }
+  if (logic == "help") {
+    const question = `The model is uncertain about the next action. The possible actions are: ${filteredResponse}`;
+    console.log(question);
+    var answer = null;
+    while (answer == null) {
+      answer = readline.question("What is your next action? ");
+      if (!POSSIBLE_ACTIONS.includes(answer)) {
+        console.log("Error: the action is not valid.");
+        answer = null;
+      }
+    }
+    return answer;
+  }
+}
 
 var availableActions = [...POSSIBLE_ACTIONS];
 var prevAction = null;
