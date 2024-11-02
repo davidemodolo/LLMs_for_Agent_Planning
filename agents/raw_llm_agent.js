@@ -122,19 +122,23 @@ async function knowno_OpenAI(
   const LOGIT_BIAS = 20;
   const logits_bias_dict = createLogitsBiasDict(tokens_to_check);
 
+  addHistory("user", prompt);
   const completion = await openai.chat.completions.create({
     model: model,
-    messages: [
-      {
-        role: "user",
-        content: prompt,
-      },
-    ],
+    messages: USE_HISTORY
+      ? conversationHistory
+      : [
+          {
+            role: "user",
+            content: prompt,
+          },
+        ],
     max_tokens: 1,
     logprobs: true,
     top_logprobs: LOGIT_BIAS,
     logit_bias: logits_bias_dict,
   });
+  total_tokens += completion.usage.total_tokens;
 
   const top_logprobs_full =
     completion.choices[0].logprobs.content[0].top_logprobs;
@@ -187,6 +191,7 @@ async function knowno_OpenAI(
   ]);
   final.sort((a, b) => b[2] - a[2]);
   console.log("Final: ", final);
+  addHistory("assistant", final[0][0]);
   return final;
 }
 
@@ -250,6 +255,7 @@ function createLogitsBiasDict(elements) {
 
 const logits_bias_dict = createLogitsBiasDict(tokens_to_check);
 var total_tokens = 0;
+
 async function getCompletion(
   prompt,
   logits_bias_dictionary = logits_bias_dict
@@ -648,15 +654,28 @@ Example: if you want to go down, just answer 'D'.
     //TODO: implement all the "ask for help" logic
     //await knowno_OpenAI(prompt, availableActions);
     // decidedAction depends on wether there are multiple actions available or not
-    const decidedAction =
-      availableActions.length > 1 || !SELECT_ONLY_ACTION
-        ? await getCompletion(prompt, createLogitsBiasDict(availableActions))
-        : availableActions[0];
-    if (SELECT_ONLY_ACTION) {
-      // fake the conversation history
+    var decidedAction = null;
+    if (SELECT_ONLY_ACTION && availableActions.length == 1) {
+      decidedAction = availableActions[0];
       addHistory("user", prompt);
       addHistory("assistant", decidedAction);
+    } else {
+      var response = await knowno_OpenAI(prompt, availableActions);
+      // filter out only the response[x][1] == true
+      response = response.filter((r) => r[1] == true);
+      console.log("Filtered response: ", response);
+      decidedAction = response[0][0];
     }
+
+    // const decidedAction =
+    //   availableActions.length > 1 || !SELECT_ONLY_ACTION
+    //     ? await getCompletion(prompt, createLogitsBiasDict(availableActions))
+    //     : availableActions[0];
+    // if (SELECT_ONLY_ACTION) {
+    //   // fake the conversation history
+    //   addHistory("user", prompt);
+    //   addHistory("assistant", decidedAction);
+    // }
     // console.log("currentEnvironment: \n", currentEnvironment);
     console.log("Decided action: ", decidedAction);
     switch (decidedAction) {
