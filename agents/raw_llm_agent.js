@@ -469,7 +469,7 @@ const POSSIBLE_ACTIONS_DESCRIPTION = {
 };
 function buildActionsText(allowedActions) {
   return POSSIBLE_ACTIONS.filter((a) => allowedActions.includes(a))
-    .map((a) => `- ${a}: ${POSSIBLE_ACTIONS_DESCRIPTION[a]}`)
+    .map((a) => `${a}): ${POSSIBLE_ACTIONS_DESCRIPTION[a]}`)
     .join("\n");
 }
 
@@ -543,6 +543,155 @@ function getLegalActions(antiLoop = ANTI_LOOP, helpTheBot = HELP_THE_BOT) {
   return legalActions;
 }
 
+// goal = ["goalType", [x, y]]
+function getPrompt(level, goal = [null, null]) {
+  var prompt = "";
+  if (conversationHistory.length == 0 || !USE_HISTORY) {
+    var prompt = `You are a delivery agent in a web-based game and I want to test your ability. You are in a grid world (represented with a matrix) with some obstacles and some parcels to deliver. Parcels are generated at random on random free spots.
+The value of the parcels lowers as the time passes, so you should deliver them as soon as possible.
+Your view of the world is limited to a certain distance, so you can only see the parcels and the delivery points that are close to you.
+LEGEND:
+- A: you (the Agent) are in this position;
+- 1: you can move in this position;
+- 2: you can deliver a parcel in this position (and also move there);
+- ${ENEMY}: an enemy agent is blocking this position, this means you cannot move in this position now, but very soon it will move and you will be able to move in this position;
+- /: is blocked, you CAN NOT move towards this position;
+- H: a parcel with High value is in this position;
+- M: a parcel with Medium value is in this position;
+- L: a parcel with Low value is in this position, so it could disappear soon and it may be a good idea to ignore it;
+- X: you are in the same position of a parcel;
+- Q: you are in the delivery/shipping point;
+
+Important rules:
+- If you have 0 parcels, you must look for the closest parcel to pick up.
+- If you are going to deliver >0 parcels and on the way you find 1 parcel, you should go and pick it up before shipping.
+- If you have at least 1 parcel, your goal should be to deliver it/them to the closest delivery point. The more parcels you have, the more important it is to deliver them as soon as possible.
+- If you can't see any delivery point, just move around to explore the map until one enters your field of view, then go and deliver the parcels.
+- If there is no parcel in the map, just move around to explore the map until one parcel spawns, then go and get it.
+
+You want to maximize your score by delivering the most possible number of parcels. You can pickup multiple parcels and deliver them in the same delivery point.
+Don't explain the reasoning and don't add any comment, just provide the action.
+Try to not go back and forth, it's a waste of time, so use the conversation history to your advantage.
+Example: if you want to go down, just answer 'D'.
+`;
+  } // end of if chatHistory.length == 0
+
+  const currentEnvironment = buildMap();
+  // check if the currentEnvironment is the same as the previous one
+  if (currentEnvironment == previousEnvironment) {
+    availableActions = availableActions.filter((a) => a != prevAction);
+  } else {
+    availableActions = getLegalActions(); //[...POSSIBLE_ACTIONS];
+  }
+  console.log("Possible actions: ", availableActions);
+  previousEnvironment = currentEnvironment;
+  prompt += `\nMAP:\n${currentEnvironment}\n\n`;
+  prompt += `You have ${numParcels} parcels to deliver.`;
+  if (HELP_FIND_DELIVERY && numParcels > 0) {
+    const closestDeliveryPoint = getClosestDeliveryPoint();
+    const deltaX = closestDeliveryPoint[0] - me.x;
+    const deltaY = closestDeliveryPoint[1] - me.y;
+    let direction = "";
+
+    if (deltaX > 0) {
+      direction += "right";
+    } else if (deltaX < 0) {
+      direction += "left";
+    }
+
+    if (deltaY > 0) {
+      direction += direction ? " and down" : "down";
+    } else if (deltaY < 0) {
+      direction += direction ? " and up" : "up";
+    }
+
+    prompt += `The closest delivery point is ${direction} from you.`;
+  }
+
+  switch (level) {
+    case "NO_PLAN":
+      prompt += `ACTIONS you can do:\n${buildActionsText(availableActions)}\n`;
+      if (HELP_SIMULATE_NEXT_ACTIONS) {
+        const simulatedActions = simulateActions(
+          currentEnvironment,
+          availableActions
+        );
+        prompt += `\n\nSIMULATED ACTIONS:\n${Object.entries(simulatedActions)
+          .map(
+            ([action, map]) =>
+              `If you do action ${action} you will end up in this situation:\n${map
+                .map((row) => row.join(" "))
+                .join("\n")}`
+          )
+          .join("\n\n")}`;
+      }
+      prompt += `\nWhat is your next action?`;
+      return [prompt, null];
+
+    case "ONLY_GOAL":
+      // todo add the option for smaller map
+      const goals = new Map();
+      prompt += `\nYou are in the spot (${me.x}, ${me.y}) as can be seen in map above. These are the available goal you can pursue:\n`;
+      const letters = [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H",
+        "I",
+        "J",
+        "K",
+        "L",
+        "M",
+        "N",
+        "O",
+        "P",
+        "Q",
+        "R",
+        "S",
+        "T",
+        "U",
+        "V",
+        "W",
+        "X",
+        "Y",
+        "Z",
+      ];
+      var i = 0;
+      for (const parcel of parcels.values()) {
+        if (!parcel.carriedBy) {
+          goals.set(letters[i], parcel);
+          prompt += `${letters[i]}) Parcel ${parcel.id} at (${parcel.x}, ${parcel.y}) with reward ${parcel.reward};\n`;
+          i++;
+        }
+      }
+      if (numParcels > 0) {
+        goals.set(letters[i], "deliver");
+        prompt += `${letters[i]}) You have ${numParcels} parcels to deliver.`;
+      }
+      prompt += `\nWhat is your next goal? Answer only with the letter of the goal you want to pursue. Example, you want to pursue goal A, you have to answer 'A'.`;
+      return [prompt, goals];
+
+    case "FULL_PLAN":
+      prompt += `\nYou are in the spot (${me.x}, ${me.y}) as can be seen in map above.\n`;
+      prompt += `Your goal is: ${goal[0]} at (${goal[1][0]}, ${goal[1][1]}).`;
+      prompt += `\nAvailable actions:\n${buildActionsText(POSSIBLE_ACTIONS)}`;
+      prompt += `\n\nReturn the list of actions you want to do to reach the goal. Return them as JavaScript array. They must be in the right order.
+Example: if you want to go up, then right, then right again then ship the parcels, you should return ['U', 'R', 'R', 'S']`;
+      return [prompt, null];
+    default:
+      // stop and give an error
+      console.log("Error: ", level);
+      process.exit(1);
+  }
+}
+
+const POSSIBLE_LOGICS = ["raw", "random", "threshold"];
+function uncertaintyLogic(response, logic) {}
+
 var availableActions = [...POSSIBLE_ACTIONS];
 var prevAction = null;
 var previousEnvironment = null; // put this inside the loop to test without the filtering
@@ -566,91 +715,13 @@ async function agentLoop() {
       );
       break;
     }
-    const currentEnvironment = buildMap();
-    // if currentEnvironment is null, wait for the next map
-    if (!currentEnvironment) {
+    if (!buildMap()) {
       await client.timer(100);
       continue;
     }
-    // check if the currentEnvironment is the same as the previous one
-    if (currentEnvironment == previousEnvironment) {
-      availableActions = availableActions.filter((a) => a != prevAction);
-    } else {
-      availableActions = getLegalActions(); //[...POSSIBLE_ACTIONS];
-    }
-    previousEnvironment = currentEnvironment;
-    // TODO: create the prompt with a function so that the first part is only sent once
-    var prompt = `You are a delivery agent in a web-based game and I want to test your ability. You are in a grid world (represented with a matrix) with some obstacles and some parcels to deliver. Parcels are generated at random on random free spots.
-The value of the parcels lowers as the time passes, so you should deliver them as soon as possible.
-Your view of the world is limited to a certain distance, so you can only see the parcels and the delivery points that are close to you.
-MAP:
-${currentEnvironment}
-LEGEND:
-- A: you (the Agent) are in this position;
-- 1: you can move in this position;
-- 2: you can deliver a parcel in this position (and also move there);
-- ${ENEMY}: an enemy agent is blocking this position, this means you cannot move in this position now, but very soon it will move and you will be able to move in this position;
-- /: is blocked, you CAN NOT move towards this position;
-- H: a parcel with High value is in this position;
-- M: a parcel with Medium value is in this position;
-- L: a parcel with Low value is in this position, so it could disappear soon and it may be a good idea to ignore it;
-- X: you are in the same position of a parcel;
-- Q: you are in the delivery/shipping point;
-
-ACTIONS you can do:
-${buildActionsText(availableActions)}
-
-You have ${numParcels} parcels to deliver.
-Important rules:
-- If you have 0 parcels, you must look for the closest parcel to pick up.
-- If you are going to deliver >0 parcels and on the way you find 1 parcel, you should go and pick it up before shipping.
-- If you have at least 1 parcel, your goal should be to deliver it/them to the closest delivery point. The more parcels you have, the more important it is to deliver them as soon as possible.
-- If you can't see any delivery point, just move around to explore the map until one enters your field of view, then go and deliver the parcels.
-- If there is no parcel in the map, just move around to explore the map until one parcel spawns, then go and get it.
-
-You want to maximize your score by delivering the most possible number of parcels. You can pickup multiple parcels and deliver them in the same delivery point.
-Don't explain the reasoning and don't add any comment, just provide the action.
-Try to not go back and forth, it's a waste of time, so use the conversation history to your advantage.
-Example: if you want to go down, just answer 'D'.
-`;
-    if (HELP_FIND_DELIVERY && numParcels > 0) {
-      const closestDeliveryPoint = getClosestDeliveryPoint();
-      const deltaX = closestDeliveryPoint[0] - me.x;
-      const deltaY = closestDeliveryPoint[1] - me.y;
-      let direction = "";
-
-      if (deltaX > 0) {
-        direction += "right";
-      } else if (deltaX < 0) {
-        direction += "left";
-      }
-
-      if (deltaY > 0) {
-        direction += direction ? " and down" : "down";
-      } else if (deltaY < 0) {
-        direction += direction ? " and up" : "up";
-      }
-
-      prompt += `The closest delivery point is ${direction} from you.`;
-    }
-
-    console.log("Possible actions: ", availableActions);
-    if (HELP_SIMULATE_NEXT_ACTIONS) {
-      const simulatedActions = simulateActions(
-        currentEnvironment,
-        availableActions
-      );
-      prompt += `\n\nSIMULATED ACTIONS:\n${Object.entries(simulatedActions)
-        .map(
-          ([action, map]) =>
-            `If you do action ${action} you will end up in this situation:\n${map
-              .map((row) => row.join(" "))
-              .join("\n")}`
-        )
-        .join("\n\n")}`;
-    }
-    prompt += `\nWhat is your next action?`;
-    console.log(prompt);
+    const prompt = getPrompt("FULL_PLAN", ["deliver", [0, 0]]);
+    console.log(prompt[0]);
+    process.exit(0);
     //TODO: implement all the "ask for help" logic
     //await knowno_OpenAI(prompt, availableActions);
     // decidedAction depends on wether there are multiple actions available or not
