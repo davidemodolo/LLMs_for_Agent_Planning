@@ -293,7 +293,7 @@ var heightMax;
 var mapOriginal = null;
 
 client.onMap((width, height, tiles) => {
-  console.log("Map received: ", width, height, tiles);
+  //console.log("Map received: ", width, height, tiles);
   // create a matrix wxh
   heightMax = height;
   mapGame = new Array(height)
@@ -303,7 +303,7 @@ client.onMap((width, height, tiles) => {
   for (var tile of tiles) {
     const tileX = tile.x;
     const tileY = height - 1 - tile.y;
-    console.log("Tile: ", tileX, tileY, tile.delivery);
+    //console.log("Tile: ", tileX, tileY, tile.delivery);
     mapGame[tileY][tileX] = tile.delivery ? DELIVERY : WALKABLE;
     if (tile.delivery) {
       deliveryZones.add([tileY, tileX]);
@@ -384,7 +384,7 @@ client.onAgentsSensing(async (perceived_agents) => {
   }
   for (const a of perceived_agents) {
     a.x = Math.round(a.x);
-    a.y = height - 1 - Math.round(a.y);
+    a.y = heightMax - 1 - Math.round(a.y);
     enemyAgents.set(a.id, [a.y, a.x]);
     // set a block in the position of the agent
     mapGame[a.y][a.x] = ENEMY;
@@ -432,12 +432,12 @@ function buildMap() {
   }
   // create a copy of the map
   const newMap = mapOriginal.map((row) => row.slice());
-  console.log("newMap: ", newMap);
+  //console.log("newMap: ", newMap);
   // cycle through the parcels and set their parcel.reward at parcel.x, parcel.y position. If a value is higher than 9, set it to 9
   for (const parcel of parcels.values()) {
     console.log("Parcel X and Y: ", parcel.x, parcel.y);
     newMap[heightMax - 1 - parcel.y][parcel.x] = getParcelCharacter(parcel);
-    console.log("newMap: ", newMap);
+    //console.log("newMap: ", newMap);
   }
   // put an A in the position of the agent, X if there already is a parcel
   newMap[me.y][me.x] = parcelBelow
@@ -629,9 +629,24 @@ Example: if you want to go down, just answer 'D'.
       return [prompt, null];
 
     case "ONLY_GOAL":
-      // todo add the option for smaller map
+      var tmpX = me.x;
+      var tmpY = me.y;
+      console.log("me.x, me.y: ", me.x, me.y);
+      if (REDUCED_MAP) {
+        tmpX = Math.min(
+          me.x,
+          Math.max(AGENTS_OBSERVATION_DISTANCE, PARCELS_OBSERVATION_DISTANCE) -
+            1
+        );
+        tmpY = Math.min(
+          me.y,
+          Math.max(AGENTS_OBSERVATION_DISTANCE, PARCELS_OBSERVATION_DISTANCE) -
+            1
+        );
+      }
+      console.log("tmpX, tmpY: ", tmpX, tmpY);
       const goals = new Map();
-      prompt += `\nYou are in the spot (${me.x}, ${me.y}) as can be seen in map above. These are the available goal you can pursue:\n`;
+      prompt += `\nYou are in the spot (${tmpX}, ${tmpY}) as can be seen in map above. These are the available goal you can pursue:\n`;
       const letters = [
         "A",
         "B",
@@ -676,7 +691,23 @@ Example: if you want to go down, just answer 'D'.
       return [prompt, goals];
 
     case "FULL_PLAN":
-      prompt += `\nYou are in the spot (${me.x}, ${me.y}) as can be seen in map above.\n`;
+      var tmpX = me.x;
+      var tmpY = me.y;
+      console.log("me.x, me.y: ", me.x, me.y);
+      if (REDUCED_MAP) {
+        tmpX = Math.min(
+          me.x,
+          Math.max(AGENTS_OBSERVATION_DISTANCE, PARCELS_OBSERVATION_DISTANCE) -
+            1
+        );
+        tmpY = Math.min(
+          me.y,
+          Math.max(AGENTS_OBSERVATION_DISTANCE, PARCELS_OBSERVATION_DISTANCE) -
+            1
+        );
+      }
+      console.log("tmpX, tmpY: ", tmpX, tmpY);
+      prompt += `\nYou are in the spot (${tmpX}, ${tmpY}) as can be seen in map above.\n`;
       prompt += `Your goal is: ${goal[0]} at (${goal[1][0]}, ${goal[1][1]}).`;
       prompt += `\nAvailable actions:\n${buildActionsText(POSSIBLE_ACTIONS)}`;
       prompt += `\n\nReturn the list of actions you want to do to reach the goal. Return them as JavaScript array. They must be in the right order.
@@ -719,7 +750,7 @@ async function agentLoop() {
       await client.timer(100);
       continue;
     }
-    const prompt = getPrompt("FULL_PLAN", ["deliver", [0, 0]]);
+    const prompt = getPrompt("ONLY_GOAL");
     console.log(prompt[0]);
     process.exit(0);
     //TODO: implement all the "ask for help" logic
