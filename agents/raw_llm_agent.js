@@ -27,6 +27,7 @@ const REDUCED_MAP = true; // using the server configuration infos, reduce the di
 // see this help as "the robot always knows where it started and can always go back to the starting point"
 const HELP_FIND_DELIVERY = true; // set to true to add to the prompt the closest delivery point even if it is not in the field of view
 const HELP_SIMULATE_NEXT_ACTIONS = false; // set to true to add to the prompt the effect (the resulting environment) of every action
+const HELP_EXPLORE_MAP = false; //  TODO: add random direction when no parcel is in sight
 
 const results = new Map();
 results.set("ANTI_LOOP", ANTI_LOOP);
@@ -40,16 +41,16 @@ results.set("HELP_SIMULATE_NEXT_ACTIONS", HELP_SIMULATE_NEXT_ACTIONS);
 const LEVELS = ["NO_PLAN", "ONLY_GOAL", "FULL_PLAN"];
 const LEVEL = LEVELS[0];
 const POSSIBLE_LOGICS = ["raw", "random", "threshold"];
-const LOGIC = POSSIBLE_LOGICS[1];
+const LOGIC = POSSIBLE_LOGICS[0];
 
 const conversationHistory = [];
 const fullConversationHistory = [];
 function addHistory(roleAdd, contentAdd) {
   conversationHistory.push({ role: roleAdd, content: contentAdd });
   fullConversationHistory.push({ role: roleAdd, content: contentAdd });
-  if (conversationHistory.length > 5) {
-    conversationHistory.splice(0, 2);
-  }
+  // if (conversationHistory.length > 5) {
+  //   conversationHistory.splice(0, 2);
+  // }
 }
 
 function simulateActions(mapString, testActions) {
@@ -128,7 +129,7 @@ async function knowno_OpenAI(
 ) {
   const LOGIT_BIAS = 20;
   const logits_bias_dict = createLogitsBiasDict(tokens_to_check);
-
+  // if prompt == null, exit and print
   addHistory("user", prompt);
   const completion = await openai.chat.completions.create({
     model: model,
@@ -198,7 +199,6 @@ async function knowno_OpenAI(
   ]);
   final.sort((a, b) => b[2] - a[2]);
   console.log("Final: ", final);
-  addHistory("assistant", final[0][0]);
   return final;
 }
 
@@ -313,7 +313,7 @@ client.onMap((width, height, tiles) => {
     //console.log("Tile: ", tileX, tileY, tile.delivery);
     mapGame[tileY][tileX] = tile.delivery ? DELIVERY : WALKABLE;
     if (tile.delivery) {
-      deliveryZones.add([tileY, tileX]);
+      deliveryZones.add([tileX, tileY]);
     }
   }
   mapOriginal = mapGame.map((row) => row.slice());
@@ -324,11 +324,12 @@ function getClosestDeliveryPoint() {
   let closestDeliveryPoint = null;
   let minDistance = Number.MAX_VALUE;
   for (const deliveryPoint of deliveryZones) {
-    const distance =
-      Math.abs(me.x - deliveryPoint[0]) + Math.abs(me.y - deliveryPoint[1]);
-    if (distance < minDistance) {
-      minDistance = distance;
-      closestDeliveryPoint = deliveryPoint;
+    const [deliveryX, deliveryY] = deliveryPoint;
+    const manhattanDistance =
+      Math.abs(me.x - deliveryX) + Math.abs(me.y - deliveryY);
+    if (manhattanDistance < minDistance) {
+      minDistance = manhattanDistance;
+      closestDeliveryPoint = [deliveryY, deliveryX];
     }
   }
   return closestDeliveryPoint;
@@ -442,7 +443,7 @@ function buildMap() {
   //console.log("newMap: ", newMap);
   // cycle through the parcels and set their parcel.reward at parcel.x, parcel.y position. If a value is higher than 9, set it to 9
   for (const parcel of parcels.values()) {
-    console.log("Parcel X and Y: ", parcel.x, parcel.y);
+    //console.log("Parcel X and Y: ", parcel.x, parcel.y);
     newMap[heightMax - 1 - parcel.y][parcel.x] = getParcelCharacter(parcel);
     //console.log("newMap: ", newMap);
   }
@@ -495,38 +496,22 @@ function getLegalActions(antiLoop = ANTI_LOOP, helpTheBot = HELP_THE_BOT) {
       return legalActions;
     }
   }
-  if (
-    me.y > 0 &&
-    me.y - 1 < mapGame.length &&
-    mapGame[me.y - 1][me.x] != BLOCK
-  ) {
+  if (me.y - 1 >= 0 && mapGame[me.y - 1][me.x] != BLOCK) {
     if (!enemyAgentsPositions.some((a) => a[0] == me.x && a[1] == me.y - 1)) {
       legalActions.push("U");
     }
   }
-  if (
-    me.y < heightMax - 1 &&
-    me.y + 1 < mapGame.length &&
-    mapGame[me.y + 1][me.x] != BLOCK
-  ) {
+  if (me.y + 1 < mapGame.length && mapGame[me.y + 1][me.x] != BLOCK) {
     if (!enemyAgentsPositions.some((a) => a[0] == me.x && a[1] == me.y + 1)) {
       legalActions.push("D");
     }
   }
-  if (
-    me.x > 0 &&
-    me.x - 1 < mapGame[0].length &&
-    mapGame[me.y][me.x - 1] != BLOCK
-  ) {
+  if (me.x - 1 >= 0 && mapGame[me.y][me.x - 1] != BLOCK) {
     if (!enemyAgentsPositions.some((a) => a[0] == me.x - 1 && a[1] == me.y)) {
       legalActions.push("L");
     }
   }
-  if (
-    me.x < mapGame[0].length - 1 &&
-    me.x + 1 < mapGame[0].length &&
-    mapGame[me.y][me.x + 1] != BLOCK
-  ) {
+  if (me.x + 1 < mapGame[0].length && mapGame[me.y][me.x + 1] != BLOCK) {
     if (!enemyAgentsPositions.some((a) => a[0] == me.x + 1 && a[1] == me.y)) {
       legalActions.push("R");
     }
@@ -546,6 +531,32 @@ function getLegalActions(antiLoop = ANTI_LOOP, helpTheBot = HELP_THE_BOT) {
       legalActions.splice(legalActions.indexOf(oppositeAction), 1);
     }
   }
+  //if lastActions contains a circle (so U, R, D, L or U, L, D, R), get what would be the next action and remove it from the legalActions to stop the loop
+  if (antiLoop && lastActions.length >= 3) {
+    const possibleCircles = [
+      // clockwise
+      ["U", "R", "D", "L"],
+      ["R", "D", "L", "U"],
+      ["D", "L", "U", "R"],
+      ["L", "U", "R", "D"],
+      // counterclockwise
+      ["U", "L", "D", "R"],
+      ["L", "D", "R", "U"],
+      ["D", "R", "U", "L"],
+      ["R", "U", "L", "D"],
+    ];
+    // check if the last 4 actions are in the possibleCircles, if so, remove what would be the next action (so the first element of the circle) from the legalActions and interrupt the cycling
+    for (const circle of possibleCircles) {
+      const lastActionsString = lastActions.slice(-4).join("");
+      if (lastActionsString == circle.join("")) {
+        if (legalActions.includes(circle[0])) {
+          console.log("CIRCLE DETECTED: ", circle);
+          legalActions.splice(legalActions.indexOf(circle[0]), 1);
+        }
+        break;
+      }
+    }
+  }
 
   return legalActions;
 }
@@ -556,7 +567,11 @@ function getPrompt(goal = [null, null], level = LEVEL) {
   if (conversationHistory.length == 0 || !USE_HISTORY) {
     var prompt = `You are a delivery agent in a web-based game and I want to test your ability. You are in a grid world (represented with a matrix) with some obstacles and some parcels to deliver. Parcels are generated at random on random free spots.
 The value of the parcels lowers as the time passes, so you should deliver them as soon as possible.
-Your view of the world is limited to a certain distance, so you can only see the parcels and the delivery points that are close to you.
+Your view of the world is ${
+      !REDUCED_MAP
+        ? "complete"
+        : "limited to a certain distance, so you can only see the parcels and the delivery points that are close to you."
+    }.
 LEGEND:
 - A: you (the Agent) are in this position;
 - 1: you can move in this position;
@@ -570,11 +585,16 @@ LEGEND:
 - Q: you are in the delivery/shipping point;
 
 Important rules:
-- If you have 0 parcels, you must look for the closest parcel to pick up.
-- If you are going to deliver >0 parcels and on the way you find 1 parcel, you should go and pick it up before shipping.
-- If you have at least 1 parcel, your goal should be to deliver it/them to the closest delivery point. The more parcels you have, the more important it is to deliver them as soon as possible.
-- If you can't see any delivery point, just move around to explore the map until one enters your field of view, then go and deliver the parcels.
-- If there is no parcel in the map, just move around to explore the map until one parcel spawns, then go and get it.
+- If you have 0 parcels, you must look for the closest parcel to pick up;
+- If you are going to deliver >0 parcels and on the way you find 1 parcel, you should go and pick it up before shipping;
+- If you have at least 1 parcel, your goal should be to deliver it/them to the closest delivery point. The more parcels you have, the more important it is to deliver them as soon as possible;
+- If you can't see any delivery point, just move around to explore the map until one enters your field of view, then go and deliver the parcels;
+- If there is no parcel in the map, just move around to explore the map until one parcel spawns, then go and get it;
+- Any enemy just blocks the position, they will not steal any parcel or anything from you, they are just obstacles that move.
+
+DO NOT WALK IN CIRCLES! SO NO UP, LEFT, DOWN, RIGHT, UP, LEFT, DOWN, RIGHT, ... OR SIMILAR.
+
+Important: if you see a H, M or L, go towards that direction.
 
 You want to maximize your score by delivering the most possible number of parcels. You can pickup multiple parcels and deliver them in the same delivery point.
 Don't explain the reasoning and don't add any comment, just provide the action.
@@ -593,11 +613,17 @@ Example: if you want to go down, just answer 'D'.
   console.log("Possible actions: ", availableActions);
   previousEnvironment = currentEnvironment;
   prompt += `\nMAP:\n${currentEnvironment}\n\n`;
-  prompt += `You have ${numParcels} parcels to deliver.`;
+  prompt += `You have ${numParcels} parcels to deliver.\n`;
   if (HELP_FIND_DELIVERY && numParcels > 0) {
     const closestDeliveryPoint = getClosestDeliveryPoint();
-    const deltaX = closestDeliveryPoint[0] - me.x;
-    const deltaY = closestDeliveryPoint[1] - me.y;
+    console.log(
+      "Closest delivery point: ",
+      closestDeliveryPoint[1],
+      closestDeliveryPoint[0]
+    );
+    console.log("Me: ", me.x, me.y);
+    const deltaX = closestDeliveryPoint[1] - me.x;
+    const deltaY = closestDeliveryPoint[0] - me.y;
     let direction = "";
 
     if (deltaX > 0) {
@@ -614,6 +640,7 @@ Example: if you want to go down, just answer 'D'.
 
     prompt += `The closest delivery point is ${direction} from you.`;
   }
+  prompt += `\nYou have ${me.score} points.\n`;
 
   switch (level) {
     case "NO_PLAN":
@@ -781,38 +808,35 @@ async function agentLoop() {
   const start = new Date().getTime();
   // stop after 5 minutes
   // while (new Date().getTime() - start < 5 * 60 * 1000) {
-  while (new Date().getTime() - start < 1 * 60 * 1000) {
-    if (me.score > 0) {
-      console.log(
-        "Time elapsed:",
-        (new Date().getTime() - start) / 1000,
-        "seconds"
-      );
-      break;
-    }
+  while (new Date().getTime() - start < 2 * 60 * 1000) {
+    // if (me.score > 0) {
+    //   console.log(
+    //     "Time elapsed:",
+    //     (new Date().getTime() - start) / 1000,
+    //     "seconds"
+    //   );
+    //   break;
+    // }
     if (!buildMap()) {
       await client.timer(100);
       continue;
     }
-    const prompt = getPrompt("ONLY_GOAL");
+    const prompt = getPrompt();
     console.log(prompt[0]);
-    process.exit(0);
-    //TODO: implement all the "ask for help" logic
+    // process.exit(0);
     //await knowno_OpenAI(prompt, availableActions);
     // decidedAction depends on wether there are multiple actions available or not
     var decidedAction = null;
-    if (SELECT_ONLY_ACTION && availableActions.length == 1) {
+    if (SELECT_ONLY_ACTION && availableActions.length < 2) {
       decidedAction = availableActions[0];
-      addHistory("user", prompt);
-      addHistory("assistant", decidedAction);
+      addHistory("user", prompt[0]);
     } else {
-      var response = await knowno_OpenAI(prompt, availableActions);
+      var response = await knowno_OpenAI(prompt[0], availableActions);
       // filter out only the response[x][1] == true
-      response = response.filter((r) => r[1] == true);
-      console.log("Filtered response: ", response);
-      decidedAction = response[0][0];
+      response = uncertaintyLogic(response);
+      decidedAction = response;
     }
-
+    addHistory("assistant", decidedAction);
     // const decidedAction =
     //   availableActions.length > 1 || !SELECT_ONLY_ACTION
     //     ? await getCompletion(prompt, createLogitsBiasDict(availableActions))
@@ -854,6 +878,7 @@ async function agentLoop() {
         .splice(0, lastActions.length - MAX_ACTIONS)
         .forEach((action) => availableActions.push(action));
     }
+
     results.set("score", me.score);
     results.set("actions", num_actions);
     results.set("tokens", total_tokens);

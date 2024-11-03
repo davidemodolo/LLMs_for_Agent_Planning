@@ -1,8 +1,8 @@
 module.exports = {
   MAP_FILE: "bench", // options are 'default_map' (DEFAULT), 'empty_map', 'map_20', ...files in levels/maps
 
-  PARCELS_GENERATION_INTERVAL: "1s", // options are '1s', '2s' (DEFAULT), '5s', '10s'
-  PARCELS_MAX: "2", // 'infinite' (DEFAULT)
+  PARCELS_GENERATION_INTERVAL: "5s", // options are '1s', '2s' (DEFAULT), '5s', '10s'
+  PARCELS_MAX: "infinite", // 'infinite' (DEFAULT)
 
   MOVEMENT_STEPS: 1, // default is 1
   MOVEMENT_DURATION: 500, // default is 500
@@ -15,7 +15,7 @@ module.exports = {
   PARCEL_DECADING_INTERVAL: "infinite", // options are '1s', '2s', '5s', '10s', 'infinite' (DEFAULT)
 
   RANDOMLY_MOVING_AGENTS: 0, // default is 2
-  RANDOM_AGENT_SPEED: "1s", // options are '1s', '2s' (DEFAULT), '5s', '10s'
+  RANDOM_AGENT_SPEED: "2s", // options are '1s', '2s' (DEFAULT), '5s', '10s'
 
   CLOCK: 50, // default is 50 (50ms are 20frame/s)
 };

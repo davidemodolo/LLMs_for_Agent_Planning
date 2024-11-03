@@ -1,7 +1,95 @@
 [
   {
     "role": "user",
-    "content": "You are a delivery agent in a web-based game and I want to test your ability. You are in a grid world (represented with a matrix) with some obstacles and some parcels to deliver. Parcels are generated at random on random free spots.\nThe value of the parcels lowers as the time passes, so you should deliver them as soon as possible.\nYour view of the world is limited to a certain distance, so you can only see the parcels and the delivery points that are close to you.\nMAP:\n1 X\n1 1\n1 1\n2 2\nLEGEND:\n- A: you (the Agent) are in this position;\n- 1: you can move in this position;\n- 2: you can deliver a parcel in this position (and also move there);\n- E: an enemy agent is blocking this position, this means you cannot move in this position now, but very soon it will move and you will be able to move in this position;\n- /: is blocked, you CAN NOT move towards this position;\n- H: a parcel with High value is in this position;\n- M: a parcel with Medium value is in this position;\n- L: a parcel with Low value is in this position, so it could disappear soon and it may be a good idea to ignore it;\n- X: you are in the same position of a parcel;\n- Q: you are in the delivery/shipping point;\n\nACTIONS you can do:\n- T: take a parcel\n\nYou have 0 parcels to deliver.\nImportant rules:\n- If you have 0 parcels, you must look for the closest parcel to pick up.\n- If you are going to deliver >0 parcels and on the way you find 1 parcel, you should go and pick it up before shipping.\n- If you have at least 1 parcel, your goal should be to deliver it/them to the closest delivery point. The more parcels you have, the more important it is to deliver them as soon as possible.\n- If you can't see any delivery point, just move around to explore the map until one enters your field of view, then go and deliver the parcels.\n- If there is no parcel in the map, just move around to explore the map until one parcel spawns, then go and get it.\n\nYou want to maximize your score by delivering the most possible number of parcels. You can pickup multiple parcels and deliver them in the same delivery point.\nDon't explain the reasoning and don't add any comment, just provide the action.\nTry to not go back and forth, it's a waste of time, so use the conversation history to your advantage.\nExample: if you want to go down, just answer 'D'.\n\nWhat is your next action?"
+    "content": "You are a delivery agent in a web-based game and I want to test your ability. You are in a grid world (represented with a matrix) with some obstacles and some parcels to deliver. Parcels are generated at random on random free spots.\nThe value of the parcels lowers as the time passes, so you should deliver them as soon as possible.\nYour view of the world is limited to a certain distance, so you can only see the parcels and the delivery points that are close to you..\nLEGEND:\n- A: you (the Agent) are in this position;\n- 1: you can move in this position;\n- 2: you can deliver a parcel in this position (and also move there);\n- E: an enemy agent is blocking this position, this means you cannot move in this position now, but very soon it will move and you will be able to move in this position;\n- /: is blocked, you CAN NOT move towards this position;\n- H: a parcel with High value is in this position;\n- M: a parcel with Medium value is in this position;\n- L: a parcel with Low value is in this position, so it could disappear soon and it may be a good idea to ignore it;\n- X: you are in the same position of a parcel;\n- Q: you are in the delivery/shipping point;\n\nImportant rules:\n- If you have 0 parcels, you must look for the closest parcel to pick up;\n- If you are going to deliver >0 parcels and on the way you find 1 parcel, you should go and pick it up before shipping;\n- If you have at least 1 parcel, your goal should be to deliver it/them to the closest delivery point. The more parcels you have, the more important it is to deliver them as soon as possible;\n- If you can't see any delivery point, just move around to explore the map until one enters your field of view, then go and deliver the parcels;\n- If there is no parcel in the map, just move around to explore the map until one parcel spawns, then go and get it;\n- Any enemy just blocks the position, they will not steal any parcel or anything from you, they are just obstacles that move.\n\nDO NOT WALK IN CIRCLES! SO NO UP, LEFT, DOWN, RIGHT, UP, LEFT, DOWN, RIGHT, ... OR SIMILAR.\n\nImportant: if you see a H, M or L, go towards that direction.\n\nYou want to maximize your score by delivering the most possible number of parcels. You can pickup multiple parcels and deliver them in the same delivery point.\nDon't explain the reasoning and don't add any comment, just provide the action.\nTry to not go back and forth, it's a waste of time, so use the conversation history to your advantage.\nExample: if you want to go down, just answer 'D'.\n\nMAP:\n1 1 1 1 1 1\n1 2 1 1 1 2\n1 1 1 2 1 1\n/ 1 / 1 / 1\n1 A 1 1 1 1\n1 1 1 1 H 1\n1 2 1 1 1 2\n1 1 1 1 1 1\n/ 1 / 1 / 1\n\nYou have 0 parcels to deliver.\n\nYou have 0 points.\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\n\nWhat is your next action?"
+  },
+  {
+    "role": "assistant",
+    "content": "D"
+  },
+  {
+    "role": "user",
+    "content": "\nMAP:\n1 2 1 1 1 2\n1 1 1 2 1 1\n/ 1 / 1 / 1\n1 1 1 1 1 1\n1 A 1 1 H 1\n1 2 1 1 1 2\n1 1 1 1 1 1\n/ 1 / 1 / 1\n1 1 1 1 1 1\n\nYou have 0 parcels to deliver.\n\nYou have 0 points.\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\n\nWhat is your next action?"
+  },
+  {
+    "role": "assistant",
+    "content": "R"
+  },
+  {
+    "role": "user",
+    "content": "\nMAP:\n1 2 1 1 1 2 1\n1 1 1 2 1 1 1\n/ 1 / 1 / 1 /\n1 1 1 1 1 1 1\n1 1 A 1 H 1 1\n1 2 1 1 1 2 1\n1 1 1 1 1 1 1\n/ 1 / 1 / 1 /\n1 1 1 1 1 1 1\n\nYou have 0 parcels to deliver.\n\nYou have 0 points.\nACTIONS you can do:\nU): move up\nD): move down\nR): move right\n\nWhat is your next action?"
+  },
+  {
+    "role": "assistant",
+    "content": "U"
+  },
+  {
+    "role": "user",
+    "content": "\nMAP:\n1 1 1 1 1 1 1\n1 2 1 1 1 2 1\n1 1 1 2 1 1 1\n/ 1 / 1 / 1 /\n1 1 A 1 1 1 1\n1 1 1 1 H 1 1\n1 2 1 1 1 2 1\n1 1 1 1 1 1 1\n/ 1 / 1 / 1 /\n\nYou have 0 parcels to deliver.\n\nYou have 0 points.\nACTIONS you can do:\nL): move left\nR): move right\n\nWhat is your next action?"
+  },
+  {
+    "role": "assistant",
+    "content": "L"
+  },
+  {
+    "role": "user",
+    "content": "\nMAP:\n1 1 1 1 1 1\n1 2 1 1 1 2\n1 1 1 2 1 1\n/ 1 / 1 / 1\n1 A 1 1 1 1\n1 1 1 1 H 1\n1 2 1 1 1 2\n1 1 1 1 1 1\n/ 1 / 1 / 1\n\nYou have 0 parcels to deliver.\n\nYou have 0 points.\nACTIONS you can do:\nU): move up\nL): move left\n\nWhat is your next action?"
+  },
+  {
+    "role": "assistant",
+    "content": "U"
+  },
+  {
+    "role": "user",
+    "content": "\nMAP:\n1 1 1 1 1 1\nH 1 1 1 1 1\n1 2 1 1 1 2\n1 1 1 2 1 1\n/ A / 1 / 1\n1 1 1 1 1 1\n1 1 1 1 1 1\n1 2 1 1 1 2\n1 1 1 1 1 1\n\nYou have 0 parcels to deliver.\n\nYou have 0 points.\nACTIONS you can do:\nU): move up\n\nWhat is your next action?"
+  },
+  {
+    "role": "assistant",
+    "content": "U"
+  },
+  {
+    "role": "user",
+    "content": "\nMAP:\n/ 1 / 1 / 1\nH 1 1 1 1 1\nH 1 1 1 1 1\n1 2 1 1 1 2\n1 A 1 2 1 1\n/ 1 / 1 / 1\n1 1 1 1 1 1\n1 1 1 1 1 1\n1 2 1 1 1 2\n\nYou have 0 parcels to deliver.\n\nYou have 0 points.\nACTIONS you can do:\nU): move up\nL): move left\nR): move right\n\nWhat is your next action?"
+  },
+  {
+    "role": "assistant",
+    "content": "R"
+  },
+  {
+    "role": "user",
+    "content": "\nMAP:\n/ 1 / 1 / 1 /\n1 1 1 1 1 1 1\nH 1 1 1 1 1 1\n1 2 1 1 1 2 1\n1 1 A 2 1 1 1\n/ 1 / 1 / 1 /\n1 1 1 1 1 1 1\n1 1 1 1 1 1 1\n1 2 1 1 1 2 1\n\nYou have 0 parcels to deliver.\n\nYou have 0 points.\nACTIONS you can do:\nU): move up\nR): move right\n\nWhat is your next action?"
+  },
+  {
+    "role": "assistant",
+    "content": "U"
+  },
+  {
+    "role": "user",
+    "content": "\nMAP:\n1 1 1 2 1 1 1\n/ 1 / 1 / 1 /\nH 1 1 1 1 1 1\nH 1 1 1 1 1 1\n1 2 A 1 1 2 1\n1 1 1 2 1 1 1\n/ 1 / 1 / 1 /\n1 1 1 1 1 1 1\n1 1 1 1 1 1 1\n\nYou have 0 parcels to deliver.\n\nYou have 0 points.\nACTIONS you can do:\nU): move up\nL): move left\nR): move right\n\nWhat is your next action?"
+  },
+  {
+    "role": "assistant",
+    "content": "L"
+  },
+  {
+    "role": "user",
+    "content": "\nMAP:\n1 1 1 2 1 1\n/ 1 / 1 / 1\nH 1 1 1 1 1\nH 1 1 1 1 1\n1 Q 1 1 1 2\n1 1 1 2 1 1\n/ 1 / 1 / 1\n1 1 1 1 1 1\n1 1 1 1 1 1\n\nYou have 0 parcels to deliver.\n\nYou have 0 points.\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\n\nWhat is your next action?"
+  },
+  {
+    "role": "assistant",
+    "content": "U"
+  },
+  {
+    "role": "user",
+    "content": "\nMAP:\n1 2 1 1 1 2\n1 1 1 2 1 1\n/ 1 / 1 / 1\nH 1 1 1 1 1\nH A 1 1 1 1\n1 2 1 1 1 2\n1 1 1 2 1 1\n/ 1 / 1 / 1\n1 1 1 1 1 1\n\nYou have 0 parcels to deliver.\n\nYou have 0 points.\nACTIONS you can do:\nU): move up\nL): move left\nR): move right\n\nWhat is your next action?"
+  },
+  {
+    "role": "assistant",
+    "content": "L"
+  },
+  {
+    "role": "user",
+    "content": "\nMAP:\n1 2 1 1 1\n1 1 1 2 1\n/ 1 / 1 /\nH 1 1 1 1\nX 1 1 1 1\n1 2 1 1 1\n1 1 1 2 1\n/ 1 / 1 /\n1 1 1 1 1\n\nYou have 0 parcels to deliver.\n\nYou have 0 points.\nACTIONS you can do:\nT): take a parcel\n\nWhat is your next action?"
   },
   {
     "role": "assistant",
@@ -9,10 +97,402 @@
   },
   {
     "role": "user",
-    "content": "You are a delivery agent in a web-based game and I want to test your ability. You are in a grid world (represented with a matrix) with some obstacles and some parcels to deliver. Parcels are generated at random on random free spots.\nThe value of the parcels lowers as the time passes, so you should deliver them as soon as possible.\nYour view of the world is limited to a certain distance, so you can only see the parcels and the delivery points that are close to you.\nMAP:\n1 1\n1 1\n1 1\n2 Q\nLEGEND:\n- A: you (the Agent) are in this position;\n- 1: you can move in this position;\n- 2: you can deliver a parcel in this position (and also move there);\n- E: an enemy agent is blocking this position, this means you cannot move in this position now, but very soon it will move and you will be able to move in this position;\n- /: is blocked, you CAN NOT move towards this position;\n- H: a parcel with High value is in this position;\n- M: a parcel with Medium value is in this position;\n- L: a parcel with Low value is in this position, so it could disappear soon and it may be a good idea to ignore it;\n- X: you are in the same position of a parcel;\n- Q: you are in the delivery/shipping point;\n\nACTIONS you can do:\n- S: ship a parcel\n\nYou have 1 parcels to deliver.\nImportant rules:\n- If you have 0 parcels, you must look for the closest parcel to pick up.\n- If you are going to deliver >0 parcels and on the way you find 1 parcel, you should go and pick it up before shipping.\n- If you have at least 1 parcel, your goal should be to deliver it/them to the closest delivery point. The more parcels you have, the more important it is to deliver them as soon as possible.\n- If you can't see any delivery point, just move around to explore the map until one enters your field of view, then go and deliver the parcels.\n- If there is no parcel in the map, just move around to explore the map until one parcel spawns, then go and get it.\n\nYou want to maximize your score by delivering the most possible number of parcels. You can pickup multiple parcels and deliver them in the same delivery point.\nDon't explain the reasoning and don't add any comment, just provide the action.\nTry to not go back and forth, it's a waste of time, so use the conversation history to your advantage.\nExample: if you want to go down, just answer 'D'.\nThe closest delivery point is right and up from you.\nWhat is your next action?"
+    "content": "\nMAP:\n1 2 1 1 1\n1 1 1 2 1\n/ 1 / 1 /\nH 1 1 1 1\nA 1 1 1 1\n1 2 1 1 1\n1 1 1 2 1\n/ 1 / 1 /\n1 1 1 1 1\n\nYou have 1 parcels to deliver.\nThe closest delivery point is right and down from you.\nYou have 0 points.\nACTIONS you can do:\nU): move up\nD): move down\nR): move right\n\nWhat is your next action?"
+  },
+  {
+    "role": "assistant",
+    "content": "D"
+  },
+  {
+    "role": "user",
+    "content": "\nMAP:\n1 1 1 2 1\n/ 1 / 1 /\nH 1 1 1 1\n1 1 1 1 1\nA 2 1 1 1\n1 1 1 2 1\n/ 1 / 1 /\n1 1 1 1 1\n1 1 1 1 1\n\nYou have 1 parcels to deliver.\nThe closest delivery point is right from you.\nYou have 0 points.\nACTIONS you can do:\nD): move down\nR): move right\n\nWhat is your next action?"
+  },
+  {
+    "role": "assistant",
+    "content": "R"
+  },
+  {
+    "role": "user",
+    "content": "\nMAP:\n1 1 1 2 1 1\n/ 1 / 1 / 1\nH 1 1 1 1 1\n1 1 1 1 1 1\n1 Q 1 1 1 2\n1 1 1 2 1 1\n/ 1 / 1 / 1\n1 1 1 1 1 1\n1 1 1 1 1 1\n\nYou have 1 parcels to deliver.\nThe closest delivery point is  from you.\nYou have 0 points.\nACTIONS you can do:\nS): ship a parcel\n\nWhat is your next action?"
   },
   {
     "role": "assistant",
     "content": "S"
+  },
+  {
+    "role": "user",
+    "content": "\nMAP:\n1 1 1 2 1 1\n/ 1 / 1 / 1\nH 1 1 1 1 1\n1 1 1 1 1 1\n1 Q 1 1 1 2\n1 1 1 2 1 1\n/ 1 / 1 / 1\n1 1 1 1 1 1\n1 1 1 1 1 1\n\nYou have 0 parcels to deliver.\n\nYou have 10 points.\nACTIONS you can do:\nU): move up\n\nWhat is your next action?"
+  },
+  {
+    "role": "assistant",
+    "content": "U"
+  },
+  {
+    "role": "user",
+    "content": "\nMAP:\n1 2 1 1 1 2\n1 1 1 2 1 1\n/ 1 / 1 / 1\nH 1 1 1 1 1\n1 A 1 1 1 1\n1 2 1 1 1 2\n1 1 1 2 1 1\n/ 1 / 1 / 1\n1 1 1 1 1 1\n\nYou have 0 parcels to deliver.\n\nYou have 10 points.\nACTIONS you can do:\nU): move up\nL): move left\nR): move right\n\nWhat is your next action?"
+  },
+  {
+    "role": "assistant",
+    "content": "R"
+  },
+  {
+    "role": "user",
+    "content": "\nMAP:\n1 2 1 1 1 2 1\n1 1 1 2 1 1 1\n/ 1 / 1 / 1 /\nH 1 1 1 1 1 1\n1 1 A 1 1 1 1\n1 2 1 1 1 2 1\n1 1 1 2 1 1 1\n/ 1 / 1 / 1 /\n1 1 1 1 1 1 1\n\nYou have 0 parcels to deliver.\n\nYou have 10 points.\nACTIONS you can do:\nU): move up\nD): move down\nR): move right\n\nWhat is your next action?"
+  },
+  {
+    "role": "assistant",
+    "content": "U"
+  },
+  {
+    "role": "user",
+    "content": "\nMAP:\n1 1 1 1 1 1 1\n1 2 1 1 1 2 1\n1 1 1 2 1 1 1\n/ 1 / 1 / H /\nH 1 A 1 1 1 1\n1 1 1 1 1 1 1\n1 2 1 1 1 2 1\n1 1 1 2 1 1 1\n/ 1 / 1 / 1 /\n\nYou have 0 parcels to deliver.\n\nYou have 10 points.\nACTIONS you can do:\nL): move left\nR): move right\n\nWhat is your next action?"
+  },
+  {
+    "role": "assistant",
+    "content": "L"
+  },
+  {
+    "role": "user",
+    "content": "\nMAP:\n1 1 1 1 1 1\n1 2 1 1 1 2\n1 1 1 2 1 1\n/ 1 / 1 / 1\nH A 1 1 1 1\n1 1 1 1 1 1\n1 2 1 1 1 2\n1 1 1 2 1 1\n/ 1 / 1 / 1\n\nYou have 0 parcels to deliver.\n\nYou have 10 points.\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\n\nWhat is your next action?"
+  },
+  {
+    "role": "assistant",
+    "content": "U"
+  },
+  {
+    "role": "user",
+    "content": "\nMAP:\n1 1 1 1 1 1\n1 1 1 1 1 1\n1 2 1 1 1 2\n1 1 1 2 1 1\n/ A / 1 / H\nH 1 1 1 1 1\n1 1 1 1 1 1\n1 2 1 1 1 2\n1 1 1 2 1 1\n\nYou have 0 parcels to deliver.\n\nYou have 10 points.\nACTIONS you can do:\nU): move up\n\nWhat is your next action?"
+  },
+  {
+    "role": "assistant",
+    "content": "U"
+  },
+  {
+    "role": "user",
+    "content": "\nMAP:\n/ 1 / 1 / 1\n1 1 1 1 1 1\n1 1 1 1 1 1\n1 2 1 1 1 2\n1 A 1 2 1 H\n/ 1 / 1 / 1\nH 1 1 1 1 1\n1 1 1 1 1 1\n1 2 1 1 1 2\n\nYou have 0 parcels to deliver.\n\nYou have 10 points.\nACTIONS you can do:\nU): move up\nL): move left\nR): move right\n\nWhat is your next action?"
+  },
+  {
+    "role": "assistant",
+    "content": "R"
+  },
+  {
+    "role": "user",
+    "content": "\nMAP:\n/ 1 / 1 / 1 /\n1 1 1 1 1 1 1\n1 1 1 1 1 1 1\n1 2 1 1 1 2 1\n1 1 A 2 1 H 1\n/ 1 / 1 / H /\nH 1 1 1 1 1 1\n1 1 1 1 1 1 1\n1 2 1 1 1 2 1\n\nYou have 0 parcels to deliver.\n\nYou have 10 points.\nACTIONS you can do:\nU): move up\nR): move right\n\nWhat is your next action?"
+  },
+  {
+    "role": "assistant",
+    "content": "U"
+  },
+  {
+    "role": "user",
+    "content": "\nMAP:\n1 1 1 1 1 1 1\n/ 1 / 1 / 1 /\n1 1 1 1 1 1 1\n1 1 1 1 1 1 1\n1 2 A 1 1 2 H\n1 1 1 2 1 H 1\n/ 1 / 1 / 1 /\n1 1 1 1 1 1 1\n1 1 1 1 1 1 1\n\nYou have 0 parcels to deliver.\n\nYou have 10 points.\nACTIONS you can do:\nU): move up\nL): move left\nR): move right\n\nWhat is your next action?"
+  },
+  {
+    "role": "assistant",
+    "content": "R"
+  },
+  {
+    "role": "user",
+    "content": "\nMAP:\n1 1 1 1 1 1 1 1\n/ 1 / 1 / 1 / 1\n1 1 1 1 1 1 1 1\nH 1 1 1 1 1 1 1\n1 2 1 A 1 2 H 1\n1 1 1 2 1 H 1 2\n/ 1 / 1 / H / 1\n1 1 1 1 1 1 1 1\n1 1 1 1 1 1 1 1\n\nYou have 0 parcels to deliver.\n\nYou have 10 points.\nACTIONS you can do:\nU): move up\nD): move down\nR): move right\n\nWhat is your next action?"
+  },
+  {
+    "role": "assistant",
+    "content": "D"
+  },
+  {
+    "role": "user",
+    "content": "\nMAP:\n/ 1 / 1 / 1 / 1\n1 1 1 1 1 1 1 1\n1 1 1 1 1 1 1 1\n1 2 1 1 1 2 H 1\n1 1 1 Q 1 H 1 2\n/ 1 / 1 / H / 1\n1 1 1 1 1 1 1 1\n1 1 1 1 1 1 1 1\n1 2 1 1 1 2 1 1\n\nYou have 0 parcels to deliver.\n\nYou have 10 points.\nACTIONS you can do:\nD): move down\nL): move left\nR): move right\n\nWhat is your next action?"
+  },
+  {
+    "role": "assistant",
+    "content": "R"
+  },
+  {
+    "role": "user",
+    "content": "\nMAP:\n/ 1 / 1 / 1 / 1 /\n1 1 1 1 1 1 1 1 1\n1 1 1 1 1 1 1 1 1\n1 2 1 1 1 2 H 1 1\n1 1 1 2 A H 1 2 1\n/ 1 / 1 / H / 1 /\n1 1 1 1 1 1 1 1 1\n1 1 1 1 1 1 1 1 1\n1 2 1 1 1 2 1 1 1\n\nYou have 0 parcels to deliver.\n\nYou have 10 points.\nACTIONS you can do:\nU): move up\nR): move right\n\nWhat is your next action?"
+  },
+  {
+    "role": "assistant",
+    "content": "U"
+  },
+  {
+    "role": "user",
+    "content": "\nMAP:\n1 1 1 1 1 1 1 1 1\n/ 1 / 1 / 1 / 1 /\n1 1 1 1 1 1 1 1 1\n1 1 1 1 1 1 1 1 1\n1 2 1 1 A 2 H 1 1\n1 1 1 2 1 H 1 2 1\n/ 1 / 1 / H / 1 /\n1 1 1 1 1 1 1 1 1\n1 1 1 1 1 1 1 1 1\n\nYou have 0 parcels to deliver.\n\nYou have 10 points.\nACTIONS you can do:\nU): move up\nL): move left\nR): move right\n\nWhat is your next action?"
+  },
+  {
+    "role": "assistant",
+    "content": "R"
+  },
+  {
+    "role": "user",
+    "content": "\nMAP:\n1 1 1 1 1 1 1 1 1\n1 / 1 / 1 / 1 / 1\n1 1 1 1 1 1 1 1 1\n1 1 1 1 1 1 1 1 1\n2 1 1 1 Q H 1 1 2\n1 1 2 1 H 1 2 1 1\n1 / 1 / H / 1 / 1\n1 1 1 1 1 1 1 1 1\n1 1 1 1 1 1 1 1 1\n\nYou have 0 parcels to deliver.\n\nYou have 10 points.\nACTIONS you can do:\nU): move up\nD): move down\nR): move right\n\nWhat is your next action?"
+  },
+  {
+    "role": "assistant",
+    "content": "D"
+  },
+  {
+    "role": "user",
+    "content": "\nMAP:\n1 / 1 / 1 / 1 / 1\n1 1 1 1 1 1 1 1 1\n1 1 1 1 1 1 1 1 1\n2 1 1 1 2 H 1 1 2\n1 1 2 1 X 1 2 1 1\n1 / 1 / H / 1 / 1\n1 1 1 1 1 1 1 1 1\n1 1 1 1 1 H 1 1 1\n2 1 1 1 2 1 1 1 2\n\nYou have 0 parcels to deliver.\n\nYou have 10 points.\nACTIONS you can do:\nT): take a parcel\n\nWhat is your next action?"
+  },
+  {
+    "role": "assistant",
+    "content": "T"
+  },
+  {
+    "role": "user",
+    "content": "\nMAP:\n1 / 1 / 1 / 1 / 1\n1 1 1 1 1 1 1 1 1\n1 1 1 1 1 1 1 1 1\n2 1 1 1 2 H 1 1 2\n1 1 2 1 A 1 2 1 1\n1 / 1 / H / 1 / 1\n1 1 1 1 1 1 1 1 1\n1 1 1 1 1 H 1 1 1\n2 1 1 1 2 1 1 1 2\n\nYou have 1 parcels to deliver.\nThe closest delivery point is up from you.\nYou have 10 points.\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\n\nWhat is your next action?"
+  },
+  {
+    "role": "assistant",
+    "content": "U"
+  },
+  {
+    "role": "user",
+    "content": "\nMAP:\n1 1 1 1 1 1 1 1 1\n1 / 1 / 1 / 1 / 1\n1 1 1 1 1 1 1 1 1\n1 1 1 1 1 1 1 1 1\n2 1 1 1 Q H 1 1 2\n1 1 2 1 1 1 2 1 1\n1 / 1 / H / 1 / 1\n1 1 1 1 1 1 1 1 1\n1 1 1 1 1 1 1 1 1\n\nYou have 1 parcels to deliver.\nThe closest delivery point is  from you.\nYou have 10 points.\nACTIONS you can do:\nS): ship a parcel\n\nWhat is your next action?"
+  },
+  {
+    "role": "assistant",
+    "content": "S"
+  },
+  {
+    "role": "user",
+    "content": "\nMAP:\n1 1 1 1 1 1 1 1 1\n1 / 1 / 1 / 1 / 1\n1 1 1 1 1 1 1 1 1\n1 1 1 1 1 1 1 1 1\n2 1 1 1 Q H 1 1 2\n1 1 2 1 1 1 2 1 1\n1 / 1 / H / 1 / 1\n1 1 1 1 1 1 1 1 1\n1 1 1 1 1 1 1 1 1\n\nYou have 0 parcels to deliver.\n\nYou have 20 points.\nACTIONS you can do:\nR): move right\n\nWhat is your next action?"
+  },
+  {
+    "role": "assistant",
+    "content": "R"
+  },
+  {
+    "role": "user",
+    "content": "\nMAP:\n1 1 1 1 1 1 1 1 1\n/ 1 / 1 / 1 / 1 /\n1 1 1 1 1 1 H 1 1\n1 1 1 1 1 1 1 1 1\n1 1 1 2 X 1 1 2 1\n1 2 1 1 1 2 1 1 1\n/ 1 / H / 1 / 1 /\n1 1 1 1 1 1 1 1 1\n1 1 1 1 H 1 1 1 1\n\nYou have 0 parcels to deliver.\n\nYou have 20 points.\nACTIONS you can do:\nT): take a parcel\n\nWhat is your next action?"
+  },
+  {
+    "role": "assistant",
+    "content": "T"
+  },
+  {
+    "role": "user",
+    "content": "\nMAP:\n1 1 1 1 1 1 1 1 1\n/ 1 / 1 / 1 / 1 /\n1 1 1 1 1 1 H 1 1\n1 1 1 1 1 1 1 1 1\n1 1 1 2 A 1 1 2 1\n1 2 1 1 1 2 1 1 1\n/ 1 / H / 1 / 1 /\n1 1 1 1 1 1 1 1 1\n1 1 1 1 H 1 1 1 1\n\nYou have 1 parcels to deliver.\nThe closest delivery point is left from you.\nYou have 20 points.\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\n\nWhat is your next action?"
+  },
+  {
+    "role": "assistant",
+    "content": "L"
+  },
+  {
+    "role": "user",
+    "content": "\nMAP:\n1 1 1 1 1 1 1 1 1\n1 / 1 / 1 / 1 / 1\n1 1 1 1 1 1 1 1 1\n1 1 1 1 1 1 1 1 1\n2 1 1 1 Q 1 1 1 2\n1 1 2 1 1 1 2 1 1\n1 / 1 / H / 1 / 1\n1 1 1 1 1 1 1 1 1\n1 1 1 1 1 1 1 1 1\n\nYou have 1 parcels to deliver.\nThe closest delivery point is  from you.\nYou have 20 points.\nACTIONS you can do:\nS): ship a parcel\n\nWhat is your next action?"
+  },
+  {
+    "role": "assistant",
+    "content": "S"
+  },
+  {
+    "role": "user",
+    "content": "\nMAP:\n1 1 1 1 1 1 1 1 1\n1 / 1 / 1 / 1 / 1\n1 1 1 1 1 1 1 1 1\n1 1 1 1 1 1 1 1 1\n2 1 1 1 Q 1 1 1 2\n1 1 2 1 1 1 2 1 1\n1 / 1 / H / 1 / 1\n1 1 1 1 1 1 1 1 1\n1 1 1 1 1 1 1 1 1\n\nYou have 0 parcels to deliver.\n\nYou have 30 points.\nACTIONS you can do:\nR): move right\n\nWhat is your next action?"
+  },
+  {
+    "role": "assistant",
+    "content": "R"
+  },
+  {
+    "role": "user",
+    "content": "\nMAP:\n1 1 1 1 1 1 1 1 1\n/ 1 / 1 / 1 / 1 /\n1 1 1 1 1 1 H 1 1\n1 1 1 1 1 1 1 1 1\n1 1 1 2 A 1 1 2 1\n1 2 1 1 1 2 1 1 1\n/ 1 / H / 1 / 1 /\n1 1 1 1 1 1 1 1 1\n1 1 1 1 H 1 1 1 1\n\nYou have 0 parcels to deliver.\n\nYou have 30 points.\nACTIONS you can do:\nU): move up\nD): move down\nR): move right\n\nWhat is your next action?"
+  },
+  {
+    "role": "assistant",
+    "content": "U"
+  },
+  {
+    "role": "user",
+    "content": "\nMAP:\n1 1 1 2 1 1 1 2 1\n1 1 1 1 1 1 1 1 1\n/ 1 / 1 / 1 / 1 /\n1 1 1 1 1 1 H 1 1\n1 1 1 1 A 1 1 1 1\n1 1 1 2 1 1 1 2 1\n1 2 1 1 1 2 1 1 1\n/ 1 / H / 1 / 1 /\n1 1 1 1 1 1 1 1 1\n\nYou have 0 parcels to deliver.\n\nYou have 30 points.\nACTIONS you can do:\nU): move up\nL): move left\nR): move right\n\nWhat is your next action?"
+  },
+  {
+    "role": "assistant",
+    "content": "R"
+  },
+  {
+    "role": "user",
+    "content": "\nMAP:\n1 1 2 1 1 1 2 1 1\n1 1 1 1 1 1 1 1 1\n1 / 1 / 1 / 1 / 1\n1 1 1 1 1 H 1 1 1\n1 1 1 1 A 1 1 1 1\n1 1 2 1 1 1 2 1 1\n2 1 1 1 2 1 1 1 2\n1 / 1 / 1 / 1 / 1\n1 1 1 1 1 1 1 1 1\n\nYou have 0 parcels to deliver.\n\nYou have 30 points.\nACTIONS you can do:\nU): move up\nD): move down\nR): move right\n\nWhat is your next action?"
+  },
+  {
+    "role": "assistant",
+    "content": "D"
+  },
+  {
+    "role": "user",
+    "content": "\nMAP:\n1 1 1 1 1 1 1 1 1\n1 / 1 / 1 / 1 / 1\n1 1 1 1 1 H 1 1 1\n1 1 1 1 1 1 1 1 1\n1 1 2 1 A 1 2 1 1\n2 1 1 1 2 1 1 1 2\n1 / H / 1 / 1 / 1\n1 1 1 1 1 1 1 1 1\n1 1 1 1 1 1 1 1 1\n\nYou have 0 parcels to deliver.\n\nYou have 30 points.\nACTIONS you can do:\nD): move down\nL): move left\nR): move right\n\nWhat is your next action?"
+  },
+  {
+    "role": "assistant",
+    "content": "R"
+  },
+  {
+    "role": "user",
+    "content": "\nMAP:\n1 1 1 1 1 1 1 1 1\n/ 1 / 1 / 1 / 1 /\n1 1 1 1 H 1 1 1 1\n1 1 1 1 1 1 1 1 1\n1 2 1 1 A 2 1 1 1\n1 1 1 2 1 1 1 2 1\n/ 1 / 1 / 1 / 1 /\n1 1 1 1 1 1 1 1 1\n1 1 1 1 1 1 1 1 1\n\nYou have 0 parcels to deliver.\n\nYou have 30 points.\nACTIONS you can do:\nU): move up\nD): move down\nR): move right\n\nWhat is your next action?"
+  },
+  {
+    "role": "assistant",
+    "content": "D"
+  },
+  {
+    "role": "user",
+    "content": "\nMAP:\n/ 1 / 1 / 1 / 1 /\n1 1 1 1 H 1 1 1 1\n1 1 1 1 1 1 1 1 1\n1 2 1 1 1 2 1 1 1\n1 1 1 2 A 1 1 2 H\n/ H / 1 / 1 / 1 /\n1 1 1 1 1 1 1 1 1\n1 1 1 1 1 1 1 1 1\n1 2 1 1 1 2 1 1 1\n\nYou have 0 parcels to deliver.\n\nYou have 30 points.\nACTIONS you can do:\nL): move left\nR): move right\n\nWhat is your next action?"
+  },
+  {
+    "role": "assistant",
+    "content": "R"
+  },
+  {
+    "role": "user",
+    "content": "\nMAP:\n1 / 1 / 1 / 1 / 1\n1 1 1 H 1 1 1 1 1\n1 1 1 1 1 1 1 1 1\n2 1 1 1 2 1 1 1 2\n1 1 2 1 A 1 2 H 1\n1 / 1 / 1 / 1 / 1\n1 1 1 1 1 1 1 1 1\n1 1 1 1 1 1 1 1 1\n2 1 1 1 2 1 1 1 2\n\nYou have 0 parcels to deliver.\n\nYou have 30 points.\nACTIONS you can do:\nU): move up\nD): move down\nR): move right\n\nWhat is your next action?"
+  },
+  {
+    "role": "assistant",
+    "content": "U"
+  },
+  {
+    "role": "user",
+    "content": "\nMAP:\n1 1 1 1 1 1 1 1 1\n1 / 1 / 1 / 1 / 1\n1 1 1 H 1 1 1 1 1\n1 1 1 1 1 1 1 1 1\n2 1 1 1 Q 1 1 1 2\n1 1 2 1 1 1 2 H 1\n1 / 1 / 1 / 1 / 1\n1 1 1 1 1 1 1 1 1\n1 1 1 1 1 1 1 1 1\n\nYou have 0 parcels to deliver.\n\nYou have 30 points.\nACTIONS you can do:\nU): move up\nL): move left\nR): move right\n\nWhat is your next action?"
+  },
+  {
+    "role": "assistant",
+    "content": "R"
+  },
+  {
+    "role": "user",
+    "content": "\nMAP:\n1 1 1 1 1 1 1 1 1\n/ 1 / 1 / 1 / 1 /\n1 1 H 1 1 1 1 1 1\n1 1 1 1 1 1 1 1 1\n1 1 1 2 A 1 1 2 1\n1 2 1 1 1 2 H 1 1\n/ 1 / 1 / 1 / 1 /\n1 1 1 1 1 1 1 1 1\n1 1 1 1 1 1 1 1 1\n\nYou have 0 parcels to deliver.\n\nYou have 30 points.\nACTIONS you can do:\nU): move up\nD): move down\nR): move right\n\nWhat is your next action?"
+  },
+  {
+    "role": "assistant",
+    "content": "D"
+  },
+  {
+    "role": "user",
+    "content": "\nMAP:\n/ 1 / 1 / 1 / 1 /\n1 1 1 1 1 1 1 1 1\n1 1 1 1 1 1 1 1 1\n1 1 1 2 1 1 1 2 1\n1 2 1 1 A 2 H 1 1\n/ 1 / 1 / 1 / 1 /\n1 1 1 1 1 1 1 1 1\n1 1 1 1 1 1 1 1 1\n1 1 1 2 1 1 1 2 1\n\nYou have 0 parcels to deliver.\n\nYou have 30 points.\nACTIONS you can do:\nL): move left\nR): move right\n\nWhat is your next action?"
+  },
+  {
+    "role": "assistant",
+    "content": "R"
+  },
+  {
+    "role": "user",
+    "content": "\nMAP:\n1 / 1 / 1 / 1 / 1\n1 1 1 1 1 1 1 1 1\n1 1 1 1 1 1 1 1 1\n1 1 2 1 1 1 2 1 1\n2 1 1 1 Q H 1 1 2\n1 / 1 / 1 / 1 / 1\n1 1 1 1 1 1 1 1 1\n1 1 1 1 1 1 1 1 1\n1 1 2 1 1 1 2 1 1\n\nYou have 0 parcels to deliver.\n\nYou have 30 points.\nACTIONS you can do:\nU): move up\nD): move down\nR): move right\n\nWhat is your next action?"
+  },
+  {
+    "role": "assistant",
+    "content": "D"
+  },
+  {
+    "role": "user",
+    "content": "\nMAP:\n1 1 1 1 1 1 1 1 1\n1 1 1 1 1 1 1 1 1\n1 1 2 1 1 1 2 1 1\n2 1 1 1 2 H 1 1 2\n1 / 1 / A / 1 / 1\n1 1 1 1 1 1 1 1 1\n1 1 1 1 1 1 1 1 1\n1 1 2 1 1 H 2 1 1\n2 1 1 1 2 1 1 1 2\n\nYou have 0 parcels to deliver.\n\nYou have 30 points.\nACTIONS you can do:\nD): move down\n\nWhat is your next action?"
+  },
+  {
+    "role": "assistant",
+    "content": "D"
+  },
+  {
+    "role": "user",
+    "content": "\nMAP:\n1 1 1 1 1 1 1 1 1\n1 1 2 1 1 1 2 1 1\n2 1 1 1 2 H 1 1 2\n1 / 1 / 1 / 1 / 1\n1 1 1 1 A 1 1 1 1\n1 1 1 1 1 1 1 1 1\n1 1 2 1 1 H 2 1 1\n2 1 1 1 2 1 1 1 2\n1 / 1 / 1 / 1 / 1\n\nYou have 0 parcels to deliver.\n\nYou have 30 points.\nACTIONS you can do:\nD): move down\nL): move left\nR): move right\n\nWhat is your next action?"
+  },
+  {
+    "role": "assistant",
+    "content": "R"
+  },
+  {
+    "role": "user",
+    "content": "\nMAP:\n1 1 1 1 1 1 1 1 1\n1 2 1 1 1 2 1 1 1\n1 1 1 2 H H 1 2 1\n/ 1 / 1 / 1 / 1 /\n1 1 1 1 A 1 1 1 1\n1 1 1 1 1 1 1 1 1\n1 2 1 1 H 2 1 1 1\n1 1 1 2 1 1 1 2 1\n/ 1 / 1 / 1 / 1 /\n\nYou have 0 parcels to deliver.\n\nYou have 30 points.\nACTIONS you can do:\nD): move down\nR): move right\n\nWhat is your next action?"
+  },
+  {
+    "role": "assistant",
+    "content": "D"
+  },
+  {
+    "role": "user",
+    "content": "\nMAP:\n1 2 1 1 1 2 1 1 1\n1 1 1 2 H H 1 2 1\n/ 1 / 1 / 1 / 1 /\n1 1 1 1 1 1 1 1 1\n1 1 1 1 A 1 1 1 1\n1 2 1 1 H 2 1 1 1\n1 1 1 2 1 1 1 2 1\n/ 1 / 1 / 1 / 1 /\n1 1 1 1 1 1 1 1 1\n\nYou have 0 parcels to deliver.\n\nYou have 30 points.\nACTIONS you can do:\nD): move down\nL): move left\nR): move right\n\nWhat is your next action?"
+  },
+  {
+    "role": "assistant",
+    "content": "R"
+  },
+  {
+    "role": "user",
+    "content": "\nMAP:\n2 1 1 1 2 1 1 1 2\n1 1 2 H H 1 2 1 1\n1 / 1 / 1 / 1 / 1\n1 1 1 1 1 1 1 1 1\n1 1 1 1 A 1 1 1 1\n2 1 1 H 2 1 1 1 2\n1 1 2 1 1 1 2 1 1\n1 / 1 / 1 / 1 / 1\n1 1 1 1 1 1 1 1 1\n\nYou have 0 parcels to deliver.\n\nYou have 30 points.\nACTIONS you can do:\nU): move up\nD): move down\nR): move right\n\nWhat is your next action?"
+  },
+  {
+    "role": "assistant",
+    "content": "D"
+  },
+  {
+    "role": "user",
+    "content": "\nMAP:\n1 1 2 1 H 1 2 1 1\n1 / 1 / 1 / 1 / 1\n1 1 1 1 1 1 1 1 1\n1 1 1 1 1 1 1 1 1\n2 1 1 H Q 1 1 1 2\n1 1 2 1 1 1 2 1 1\n1 / 1 / 1 / 1 / 1\n1 1 1 1 1 1 1 1 1\n1 1 1 1 H 1 1 1 1\n\nYou have 0 parcels to deliver.\n\nYou have 30 points.\nACTIONS you can do:\nD): move down\nL): move left\nR): move right\n\nWhat is your next action?"
+  },
+  {
+    "role": "assistant",
+    "content": "D"
+  },
+  {
+    "role": "user",
+    "content": "\nMAP:\n1 / 1 / 1 / 1 / 1\n1 1 1 1 1 1 1 1 1\n1 1 1 1 1 1 1 1 1\n2 1 1 H 2 1 1 1 2\n1 1 2 1 A 1 2 1 1\n1 / 1 / 1 / 1 / 1\n1 1 1 1 1 1 1 1 1\n1 1 1 1 H 1 1 1 1\n2 1 1 1 2 1 1 1 2\n\nYou have 0 parcels to deliver.\n\nYou have 30 points.\nACTIONS you can do:\nD): move down\nL): move left\nR): move right\n\nWhat is your next action?"
+  },
+  {
+    "role": "assistant",
+    "content": "R"
+  },
+  {
+    "role": "user",
+    "content": "\nMAP:\n/ 1 / 1 / 1 / 1 /\n1 1 1 1 1 1 1 1 1\n1 1 1 1 1 1 1 1 1\n1 1 H 2 1 1 1 2 1\n1 2 1 1 A 2 1 1 1\n/ 1 / 1 / 1 / 1 /\n1 1 1 1 1 1 1 1 1\n1 1 1 H 1 H 1 1 1\n1 1 1 2 1 1 1 2 1\n\nYou have 0 parcels to deliver.\n\nYou have 30 points.\nACTIONS you can do:\nU): move up\nR): move right\n\nWhat is your next action?"
+  },
+  {
+    "role": "assistant",
+    "content": "U"
+  },
+  {
+    "role": "user",
+    "content": "\nMAP:\n1 2 1 1 1 2 1 1 1\n/ 1 / 1 / 1 / 1 /\n1 1 1 1 1 1 1 1 1\n1 1 1 1 1 1 1 1 1\n1 1 H 2 A 1 1 2 H\n1 2 1 1 1 2 1 1 1\n/ 1 / 1 / 1 / 1 /\n1 1 1 1 1 1 1 1 1\n1 1 1 1 1 1 1 1 1\n\nYou have 0 parcels to deliver.\n\nYou have 30 points.\nACTIONS you can do:\nU): move up\nL): move left\nR): move right\n\nWhat is your next action?"
+  },
+  {
+    "role": "assistant",
+    "content": "R"
+  },
+  {
+    "role": "user",
+    "content": "\nMAP:\n2 1 1 1 2 1 1 1 2\n1 / 1 / 1 / 1 / 1\n1 1 1 1 1 1 1 1 1\n1 1 1 1 1 1 1 1 1\n1 H 2 1 A 1 2 H H\n2 1 1 1 2 1 1 1 2\n1 / 1 / 1 / 1 / 1\n1 1 1 1 1 1 1 1 1\n1 1 1 1 H 1 1 1 1\n\nYou have 0 parcels to deliver.\n\nYou have 30 points.\nACTIONS you can do:\nU): move up\nD): move down\nR): move right\n\nWhat is your next action?"
+  },
+  {
+    "role": "assistant",
+    "content": "D"
+  },
+  {
+    "role": "user",
+    "content": "\nMAP:\n1 / 1 / 1 / 1 / 1\n1 1 1 1 1 1 1 1 1\n1 1 1 1 1 1 1 1 1\n1 H 2 1 1 1 2 H 1\n2 1 1 1 Q 1 1 1 2\n1 / 1 / 1 / 1 / 1\n1 1 1 1 1 1 1 1 1\n1 1 1 1 H 1 1 1 1\n1 1 2 1 1 1 2 1 1\n\nYou have 0 parcels to deliver.\n\nYou have 30 points.\nACTIONS you can do:\nD): move down\nL): move left\nR): move right\n\nWhat is your next action?"
+  },
+  {
+    "role": "assistant",
+    "content": "D"
+  },
+  {
+    "role": "user",
+    "content": "\nMAP:\n1 1 1 1 1 1 1 1 1\n1 1 1 1 1 1 1 1 1\n1 1 2 1 1 1 2 1 1\n2 1 1 1 2 1 1 1 2\n1 / 1 / A / 1 / 1\n1 1 1 1 1 1 1 1 1\n1 1 H 1 H 1 1 1 1\n1 1 2 1 1 1 2 1 1\n1 1 1 1 1 1 1 1 1\n\nYou have 0 parcels to deliver.\n\nYou have 30 points.\nACTIONS you can do:\nD): move down\n\nWhat is your next action?"
+  },
+  {
+    "role": "assistant",
+    "content": "D"
+  },
+  {
+    "role": "user",
+    "content": "\nMAP:\n1 1 1 1 1 1 1 1 1\n1 1 2 1 1 1 2 1 1\n2 1 1 1 2 1 1 1 2\n1 / 1 / 1 / 1 / 1\n1 1 1 1 A 1 1 1 H\n1 1 H 1 H 1 1 1 1\n1 1 2 1 1 1 2 1 1\n1 1 1 1 1 1 1 1 1\n1 / 1 / 1 / 1 / 1\n\nYou have 0 parcels to deliver.\n\nYou have 30 points.\nACTIONS you can do:\nD): move down\nL): move left\nR): move right\n\nWhat is your next action?"
+  },
+  {
+    "role": "assistant",
+    "content": "R"
+  },
+  {
+    "role": "user",
+    "content": "\nMAP:\n1 1 1 1 1 1 1 1\n1 2 1 1 1 2 1 1\n1 1 1 2 1 1 1 2\n/ 1 / 1 / 1 / 1\n1 1 1 1 A 1 1 H\n1 H 1 H 1 1 1 1\n1 2 1 1 1 2 1 1\n1 1 1 1 1 1 1 1\n/ 1 / 1 / 1 / 1\n\nYou have 0 parcels to deliver.\n\nYou have 30 points.\nACTIONS you can do:\nD): move down\nR): move right\n\nWhat is your next action?"
+  },
+  {
+    "role": "assistant",
+    "content": "D"
   }
 ]
