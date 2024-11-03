@@ -457,9 +457,14 @@ function buildMap() {
       }
     }
   });
-  return REDUCED_MAP
+  const returnMap = REDUCED_MAP
     ? reduceMap(newMap)
     : newMap.map((row) => row.join(" ")).join("\n");
+  // if there is a space before the agent, remove it
+
+  // var replaced = returnMap.replace(" (", "(");
+  // replaced = replaced.replace(") ", ")");
+  return returnMap;
 }
 
 const POSSIBLE_ACTIONS = ["U", "D", "L", "R", "T", "S"];
@@ -573,7 +578,7 @@ LEGEND:
 - 1: you can move in this position;
 - 2: you can deliver a parcel in this position (and also move there);
 - ${ENEMY}: an enemy agent is blocking this position, this means you cannot move in this position now, but very soon it will move and you will be able to move in this position;
-- /: is blocked, you CAN NOT move towards this position;
+- /: is blocked, you CAN NOT move in this cell;
 - H: a parcel with High value is in this position;
 - M: a parcel with Medium value is in this position;
 - L: a parcel with Low value is in this position, so it could disappear soon and it may be a good idea to ignore it;
@@ -677,7 +682,7 @@ Example: if you want to go down, just answer 'D'.\n`;
       }
       console.log("tmpX, tmpY: ", tmpX, tmpY);
       const goals = new Map();
-      prompt += `\nYou are in the spot (${tmpX}, ${tmpY}) as can be seen in map above. These are the available goal you can pursue:\n`;
+      prompt += `\nYou are in the spot (row, column) (${tmpY}, ${tmpX}) as can be seen in map above. These are the available goal you can pursue:\n`;
       const letters = [
         "A",
         "B",
@@ -717,7 +722,7 @@ Example: if you want to go down, just answer 'D'.\n`;
             totalParcelX = parcel.x - (me.x - tmpX);
             totalParcelY = heightMax - 1 - parcel.y - (me.y - tmpY);
           }
-          goals.set(letters[i], [totalParcelY, totalParcelX]);
+          goals.set(letters[i], [totalParcelX, totalParcelY]);
           prompt += `${letters[i]}) Parcel ${parcel.id} at (${totalParcelY}, ${totalParcelX}) with reward ${parcel.reward};\n`;
           i++;
         }
@@ -746,11 +751,12 @@ Example: if you want to go down, just answer 'D'.\n`;
         );
       }
       console.log("tmpX, tmpY: ", tmpX, tmpY);
-      prompt += `\nYou are in the spot (${tmpX}, ${tmpY}) as can be seen in map above.\n`;
-      prompt += `Your goal is: ${goal[0]} at (${goal[1][0]}, ${goal[1][1]}).`;
+      prompt += `\nYou are in the spot (${tmpY}, ${tmpX}) as can be seen in map above.\n`;
+      prompt += `Your goal is: ${goal[0]} at (${goal[1][1]}, ${goal[1][0]}).`;
       prompt += `\nAvailable actions:\n${buildActionsText(POSSIBLE_ACTIONS)}`;
       prompt += `\n\nReturn the list of actions you want to do to reach the goal. Return them as JavaScript array. They must be in the right order.
 Example: if you want to go up, then right, then right again then ship the parcels, you should return ['U', 'R', 'R', 'S']. Remember to avoid the blocks by walking around them.
+One step moves the agent by one position in the grid.
 Don't write anything more, just the array of actions.`;
       return [prompt, null];
     default:
