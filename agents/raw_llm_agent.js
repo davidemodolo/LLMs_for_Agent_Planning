@@ -123,6 +123,7 @@ function simulateActions(mapString, testActions) {
 async function knowno_OpenAI(
   prompt,
   tokens_to_check,
+  max_tokens = 1,
   qhat = 0.928,
   temp = 3.0,
   model = MODEL
@@ -141,7 +142,7 @@ async function knowno_OpenAI(
             content: prompt,
           },
         ],
-    max_tokens: 1,
+    max_tokens: max_tokens,
     logprobs: true,
     top_logprobs: LOGIT_BIAS,
     logit_bias: logits_bias_dict,
@@ -165,6 +166,7 @@ async function knowno_OpenAI(
   console.log("Top logprobs: ", top_logprobs);
 
   const results_dict = {};
+  console.log("Tokens to check: ", tokens_to_check);
   top_tokens.forEach((token, i) => {
     const character = token.trim().toUpperCase();
     if (tokens_to_check.includes(character) && !results_dict[character]) {
@@ -263,20 +265,14 @@ function createLogitsBiasDict(elements) {
 const logits_bias_dict = createLogitsBiasDict(tokens_to_check);
 var total_tokens = 0;
 
-async function getCompletion(
-  prompt,
-  logits_bias_dictionary = logits_bias_dict
-) {
+async function getCompletion(prompt, max_tokens = 1024) {
   addHistory("user", prompt);
   const completion = await openai.chat.completions.create({
     model: MODEL,
     messages: USE_HISTORY
       ? conversationHistory
       : [{ role: "user", content: prompt }],
-    max_tokens: 1,
-    logprobs: true,
-    top_logprobs: 20,
-    logit_bias: logits_bias_dictionary,
+    max_tokens: max_tokens,
   });
   addHistory("assistant", completion.choices[0].message.content);
   total_tokens += completion.usage.total_tokens;
@@ -581,7 +577,7 @@ LEGEND:
 - H: a parcel with High value is in this position;
 - M: a parcel with Medium value is in this position;
 - L: a parcel with Low value is in this position, so it could disappear soon and it may be a good idea to ignore it;
-- X: you are in the same position of a parcel;
+- X: you are in the same position of a parcel, you can PICKUP a parcel only if there is an X on the map because it means that the parcel is below you;
 - Q: you are in the delivery/shipping point;
 
 Important rules:
@@ -596,11 +592,7 @@ DO NOT WALK IN CIRCLES! SO NO UP, LEFT, DOWN, RIGHT, UP, LEFT, DOWN, RIGHT, ... 
 
 Important: if you see a H, M or L, go towards that direction.
 
-You want to maximize your score by delivering the most possible number of parcels. You can pickup multiple parcels and deliver them in the same delivery point.
-Don't explain the reasoning and don't add any comment, just provide the action.
-Try to not go back and forth, it's a waste of time, so use the conversation history to your advantage.
-Example: if you want to go down, just answer 'D'.
-`;
+You want to maximize your score by delivering the most possible number of parcels. You can pickup multiple parcels and deliver them in the same delivery point.`;
   } // end of if chatHistory.length == 0
 
   const currentEnvironment = buildMap();
@@ -644,6 +636,9 @@ Example: if you want to go down, just answer 'D'.
 
   switch (level) {
     case "NO_PLAN":
+      prompt += `Don't explain the reasoning and don't add any comment, just provide the action.
+Try to not go back and forth, it's a waste of time, so use the conversation history to your advantage.
+Example: if you want to go down, just answer 'D'.\n`;
       prompt += `ACTIONS you can do:\n${buildActionsText(availableActions)}\n`;
       if (HELP_SIMULATE_NEXT_ACTIONS) {
         const simulatedActions = simulateActions(
@@ -668,6 +663,7 @@ Example: if you want to go down, just answer 'D'.
       var tmpY = me.y;
       console.log("me.x, me.y: ", me.x, me.y);
       if (REDUCED_MAP) {
+        // this works because the reduced map is centered on the agent
         tmpX = Math.min(
           me.x,
           Math.max(AGENTS_OBSERVATION_DISTANCE, PARCELS_OBSERVATION_DISTANCE) -
@@ -713,8 +709,50 @@ Example: if you want to go down, just answer 'D'.
       var i = 0;
       for (const parcel of parcels.values()) {
         if (!parcel.carriedBy) {
-          goals.set(letters[i], parcel);
-          prompt += `${letters[i]}) Parcel ${parcel.id} at (${parcel.x}, ${parcel.y}) with reward ${parcel.reward};\n`;
+          var parcelX = parcel.x;
+          var parcelY = parcel.y;
+          if (REDUCED_MAP) {
+            // find the position of the parcel in the reduced map
+            // TODO: FIX THIS
+            const deltaWRTAgentX = parcel.x - me.x;
+            const deltaWRTAgentY = parcel.y - me.y;
+            parcelX = Math.min(
+              Math.max(
+                0,
+                Math.max(
+                  AGENTS_OBSERVATION_DISTANCE,
+                  PARCELS_OBSERVATION_DISTANCE
+                ) -
+                  1 +
+                  deltaWRTAgentX
+              ),
+              Math.max(
+                AGENTS_OBSERVATION_DISTANCE,
+                PARCELS_OBSERVATION_DISTANCE
+              ) *
+                2 -
+                1
+            );
+            parcelY = Math.min(
+              Math.max(
+                0,
+                Math.max(
+                  AGENTS_OBSERVATION_DISTANCE,
+                  PARCELS_OBSERVATION_DISTANCE
+                ) -
+                  1 +
+                  deltaWRTAgentY
+              ),
+              Math.max(
+                AGENTS_OBSERVATION_DISTANCE,
+                PARCELS_OBSERVATION_DISTANCE
+              ) *
+                2 -
+                1
+            );
+          }
+          goals.set(letters[i], [parcelX, parcelY]);
+          prompt += `${letters[i]}) Parcel ${parcel.id} at (${parcelX}, ${parcelY}) with reward ${parcel.reward};\n`;
           i++;
         }
       }
@@ -746,7 +784,8 @@ Example: if you want to go down, just answer 'D'.
       prompt += `Your goal is: ${goal[0]} at (${goal[1][0]}, ${goal[1][1]}).`;
       prompt += `\nAvailable actions:\n${buildActionsText(POSSIBLE_ACTIONS)}`;
       prompt += `\n\nReturn the list of actions you want to do to reach the goal. Return them as JavaScript array. They must be in the right order.
-Example: if you want to go up, then right, then right again then ship the parcels, you should return ['U', 'R', 'R', 'S']`;
+Example: if you want to go up, then right, then right again then ship the parcels, you should return ['U', 'R', 'R', 'S']. Remember to avoid the blocks by walking around them.
+Don't write anything more, just the array of actions.`;
       return [prompt, null];
     default:
       // stop and give an error
@@ -821,11 +860,82 @@ async function agentLoop() {
       await client.timer(100);
       continue;
     }
+
+    if (true) {
+      const [promptGoal, goals] = getPrompt([null, null], "ONLY_GOAL");
+      console.log(promptGoal);
+      console.log("Goals: ", Array.from(goals.keys()));
+
+      var response = await knowno_OpenAI(promptGoal, Array.from(goals.keys()));
+      response = uncertaintyLogic(response);
+      console.log("Goal: ", response);
+
+      var parameterGoal = null;
+      if (goals[response] == "deliver") {
+        parameterGoal = ["deliver", null];
+      } else {
+        console.log("goals", goals);
+        console.log("Goals[reponse]:", goals.get(response));
+        parameterGoal = [
+          "pick_up",
+          [goals.get(response)[0], goals.get(response)[1]],
+        ];
+      }
+      const [promptPlan, _] = getPrompt(parameterGoal, "FULL_PLAN");
+      console.log(promptPlan);
+
+      var response = await getCompletion(promptPlan);
+      console.log("Response: ", response);
+      // Remove the starting ```javascript
+      response = response.replace("```javascript", "");
+      // Remove the ending ```
+      response = response.replace("```", "");
+      // TODO: make this better with a regex
+      const actionsRaw = eval(response);
+      console.log("ActionsRaw: ", actionsRaw);
+      process.exit();
+      // convert the string to an array
+      const actions = JSON.parse(actionsRaw[0]);
+      console.log("Actions: ", actions);
+      for (const action of actions) {
+        addHistory("user", action);
+        console.log("Action: ", action);
+        switch (action) {
+          case "U":
+            await client.move("up");
+            break;
+          case "D":
+            await client.move("down");
+            break;
+          case "L":
+            await client.move("left");
+            break;
+          case "R":
+            await client.move("right");
+            break;
+          case "T":
+            await client.pickup();
+            break;
+          case "S":
+            await client.putdown();
+            break;
+          default:
+            console.log("Error in action:", action);
+        }
+        num_actions++;
+        prevAction = action;
+        lastActions.push(action);
+        if (lastActions.length > MAX_ACTIONS) {
+          lastActions
+            .splice(0, lastActions.length - MAX_ACTIONS)
+            .forEach((action) => availableActions.push(action));
+        }
+        await client.timer(ACTION_DELAY);
+      }
+      process.exit();
+    }
     const prompt = getPrompt();
     console.log(prompt[0]);
-    // process.exit(0);
-    //await knowno_OpenAI(prompt, availableActions);
-    // decidedAction depends on wether there are multiple actions available or not
     var decidedAction = null;
     if (SELECT_ONLY_ACTION && availableActions.length < 2) {
       decidedAction = availableActions[0];
