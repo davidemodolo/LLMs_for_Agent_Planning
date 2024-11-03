@@ -709,50 +709,16 @@ Example: if you want to go down, just answer 'D'.\n`;
       var i = 0;
       for (const parcel of parcels.values()) {
         if (!parcel.carriedBy) {
-          var parcelX = parcel.x;
-          var parcelY = parcel.y;
+          // TODO: TEST, INVERT Y AND X
+          var totalParcelX = parcel.x;
+          var totalParcelY = heightMax - 1 - parcel.y;
           if (REDUCED_MAP) {
-            // find the position of the parcel in the reduced map
-            // TODO: FIX THIS
-            const deltaWRTAgentX = parcel.x - me.x;
-            const deltaWRTAgentY = parcel.y - me.y;
-            parcelX = Math.min(
-              Math.max(
-                0,
-                Math.max(
-                  AGENTS_OBSERVATION_DISTANCE,
-                  PARCELS_OBSERVATION_DISTANCE
-                ) -
-                  1 +
-                  deltaWRTAgentX
-              ),
-              Math.max(
-                AGENTS_OBSERVATION_DISTANCE,
-                PARCELS_OBSERVATION_DISTANCE
-              ) *
-                2 -
-                1
-            );
-            parcelY = Math.min(
-              Math.max(
-                0,
-                Math.max(
-                  AGENTS_OBSERVATION_DISTANCE,
-                  PARCELS_OBSERVATION_DISTANCE
-                ) -
-                  1 +
-                  deltaWRTAgentY
-              ),
-              Math.max(
-                AGENTS_OBSERVATION_DISTANCE,
-                PARCELS_OBSERVATION_DISTANCE
-              ) *
-                2 -
-                1
-            );
+            // change totalParcelX and totalParcelY to the right coordinates in the reduced map
+            totalParcelX = parcel.x - (me.x - tmpX);
+            totalParcelY = heightMax - 1 - parcel.y - (me.y - tmpY);
           }
-          goals.set(letters[i], [parcelX, parcelY]);
-          prompt += `${letters[i]}) Parcel ${parcel.id} at (${parcelX}, ${parcelY}) with reward ${parcel.reward};\n`;
+          goals.set(letters[i], [totalParcelY, totalParcelX]);
+          prompt += `${letters[i]}) Parcel ${parcel.id} at (${totalParcelY}, ${totalParcelX}) with reward ${parcel.reward};\n`;
           i++;
         }
       }
@@ -893,11 +859,7 @@ async function agentLoop() {
       // TODO: make this better with a regex
       const actionsRaw = eval(response);
       console.log("ActionsRaw: ", actionsRaw);
-      process.exit();
-      // convert the string to an array
-      const actions = JSON.parse(actionsRaw[0]);
-      console.log("Actions: ", actions);
-      for (const action of actions) {
+      for (const action of actionsRaw) {
         addHistory("user", action);
         console.log("Action: ", action);
         switch (action) {
