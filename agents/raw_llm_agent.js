@@ -731,7 +731,7 @@ Example: if you want to go down, just answer 'D'.\n`;
         goals.set(letters[i], "deliver");
         prompt += `${letters[i]}) You have ${numParcels} parcels to deliver.`;
       }
-      prompt += `\nWhat is your next goal? Answer only with the letter of the goal you want to pursue. Example, you want to pursue goal A, you have to answer 'A'.`;
+      prompt += `\nYou should pursue either to go to the closest parcel or deliver if you have at least one parcel. Answer only with the letter of the goal you want to pursue. Example, you want to pursue goal A, you have to answer 'A'.\nWhat is your next goal?`;
       return [prompt, goals];
 
     case "FULL_PLAN":
@@ -833,7 +833,7 @@ async function agentLoop() {
       continue;
     }
 
-    if (true) {
+    if (false) {
       const [promptGoal, goals] = getPrompt([null, null], "ONLY_GOAL");
       console.log(promptGoal);
       console.log("Goals: ", Array.from(goals.keys()));

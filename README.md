@@ -1,3 +1,13 @@
+# MASTER THESIS PROJECT - LLM uncertainty with log-probability as Agent in Deliveroo.js
+
+## Deliveroo.js code
+
+[Deliveroo Agent](https://github.com/unitn-ASA/DeliverooAgent.js)
+
+[Deliveroo Server](https://github.com/unitn-ASA/Deliveroo.js)
+
+## TODO README, now just a list of notes
+
 Started with raw input and raw output with llama 3.2 and Mistral.
 
 1. The idea is to give the raw output as seen in the prompt [prompt] and parse the raw
@@ -11,8 +21,6 @@ Started with raw input and raw output with llama 3.2 and Mistral.
      prompt without that action.
 
 Selecting only the top choice is called “greedy sampling” and actually doesn’t produce language that seems as human, despite being more reliable.
-
-https://github.com/unitn-ASA/DeliverooAgent.js
 
 DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead. -> IGNORED
 

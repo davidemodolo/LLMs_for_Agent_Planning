@@ -6,8 +6,8 @@
   "REDUCED_MAP": true,
   "HELP_FIND_DELIVERY": true,
   "HELP_SIMULATE_NEXT_ACTIONS": false,
-  "score": 30,
-  "actions": 62,
-  "tokens": 301655,
-  "elapsed_time_seconds": 120.547
+  "score": 0,
+  "actions": 1,
+  "tokens": 804,
+  "elapsed_time_seconds": 1.75
 }
