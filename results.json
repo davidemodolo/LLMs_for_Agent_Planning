@@ -7,7 +7,7 @@
   "HELP_FIND_DELIVERY": true,
   "HELP_SIMULATE_NEXT_ACTIONS": false,
   "score": 0,
-  "actions": 1,
-  "tokens": 804,
-  "elapsed_time_seconds": 1.75
+  "actions": 0,
+  "tokens": 102308,
+  "elapsed_time_seconds": 22.204
 }

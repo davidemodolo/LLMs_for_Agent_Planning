@@ -5,6 +5,7 @@ import fs from "fs";
 import tiktoken from "tiktoken";
 import { exit } from "process";
 import { log } from "console";
+import { get } from "http";
 const apiKey = fs.readFileSync("key.txt", "utf8").trim();
 const openai = new OpenAI({
   apiKey: apiKey,
@@ -148,6 +149,7 @@ async function knowno_OpenAI(
     logit_bias: logits_bias_dict,
   });
   total_tokens += completion.usage.total_tokens;
+  fs.writeFileSync("completion.json", JSON.stringify(completion, null, 2));
 
   const top_logprobs_full =
     completion.choices[0].logprobs.content[0].top_logprobs;
@@ -295,9 +297,12 @@ var mapGame;
 var heightMax;
 var mapOriginal = null;
 
+var rawOnMap = null;
+
 client.onMap((width, height, tiles) => {
   //console.log("Map received: ", width, height, tiles);
   // create a matrix wxh
+  rawOnMap = { width, height, tiles };
   heightMax = height;
   mapGame = new Array(height)
     .fill(BLOCK)
@@ -344,8 +349,10 @@ client.onConfig((conf) => {
 setTimeout(() => {}, 1000);
 
 const me = {};
+var rawOnYou = null;
 
 client.onYou(({ id, name, x, y, score }) => {
+  rawOnYou = { id, name, x, y, score };
   me.id = id;
   me.name = name;
   me.x = Math.round(x);
@@ -358,7 +365,9 @@ var parcelBelow = false;
 
 // add the parcel sensing method to remember the list of parcels
 const parcels = new Map();
+var rawOnParcelsSensing = null;
 client.onParcelsSensing(async (perceived_parcels) => {
+  rawOnParcelsSensing = perceived_parcels;
   numParcels = 0;
   parcelBelow = false;
   // reset parcels
@@ -381,7 +390,9 @@ client.onParcelsSensing(async (perceived_parcels) => {
 });
 
 const enemyAgents = new Map();
+var rawOnAgentsSensing = null;
 client.onAgentsSensing(async (perceived_agents) => {
+  rawOnAgentsSensing = perceived_agents;
   // reset all the enemy agents coordinates as the original values
   for (const a of enemyAgents.values()) {
     mapGame[a[0]][a[1]] = mapOriginal[a[0]][a[1]];
@@ -560,6 +571,54 @@ function getLegalActions(antiLoop = ANTI_LOOP, helpTheBot = HELP_THE_BOT) {
   }
 
   return legalActions;
+}
+
+function getRawPrompt() {
+  var prompt = `You are a delivery agent in a web-based game I am going to give you the raw information I receive from the server and the possible actions.`;
+  // work on the coordinates of the tiles
+  for (let tile of rawOnMap.tiles) {
+    tile.y = heightMax - 1 - tile.y;
+    const tmp = tile.x;
+    tile.x = tile.y;
+    tile.y = tmp;
+  }
+  // raw onMap
+  prompt += `\nRaw 'onMap' response: ${JSON.stringify(rawOnMap)}\n`;
+
+  // work on the coordinates of the agent
+  rawOnYou.y = heightMax - 1 - rawOnYou.y;
+  const tmp = rawOnYou.x;
+  rawOnYou.x = rawOnYou.y;
+  rawOnYou.y = tmp;
+  // raw onYou
+  prompt += `\nRaw 'onYou' response: ${JSON.stringify(rawOnYou)}\n`;
+
+  // work on the coordinates of the parcels
+  for (let parcel of rawOnParcelsSensing) {
+    parcel.y = heightMax - 1 - parcel.y;
+    const tmp = parcel.x;
+    parcel.x = parcel.y;
+    parcel.y = tmp;
+  }
+  // raw onParcelsSensing
+  prompt += `\nRaw 'onParcelsSensing' response: ${JSON.stringify(
+    rawOnParcelsSensing
+  )}\n`;
+
+  // work on the coordinates of the agents
+  for (let agent of rawOnAgentsSensing) {
+    agent.y = heightMax - 1 - agent.y;
+    const tmp = agent.x;
+    agent.x = agent.y;
+    agent.y = tmp;
+  }
+  // raw onAgentsSensing
+  prompt += `\nRaw 'onAgentsSensing' response: ${JSON.stringify(
+    rawOnAgentsSensing
+  )}\n`;
+  prompt += `ACTIONS you can do:\n${buildActionsText(POSSIBLE_ACTIONS)}\n`;
+  prompt += `Don't explain the reasoning and don't add any comment, just provide the action. What is your next action?`;
+  return prompt;
 }
 
 // goal = ["goalType", [x, y]]
@@ -813,13 +872,14 @@ var previousEnvironment = null; // put this inside the loop to test without the 
 const lastActions = [];
 const MAX_ACTIONS = 10;
 
+//TODO: keep track of the uncertainty
 async function agentLoop() {
   var num_actions = 0;
   // get current time
   const start = new Date().getTime();
   // stop after 5 minutes
   // while (new Date().getTime() - start < 5 * 60 * 1000) {
-  while (new Date().getTime() - start < 2 * 60 * 1000) {
+  while (new Date().getTime() - start < 2 * 15 * 1000) {
     // if (me.score > 0) {
     //   console.log(
     //     "Time elapsed:",
@@ -832,7 +892,34 @@ async function agentLoop() {
       await client.timer(100);
       continue;
     }
-
+    getRawPrompt();
+    var response = await knowno_OpenAI(getRawPrompt(), POSSIBLE_ACTIONS);
+    response = uncertaintyLogic(response);
+    console.log("Action: ", response);
+    switch (response) {
+      case "U":
+        await client.move("up");
+        break;
+      case "D":
+        await client.move("down");
+        break;
+      case "L":
+        await client.move("left");
+        break;
+      case "R":
+        await client.move("right");
+        break;
+      case "T":
+        await client.pickup();
+        break;
+      case "S":
+        await client.putdown();
+        break;
+      default:
+        console.log("Error in action:", action);
+    }
+    // set to false since I'm just testing
+    // here we have the full logic
     if (false) {
       const [promptGoal, goals] = getPrompt([null, null], "ONLY_GOAL");
       console.log(promptGoal);
@@ -866,7 +953,7 @@ async function agentLoop() {
       const actionsRaw = eval(response);
       console.log("ActionsRaw: ", actionsRaw);
       for (const action of actionsRaw) {
-        addHistory("user", action);
+        addHistory("assistant", action);
         console.log("Action: ", action);
         switch (action) {
           case "U":
@@ -902,61 +989,6 @@ async function agentLoop() {
       }
       process.exit();
     }
-    const prompt = getPrompt();
-    console.log(prompt[0]);
-    var decidedAction = null;
-    if (SELECT_ONLY_ACTION && availableActions.length < 2) {
-      decidedAction = availableActions[0];
-      addHistory("user", prompt[0]);
-    } else {
-      var response = await knowno_OpenAI(prompt[0], availableActions);
-      // filter out only the response[x][1] == true
-      response = uncertaintyLogic(response);
-      decidedAction = response;
-    }
-    addHistory("assistant", decidedAction);
-    // const decidedAction =
-    //   availableActions.length > 1 || !SELECT_ONLY_ACTION
-    //     ? await getCompletion(prompt, createLogitsBiasDict(availableActions))
-    //     : availableActions[0];
-    // if (SELECT_ONLY_ACTION) {
-    //   // fake the conversation history
-    //   addHistory("user", prompt);
-    //   addHistory("assistant", decidedAction);
-    // }
-    // console.log("currentEnvironment: \n", currentEnvironment);
-    console.log("Decided action: ", decidedAction);
-    switch (decidedAction) {
-      case "U":
-        await client.move("up");
-        break;
-      case "D":
-        await client.move("down");
-        break;
-      case "L":
-        await client.move("left");
-        break;
-      case "R":
-        await client.move("right");
-        break;
-      case "T":
-        await client.pickup();
-        break;
-      case "S":
-        await client.putdown();
-        break;
-      default:
-        console.log("Error in action:", decidedAction);
-    }
-    num_actions++;
-    prevAction = decidedAction;
-    lastActions.push(decidedAction);
-    if (lastActions.length > MAX_ACTIONS) {
-      lastActions
-        .splice(0, lastActions.length - MAX_ACTIONS)
-        .forEach((action) => availableActions.push(action));
-    }
-
     results.set("score", me.score);
     results.set("actions", num_actions);
     results.set("tokens", total_tokens);

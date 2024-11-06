@@ -9,6 +9,7 @@
 ## TODO README, now just a list of notes
 
 **Idea**: we give an agent the atomic actions, let's see if it is able to solve a goal without giving instructions.
+Generative AI solving general problem with not previous information.
 
 Started with raw input and raw output with llama 3.2 and Mistral.
 
@@ -37,7 +38,7 @@ TODO in order:
 - [x] using the server configuration infos, reduce the dimension of the map given to the LLM depending on the max(PARCELS_OBSERVATION_DISTANCE, AGENTS_OBSERVATION_DISTANCE)
 - [x] using the server configuration infos, better map the parcel reward to H, M, L
 - [x] if no delivery point in sight, append the distance and the direction to the nearest one
-- [ ] use server output as raw input for the LLM
+- [x] use server output as raw input for the LLM
 - [ ] test uncertainty in obvious situations
 - [ ] random weighted choice
 - [ ] DFS to find the best path to the goal given the map

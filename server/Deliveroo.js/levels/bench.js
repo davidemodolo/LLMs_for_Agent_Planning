@@ -2,7 +2,7 @@ module.exports = {
   MAP_FILE: "bench", // options are 'default_map' (DEFAULT), 'empty_map', 'map_20', ...files in levels/maps
 
   PARCELS_GENERATION_INTERVAL: "5s", // options are '1s', '2s' (DEFAULT), '5s', '10s'
-  PARCELS_MAX: "infinite", // 'infinite' (DEFAULT)
+  PARCELS_MAX: "1", // 'infinite' (DEFAULT)
 
   MOVEMENT_STEPS: 1, // default is 1
   MOVEMENT_DURATION: 500, // default is 500
