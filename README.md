@@ -8,6 +8,8 @@
 
 ## TODO README, now just a list of notes
 
+**Idea**: we give an agent the atomic actions, let's see if it is able to solve a goal without giving instructions.
+
 Started with raw input and raw output with llama 3.2 and Mistral.
 
 1. The idea is to give the raw output as seen in the prompt [prompt] and parse the raw
@@ -35,6 +37,13 @@ TODO in order:
 - [x] using the server configuration infos, reduce the dimension of the map given to the LLM depending on the max(PARCELS_OBSERVATION_DISTANCE, AGENTS_OBSERVATION_DISTANCE)
 - [x] using the server configuration infos, better map the parcel reward to H, M, L
 - [x] if no delivery point in sight, append the distance and the direction to the nearest one
+- [ ] use server output as raw input for the LLM
+- [ ] test uncertainty in obvious situations
+- [ ] random weighted choice
+- [ ] DFS to find the best path to the goal given the map
+- [ ] test as steps vs DFS steps
+- [ ] basic RAG implementation to add preferences (randomly assign ["pears", "apples", "bananas"] to the parcels and give a preference to the agent, to be recalled via RAG)
+- [ ] custom server to select where to put the parcel (maybe using "god" mode)
 
 POSSIBLE TITLE: "Using LLM as choice selector for an agent in a web-based game environment, at different level of freedom, weighted by confidence"
 
