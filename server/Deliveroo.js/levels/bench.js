@@ -6,8 +6,8 @@ module.exports = {
 
   MOVEMENT_STEPS: 1, // default is 1
   MOVEMENT_DURATION: 500, // default is 500
-  AGENTS_OBSERVATION_DISTANCE: 2, // default is 5
-  PARCELS_OBSERVATION_DISTANCE: 5, // default is 5
+  AGENTS_OBSERVATION_DISTANCE: 12, // default is 5
+  PARCELS_OBSERVATION_DISTANCE: 12, // default is 5
   AGENT_TIMEOUT: 10000, // default is 10000
 
   PARCEL_REWARD_AVG: 10, // default is 30

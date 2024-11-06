@@ -42,7 +42,7 @@ results.set("HELP_SIMULATE_NEXT_ACTIONS", HELP_SIMULATE_NEXT_ACTIONS);
 const LEVELS = ["NO_PLAN", "ONLY_GOAL", "FULL_PLAN"];
 const LEVEL = LEVELS[0];
 const POSSIBLE_LOGICS = ["raw", "random", "threshold"];
-const LOGIC = POSSIBLE_LOGICS[0];
+const LOGIC = POSSIBLE_LOGICS[1];
 
 const conversationHistory = [];
 const fullConversationHistory = [];
@@ -574,7 +574,11 @@ function getLegalActions(antiLoop = ANTI_LOOP, helpTheBot = HELP_THE_BOT) {
 }
 
 function getRawPrompt() {
-  var prompt = `You are a delivery agent in a web-based game I am going to give you the raw information I receive from the server and the possible actions.`;
+  var prompt = "";
+  if (conversationHistory.length == 0) {
+    prompt = `You are a delivery agent in a web-based game I am going to give you the raw information I receive from the server and the possible actions.`;
+  }
+
   // work on the coordinates of the tiles
   for (let tile of rawOnMap.tiles) {
     tile.y = heightMax - 1 - tile.y;
@@ -618,6 +622,8 @@ function getRawPrompt() {
   )}\n`;
   prompt += `ACTIONS you can do:\n${buildActionsText(POSSIBLE_ACTIONS)}\n`;
   prompt += `Don't explain the reasoning and don't add any comment, just provide the action. What is your next action?`;
+  // save the prompt to prompt.txt
+  fs.writeFileSync(`prompt${fullConversationHistory.length}.txt`, prompt);
   return prompt;
 }
 
@@ -836,17 +842,37 @@ function uncertaintyLogic(response, threshold = null, logic = LOGIC) {
   }
   // if the logic is random, return a random element from the response elements having response[x][1] == true
   if (logic == "random") {
+    const weights = filteredResponse.map((r) => r[2]);
+    // acc is the accumulator, weight is the current weight
+    const totalWeight = weights.reduce((acc, weight) => acc + weight, 0);
+    //TODO: move this function outside the if
+    const weightedRandomIndex = () => {
+      let random = Math.random() * totalWeight;
+      for (let i = 0; i < weights.length; i++) {
+        if (random < weights[i]) {
+          return i;
+        }
+        random -= weights[i];
+      }
+    };
     if (!threshold) {
-      return filteredResponse[
-        Math.floor(Math.random() * filteredResponse.length)
-      ][0];
+      return filteredResponse[weightedRandomIndex()][0];
     } else {
       const filteredResponseT = filteredResponse.filter(
         (r) => r[2] >= threshold
       );
-      return filteredResponseT[
-        Math.floor(Math.random() * filteredResponseT.length)
-      ][0];
+      const weightsT = filteredResponseT.map((r) => r[2]);
+      const totalWeightT = weightsT.reduce((acc, weight) => acc + weight, 0);
+      const weightedRandomIndexT = () => {
+        let random = Math.random() * totalWeightT;
+        for (let i = 0; i < weightsT.length; i++) {
+          if (random < weightsT[i]) {
+            return i;
+          }
+          random -= weightsT[i];
+        }
+      };
+      return filteredResponseT[weightedRandomIndexT()][0];
     }
   }
   if (logic == "help") {
@@ -879,7 +905,7 @@ async function agentLoop() {
   const start = new Date().getTime();
   // stop after 5 minutes
   // while (new Date().getTime() - start < 5 * 60 * 1000) {
-  while (new Date().getTime() - start < 2 * 15 * 1000) {
+  while (new Date().getTime() - start < 2 * 60 * 1000) {
     // if (me.score > 0) {
     //   console.log(
     //     "Time elapsed:",
@@ -918,6 +944,7 @@ async function agentLoop() {
       default:
         console.log("Error in action:", action);
     }
+    addHistory("assistant", response);
     // set to false since I'm just testing
     // here we have the full logic
     if (false) {
