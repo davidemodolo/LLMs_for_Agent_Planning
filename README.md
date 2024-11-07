@@ -40,7 +40,7 @@ TODO in order:
 - [x] if no delivery point in sight, append the distance and the direction to the nearest one
 - [x] use server output as raw input for the LLM
 - [ ] test uncertainty in obvious situations
-- [ ] random weighted choice
+- [x] random weighted choice
 - [ ] DFS to find the best path to the goal given the map
 - [ ] test as steps vs DFS steps
 - [ ] basic RAG implementation to add preferences (randomly assign ["pears", "apples", "bananas"] to the parcels and give a preference to the agent, to be recalled via RAG)

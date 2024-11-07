@@ -16,7 +16,7 @@ const openai = new OpenAI({
 /*
 gpt-3.5-turbo-0125 - $0.50 / 1M tokens - $1.50 / 1M tokens
 gpt-4o-mini - $0.150 / 1M input tokens - $0.075 / 1M input tokens
-
+gpt-4o - $2.50 / 1M input tokens
 
 */
 
@@ -484,8 +484,8 @@ const POSSIBLE_ACTIONS_DESCRIPTION = {
   D: "move down",
   L: "move left",
   R: "move right",
-  T: "take a parcel",
-  S: "ship a parcel",
+  T: "take the parcel that is in your tile",
+  S: "ship a parcel (you must be in a delivery tile)",
 };
 function buildActionsText(allowedActions) {
   return POSSIBLE_ACTIONS.filter((a) => allowedActions.includes(a))
@@ -576,7 +576,7 @@ function getLegalActions(antiLoop = ANTI_LOOP, helpTheBot = HELP_THE_BOT) {
 function getRawPrompt() {
   var prompt = "";
   if (conversationHistory.length == 0) {
-    prompt = `You are a delivery agent in a web-based game I am going to give you the raw information I receive from the server and the possible actions.`;
+    prompt = `You are a delivery agent in a web-based game I am going to give you the raw information I receive from the server and the possible actions. You have to take (pickup) the parcel and ship (deliver) it in a delivery tile.`;
   }
 
   // work on the coordinates of the tiles
@@ -604,23 +604,28 @@ function getRawPrompt() {
     parcel.x = parcel.y;
     parcel.y = tmp;
   }
+
+  for (let parcel of rawOnParcelsSensing) {
+    const parcelIdNumber = parseInt(parcel.id.substring(1));
+    parcel.food = parcelIdNumber % 2 === 0 ? "banana" : "pineapple";
+  }
   // raw onParcelsSensing
   prompt += `\nRaw 'onParcelsSensing' response: ${JSON.stringify(
     rawOnParcelsSensing
   )}\n`;
 
-  // work on the coordinates of the agents
-  for (let agent of rawOnAgentsSensing) {
-    agent.y = heightMax - 1 - agent.y;
-    const tmp = agent.x;
-    agent.x = agent.y;
-    agent.y = tmp;
-  }
-  // raw onAgentsSensing
-  prompt += `\nRaw 'onAgentsSensing' response: ${JSON.stringify(
-    rawOnAgentsSensing
-  )}\n`;
-  prompt += `ACTIONS you can do:\n${buildActionsText(POSSIBLE_ACTIONS)}\n`;
+  // // work on the coordinates of the agents
+  // for (let agent of rawOnAgentsSensing) {
+  //   agent.y = heightMax - 1 - agent.y;
+  //   const tmp = agent.x;
+  //   agent.x = agent.y;
+  //   agent.y = tmp;
+  // }
+  // // raw onAgentsSensing
+  // prompt += `\nRaw 'onAgentsSensing' response: ${JSON.stringify(
+  //   rawOnAgentsSensing
+  // )}\n`;
+  prompt += `\nACTIONS you can do:\n${buildActionsText(POSSIBLE_ACTIONS)}\n`;
   prompt += `Don't explain the reasoning and don't add any comment, just provide the action. What is your next action?`;
   // save the prompt to prompt.txt
   fs.writeFileSync(`prompt${fullConversationHistory.length}.txt`, prompt);
