@@ -25,8 +25,9 @@ const USE_HISTORY = true; // set to true to use the conversation history
 const REDUCED_MAP = true; // using the server configuration infos, reduce the dimension of the map given to the LLM depending on the max(PARCELS_OBSERVATION_DISTANCE, AGENTS_OBSERVATION_DISTANCE)
 // see this help as "the robot always knows where it started and can always go back to the starting point"
 const HELP_FIND_DELIVERY = true; // set to true to add to the prompt the closest delivery point even if it is not in the field of view
-const HELP_SIMULATE_NEXT_ACTIONS = false; // set to true to add to the prompt the effect (the resulting environment) of every action
-const HELP_EXPLORE_MAP = false; //  TODO: add random direction when no parcel is in sight
+const HELP_SIMULATE_NEXT_ACTIONS = false; // set to true to add to the prompt the effect (the resulting environment) of every action -> poor results
+
+const MODEL = "gpt-4o-mini";
 
 const results = new Map();
 results.set("ANTI_LOOP", ANTI_LOOP);
@@ -57,7 +58,6 @@ async function knowno_OpenAI(
   tokens_to_check,
   max_tokens = 1,
   qhat = 0.928,
-  temp = 3.0,
   model = MODEL
 ) {
   const LOGIT_BIAS = 20;
@@ -152,10 +152,6 @@ function temperatureScaling(logits, temperature = 0.1) {
 
   return softmax;
 }
-
-const MODEL = "gpt-4o-mini";
-
-const tokens_to_check = ["U", "D", "L", "R", "T", "S"];
 
 function createLogitsBiasDict(elements) {
   const encoding = tiktoken.encoding_for_model(MODEL);
