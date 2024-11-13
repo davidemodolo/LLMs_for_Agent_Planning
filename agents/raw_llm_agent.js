@@ -3,7 +3,7 @@ import axios from "axios";
 import OpenAI from "openai";
 import fs from "fs";
 import tiktoken from "tiktoken";
-import { Agent } from "openai/_shims/node-types.mjs";
+// import { Agent } from "openai/_shims/node-types.mjs";
 const apiKey = fs.readFileSync("key.txt", "utf8").trim();
 const openai = new OpenAI({
   apiKey: apiKey,
@@ -41,7 +41,7 @@ results.set("HELP_SIMULATE_NEXT_ACTIONS", HELP_SIMULATE_NEXT_ACTIONS);
 const LEVELS = ["NO_PLAN", "ONLY_GOAL", "FULL_PLAN"];
 const LEVEL = LEVELS[0];
 const POSSIBLE_LOGICS = ["raw", "random", "threshold"];
-const LOGIC = POSSIBLE_LOGICS[1];
+const LOGIC = POSSIBLE_LOGICS[0];
 
 const conversationHistory = [];
 const fullConversationHistory = [];
@@ -373,10 +373,6 @@ function buildMap() {
   const returnMap = REDUCED_MAP
     ? reduceMap(newMap)
     : newMap.map((row) => row.join(" ")).join("\n");
-  // if there is a space before the agent, remove it
-
-  // var replaced = returnMap.replace(" (", "(");
-  // replaced = replaced.replace(") ", ")");
   return returnMap;
 }
 
@@ -387,7 +383,7 @@ const POSSIBLE_ACTIONS_DESCRIPTION = {
   L: "move left",
   R: "move right",
   T: "take the parcel that is in your tile",
-  S: "ship a parcel (you must be in a delivery tile)",
+  S: "ship a parcel (you must be in a delivery=true tile)",
 };
 function buildActionsText(allowedActions) {
   return POSSIBLE_ACTIONS.filter((a) => allowedActions.includes(a))
@@ -476,31 +472,44 @@ function getLegalActions(antiLoop = ANTI_LOOP, helpTheBot = HELP_THE_BOT) {
 }
 
 function getRawPrompt() {
-  const CUSTOM_ORIENTATION = false;
-  const PARCERL_CATEGORIZATION = true;
+  const CUSTOM_ORIENTATION = true;
+  const PARCERL_CATEGORIZATION = false;
   var prompt = "";
-  if (conversationHistory.length == 0) {
-    prompt = `You are a delivery agent in a web-based game I am going to give you the raw information I receive from the server and the possible actions. You have to take (pickup) the parcel and ship (deliver) it in a delivery tile.`;
+  // repeat the prompt every 5 steps
+  if (conversationHistory.length % 10 == 0) {
+    prompt = `You are a delivery agent in a web-based game I am going to give you the raw information I receive from the server and the possible actions. You have to take (pickup) the parcel and ship (deliver) it in a delivery tile.
+Don't loop using the same moves.
+If the information does not change, it means you are choosing the wrong actions.`;
   }
 
   // work on the coordinates of the tiles
   if (CUSTOM_ORIENTATION) {
     for (let tile of rawOnMap.tiles) {
-      tile.y = heightMax - 1 - tile.y;
       const tmp = tile.x;
-      tile.x = tile.y;
+      tile.x = Math.abs(tile.y - (heightMax - 1));
       tile.y = tmp;
     }
   }
+  // remove the parcelSpawned property from the tiles, tiles are {"x":0,"y":0,"delivery":false,"parcelSpawner":true}
+  const noParcelSpawnerTiles = [];
+  for (let tile of rawOnMap.tiles) {
+    tile = { x: tile.x, y: tile.y, delivery: tile.delivery };
+    noParcelSpawnerTiles.push(tile);
+  }
+  rawOnMap.tiles = noParcelSpawnerTiles;
+  // sort the tiles first by x and then by y
+  rawOnMap.tiles.sort((a, b) => a.x - b.x || a.y - b.y);
+
   // raw onMap
   prompt += `\nRaw 'onMap' response: ${JSON.stringify(rawOnMap)}\n`;
 
   // work on the coordinates of the agent
   if (CUSTOM_ORIENTATION) {
-    rawOnYou.y = heightMax - 1 - rawOnYou.y;
-    const tmp = rawOnYou.x;
-    rawOnYou.x = rawOnYou.y;
-    rawOnYou.y = tmp;
+    console.log("Before: ", rawOnYou);
+    const tmpX = rawOnYou.x;
+    rawOnYou.x = Math.abs(rawOnYou.y - (heightMax - 1));
+    rawOnYou.y = tmpX;
+    console.log("After: ", rawOnYou);
   }
   // raw onYou
   prompt += `\nRaw 'onYou' response: ${JSON.stringify(rawOnYou)}\n`;
@@ -508,12 +517,12 @@ function getRawPrompt() {
   // work on the coordinates of the parcels
   if (CUSTOM_ORIENTATION) {
     for (let parcel of rawOnParcelsSensing) {
-      parcel.y = heightMax - 1 - parcel.y;
       const tmp = parcel.x;
-      parcel.x = parcel.y;
+      parcel.x = Math.abs(parcel.y - (heightMax - 1));
       parcel.y = tmp;
     }
   }
+
   if (PARCERL_CATEGORIZATION) {
     for (let parcel of rawOnParcelsSensing) {
       const parcelIdNumber = parseInt(parcel.id.substring(1));
@@ -526,12 +535,11 @@ function getRawPrompt() {
   )}\n`;
 
   // work on the coordinates of the agents
-  if (rawOnAgentsSensing) {
+  if (rawOnAgentsSensing.length > 0) {
     if (CUSTOM_ORIENTATION) {
       for (let agent of rawOnAgentsSensing) {
-        agent.y = heightMax - 1 - agent.y;
         const tmp = agent.x;
-        agent.x = agent.y;
+        agent.x = Math.abs(agent.y - (heightMax - 1));
         agent.y = tmp;
       }
     }
@@ -750,7 +758,7 @@ Don't write anything more, just the array of actions.`;
   }
 }
 
-function weightedRandomIndex(weights) {
+function getWeightedRandomIndex(weights) {
   const totalWeight = weights.reduce((acc, weight) => acc + weight, 0);
   let random = Math.random() * totalWeight;
   for (let i = 0; i < weights.length; i++) {
@@ -774,7 +782,7 @@ function uncertaintyLogic(response, threshold = null, logic = LOGIC) {
   if (logic == "random") {
     const weights = filteredResponse.map((r) => r[2]);
     // acc is the accumulator, weight is the current weight
-    const weightedRandomIndex = weightedRandomIndex(weights);
+    const weightedRandomIndex = getWeightedRandomIndex(weights);
     if (!threshold) {
       return filteredResponse[weightedRandomIndex][0];
     } else {
@@ -782,7 +790,7 @@ function uncertaintyLogic(response, threshold = null, logic = LOGIC) {
         (r) => r[2] >= threshold
       );
       const weightsT = filteredResponseT.map((r) => r[2]);
-      const weightedRandomIndexT = weightedRandomIndex(weightsT);
+      const weightedRandomIndexT = getWeightedRandomIndex(weightsT);
       return filteredResponseT[weightedRandomIndexT][0];
     }
   }
@@ -829,7 +837,6 @@ async function agentLoop() {
       await client.timer(100);
       continue;
     }
-    getRawPrompt();
     var response = await knowno_OpenAI(getRawPrompt(), POSSIBLE_ACTIONS);
     response = uncertaintyLogic(response);
     console.log("Action: ", response);
