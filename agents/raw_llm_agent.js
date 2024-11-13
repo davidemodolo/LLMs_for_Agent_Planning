@@ -476,58 +476,70 @@ function getLegalActions(antiLoop = ANTI_LOOP, helpTheBot = HELP_THE_BOT) {
 }
 
 function getRawPrompt() {
-  const ORIGINAL_ORIENTATION = false;
+  const CUSTOM_ORIENTATION = false;
+  const PARCERL_CATEGORIZATION = true;
   var prompt = "";
   if (conversationHistory.length == 0) {
     prompt = `You are a delivery agent in a web-based game I am going to give you the raw information I receive from the server and the possible actions. You have to take (pickup) the parcel and ship (deliver) it in a delivery tile.`;
   }
 
   // work on the coordinates of the tiles
-  for (let tile of rawOnMap.tiles) {
-    tile.y = heightMax - 1 - tile.y;
-    const tmp = tile.x;
-    tile.x = tile.y;
-    tile.y = tmp;
+  if (CUSTOM_ORIENTATION) {
+    for (let tile of rawOnMap.tiles) {
+      tile.y = heightMax - 1 - tile.y;
+      const tmp = tile.x;
+      tile.x = tile.y;
+      tile.y = tmp;
+    }
   }
   // raw onMap
   prompt += `\nRaw 'onMap' response: ${JSON.stringify(rawOnMap)}\n`;
 
   // work on the coordinates of the agent
-  rawOnYou.y = heightMax - 1 - rawOnYou.y;
-  const tmp = rawOnYou.x;
-  rawOnYou.x = rawOnYou.y;
-  rawOnYou.y = tmp;
+  if (CUSTOM_ORIENTATION) {
+    rawOnYou.y = heightMax - 1 - rawOnYou.y;
+    const tmp = rawOnYou.x;
+    rawOnYou.x = rawOnYou.y;
+    rawOnYou.y = tmp;
+  }
   // raw onYou
   prompt += `\nRaw 'onYou' response: ${JSON.stringify(rawOnYou)}\n`;
 
   // work on the coordinates of the parcels
-  for (let parcel of rawOnParcelsSensing) {
-    parcel.y = heightMax - 1 - parcel.y;
-    const tmp = parcel.x;
-    parcel.x = parcel.y;
-    parcel.y = tmp;
+  if (CUSTOM_ORIENTATION) {
+    for (let parcel of rawOnParcelsSensing) {
+      parcel.y = heightMax - 1 - parcel.y;
+      const tmp = parcel.x;
+      parcel.x = parcel.y;
+      parcel.y = tmp;
+    }
   }
-
-  for (let parcel of rawOnParcelsSensing) {
-    const parcelIdNumber = parseInt(parcel.id.substring(1));
-    parcel.food = parcelIdNumber % 2 === 0 ? "banana" : "pineapple";
+  if (PARCERL_CATEGORIZATION) {
+    for (let parcel of rawOnParcelsSensing) {
+      const parcelIdNumber = parseInt(parcel.id.substring(1));
+      parcel.food = parcelIdNumber % 2 === 0 ? "banana" : "pineapple";
+    }
   }
   // raw onParcelsSensing
   prompt += `\nRaw 'onParcelsSensing' response: ${JSON.stringify(
     rawOnParcelsSensing
   )}\n`;
 
-  // // work on the coordinates of the agents
-  // for (let agent of rawOnAgentsSensing) {
-  //   agent.y = heightMax - 1 - agent.y;
-  //   const tmp = agent.x;
-  //   agent.x = agent.y;
-  //   agent.y = tmp;
-  // }
-  // // raw onAgentsSensing
-  // prompt += `\nRaw 'onAgentsSensing' response: ${JSON.stringify(
-  //   rawOnAgentsSensing
-  // )}\n`;
+  // work on the coordinates of the agents
+  if (rawOnAgentsSensing) {
+    if (CUSTOM_ORIENTATION) {
+      for (let agent of rawOnAgentsSensing) {
+        agent.y = heightMax - 1 - agent.y;
+        const tmp = agent.x;
+        agent.x = agent.y;
+        agent.y = tmp;
+      }
+    }
+    // raw onAgentsSensing
+    prompt += `\nRaw 'onAgentsSensing' response: ${JSON.stringify(
+      rawOnAgentsSensing
+    )}\n`;
+  }
   prompt += `\nACTIONS you can do:\n${buildActionsText(POSSIBLE_ACTIONS)}\n`;
   prompt += `Don't explain the reasoning and don't add any comment, just provide the action. What is your next action?`;
   // save the prompt to prompt.txt
