@@ -476,7 +476,7 @@ function getLegalActions(antiLoop = ANTI_LOOP, helpTheBot = HELP_THE_BOT) {
 }
 
 function getRawPrompt() {
-  //TODO: keep the original orientation of the map
+  const ORIGINAL_ORIENTATION = false;
   var prompt = "";
   if (conversationHistory.length == 0) {
     prompt = `You are a delivery agent in a web-based game I am going to give you the raw information I receive from the server and the possible actions. You have to take (pickup) the parcel and ship (deliver) it in a delivery tile.`;
