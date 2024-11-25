@@ -1,4 +1,5 @@
 # MASTER THESIS PROJECT - LLM uncertainty with log-probability as Agent in Deliveroo.js
+
 March 2025
 
 ## Deliveroo.js code
@@ -46,6 +47,7 @@ TODO in order:
 - [ ] test as steps vs DFS steps
 - [ ] basic RAG implementation to add preferences (randomly assign ["pears", "apples", "bananas"] to the parcels and give a preference to the agent, to be recalled via RAG)
 - [ ] custom server to select where to put the parcel (maybe using "god" mode)
+- [ ] Add the image to the prompt
 
 POSSIBLE TITLE: "Using LLM as choice selector for an agent in a web-based game environment, at different level of freedom, weighted by confidence"
 
