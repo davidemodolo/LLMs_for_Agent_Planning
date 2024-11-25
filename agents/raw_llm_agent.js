@@ -824,7 +824,8 @@ async function agentLoop() {
   const start = new Date().getTime();
   // stop after 5 minutes
   // while (new Date().getTime() - start < 5 * 60 * 1000) {
-  while (new Date().getTime() - start < 2 * 60 * 1000) {
+  const MINUTES = 5;
+  while (new Date().getTime() - start < MINUTES * 60 * 1000) {
     // if (me.score > 0) {
     //   console.log(
     //     "Time elapsed:",

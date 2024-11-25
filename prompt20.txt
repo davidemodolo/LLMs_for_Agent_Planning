@@ -1,11 +1,11 @@
 You are a delivery agent in a web-based game I am going to give you the raw information I receive from the server and the possible actions. You have to take (pickup) the parcel and ship (deliver) it in a delivery tile.
 Don't loop using the same moves.
 If the information does not change, it means you are choosing the wrong actions.
-Raw 'onMap' response: {"width":2,"height":5,"tiles":[{"x":0,"y":0,"delivery":false},{"x":0,"y":1,"delivery":true},{"x":1,"y":0,"delivery":false},{"x":1,"y":1,"delivery":false},{"x":2,"y":0,"delivery":false},{"x":2,"y":1,"delivery":false},{"x":3,"y":0,"delivery":false},{"x":3,"y":1,"delivery":false},{"x":4,"y":0,"delivery":false},{"x":4,"y":1,"delivery":false}]}
+Raw 'onMap' response: {"width":2,"height":5,"tiles":[{"x":0,"y":3,"delivery":false},{"x":0,"y":4,"delivery":false},{"x":1,"y":3,"delivery":false},{"x":1,"y":4,"delivery":false},{"x":2,"y":3,"delivery":false},{"x":2,"y":4,"delivery":false},{"x":3,"y":3,"delivery":false},{"x":3,"y":4,"delivery":false},{"x":4,"y":3,"delivery":true},{"x":4,"y":4,"delivery":false}]}
 
-Raw 'onYou' response: {"id":"75d4e78ed8e","name":"raw_llm_agent","x":3,"y":1,"score":0}
+Raw 'onYou' response: {"id":"75d4e78ed8e","name":"raw_llm_agent","x":1,"y":4,"score":0}
 
-Raw 'onParcelsSensing' response: [{"id":"p0","x":3,"y":0,"carriedBy":null,"reward":10}]
+Raw 'onParcelsSensing' response: [{"id":"p0","x":4,"y":3,"carriedBy":"75d4e78ed8e","reward":10}]
 
 ACTIONS you can do:
 U): move up
