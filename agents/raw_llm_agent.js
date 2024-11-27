@@ -496,7 +496,7 @@ function getRawPrompt() {
   }
   rawOnMap.tiles = noParcelSpawnerTiles;
   // sort the tiles first by x and then by y
-  rawOnMap.tiles.sort((a, b) => a.x - b.x || a.y - b.y);
+  //rawOnMap.tiles.sort((a, b) => a.x - b.x || a.y - b.y);
 
   // raw onMap
   prompt += `\nMap: ${JSON.stringify(rawOnMap, null, 3)}\n`;
@@ -511,7 +511,7 @@ function getRawPrompt() {
 
   // raw onYou
   //prompt += `\nRaw 'onYou' response: ${JSON.stringify(rawOnYou)}\n`;
-  prompt += `\nYou are in the spot (${rawOnYou.y}, ${rawOnYou.x}).\n`;
+  prompt += `\nYou are in the spot (${rawOnYou.x}, ${rawOnYou.y}).\n`;
   // work on the coordinates of the parcels
   if (CUSTOM_ORIENTATION) {
     for (let parcel of rawOnParcelsSensing) {
