@@ -2,9 +2,10 @@ import os
 
 from openai import AzureOpenAI
 from retry import retry
+import json
 
 llm_default_config = {
-    "max_tokens": 4096,
+    "max_tokens": 1,
     "temperature": 0.0,
     "top_p": 0.0,
     "frequency_penalty": 0.0,
@@ -62,15 +63,27 @@ def __connect_openai(messages):
         temperature=llm_default_config["temperature"],
         max_tokens=llm_default_config["max_tokens"],
         top_p=llm_default_config["top_p"],
+        logprobs= True,
+        top_logprobs= 20,
+        logit_bias_dict= {},
         frequency_penalty=llm_default_config["frequency_penalty"],
         presence_penalty=llm_default_config["presence_penalty"],
         seed=llm_default_config["seed"],
         stop=llm_default_config["stop"],
     )
 
+    # save the response to a json file str(response.choices[0].logprobs.content[0].top_logprobs)
+    print(response.choices[0].logprobs.content[0].top_logprobs)
+    with open("response.json", "w") as f:
+        json.dump(build_log_probs(response.choices[0].logprobs.content[0].top_logprobs), f)
+    
     return response.choices[0].message.content
 
-
+def build_log_probs(top_logprobs):
+    log_probs = {}
+    for logprob in top_logprobs:
+        log_probs[logprob.token] = logprob.logprob
+    return log_probs
 if __name__ == "__main__":
     prompt = "What is the oldest capital of Italy?"
     succ, output = query(prompt)
