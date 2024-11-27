@@ -21,7 +21,7 @@ gpt-4o - $2.50 / 1M input tokens
 const ANTI_LOOP = true; // set to true to avoid the agent to go back and forth
 const HELP_THE_BOT = true; // set to true to force the bot to take the parcel if it is below the agent or to ship the parcel if the agent is in the delivery point
 const SELECT_ONLY_ACTION = true; // set to true to select the only action if the list of available actions has only one element
-const USE_HISTORY = true; // set to true to use the conversation history
+const USE_HISTORY = false; // set to true to use the conversation history
 const REDUCED_MAP = true; // using the server configuration infos, reduce the dimension of the map given to the LLM depending on the max(PARCELS_OBSERVATION_DISTANCE, AGENTS_OBSERVATION_DISTANCE)
 // see this help as "the robot always knows where it started and can always go back to the starting point"
 const HELP_FIND_DELIVERY = true; // set to true to add to the prompt the closest delivery point even if it is not in the field of view
@@ -476,10 +476,8 @@ function getRawPrompt() {
   const PARCERL_CATEGORIZATION = false;
   var prompt = "";
   // repeat the prompt every 5 steps
-  if (conversationHistory.length % 10 == 0) {
-    prompt = `You are a delivery agent in a web-based game I am going to give you the raw information I receive from the server and the possible actions. You have to take (pickup) the parcel and ship (deliver) it in a delivery tile.
-Don't loop using the same moves.
-If the information does not change, it means you are choosing the wrong actions.`;
+  if (conversationHistory.length % 10 == 0 || !USE_HISTORY) {
+    prompt = `You are a delivery agent in a web-based delivery game\nI am going to give you the raw information I receive from the server and the possible actions.\nYour current goal is to go to a tile with delivery == true.`;
   }
 
   // work on the coordinates of the tiles
@@ -501,8 +499,7 @@ If the information does not change, it means you are choosing the wrong actions.
   rawOnMap.tiles.sort((a, b) => a.x - b.x || a.y - b.y);
 
   // raw onMap
-  prompt += `\nRaw 'onMap' response: ${JSON.stringify(rawOnMap)}\n`;
-
+  prompt += `\nMap: ${JSON.stringify(rawOnMap, null, 3)}\n`;
   // work on the coordinates of the agent
   if (CUSTOM_ORIENTATION) {
     console.log("Before: ", rawOnYou);
@@ -511,9 +508,10 @@ If the information does not change, it means you are choosing the wrong actions.
     rawOnYou.y = tmpX;
     console.log("After: ", rawOnYou);
   }
-  // raw onYou
-  prompt += `\nRaw 'onYou' response: ${JSON.stringify(rawOnYou)}\n`;
 
+  // raw onYou
+  //prompt += `\nRaw 'onYou' response: ${JSON.stringify(rawOnYou)}\n`;
+  prompt += `\nYou are in the spot (${rawOnYou.y}, ${rawOnYou.x}).\n`;
   // work on the coordinates of the parcels
   if (CUSTOM_ORIENTATION) {
     for (let parcel of rawOnParcelsSensing) {
@@ -530,9 +528,9 @@ If the information does not change, it means you are choosing the wrong actions.
     }
   }
   // raw onParcelsSensing
-  prompt += `\nRaw 'onParcelsSensing' response: ${JSON.stringify(
-    rawOnParcelsSensing
-  )}\n`;
+  // prompt += `\nRaw 'onParcelsSensing' response: ${JSON.stringify(
+  //   rawOnParcelsSensing
+  // )}\n`;
 
   // work on the coordinates of the agents
   if (rawOnAgentsSensing.length > 0) {
@@ -548,10 +546,11 @@ If the information does not change, it means you are choosing the wrong actions.
       rawOnAgentsSensing
     )}\n`;
   }
-  prompt += `\nACTIONS you can do:\n${buildActionsText(POSSIBLE_ACTIONS)}\n`;
-  prompt += `Don't explain the reasoning and don't add any comment, just provide the action. What is your next action?`;
+  prompt += `\nACTIONS you can do:\n${buildActionsText(POSSIBLE_ACTIONS)}\n\n`;
+  prompt += `Your final goal is to go to a delivery zone, I need the next action that gets you closer. Don't explain the reasoning and don't add any comment, just provide the action. What is your next action?`;
   // save the prompt to prompt.txt
-  fs.writeFileSync(`prompt${fullConversationHistory.length}.txt`, prompt);
+  //fs.writeFileSync(`prompt${fullConversationHistory.length}.txt`, prompt);
+  fs.writeFileSync(`promptOBS.txt`, prompt);
   return prompt;
 }
 
@@ -841,6 +840,7 @@ async function agentLoop() {
     var response = await knowno_OpenAI(getRawPrompt(), POSSIBLE_ACTIONS);
     response = uncertaintyLogic(response);
     console.log("Action: ", response);
+    fs.writeFileSync("action.txt", response);
     switch (response) {
       case "U":
         await client.move("up");
@@ -944,7 +944,8 @@ async function agentLoop() {
       JSON.stringify(Object.fromEntries(results), null, 2)
     );
 
-    await client.timer(ACTION_DELAY);
+    //await client.timer(ACTION_DELAY);
+    await client.timer(1000);
   }
   // save the conversation history to a file
   fs.writeFileSync(

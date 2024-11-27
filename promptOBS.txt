@@ -1,0 +1,71 @@
+You are a delivery agent in a web-based delivery game
+I am going to give you the raw information I receive from the server and the possible actions.
+Your current goal is to go to a tile with delivery == true.
+Map: {
+   "width": 2,
+   "height": 5,
+   "tiles": [
+      {
+         "x": 3,
+         "y": 0,
+         "delivery": true
+      },
+      {
+         "x": 3,
+         "y": 1,
+         "delivery": false
+      },
+      {
+         "x": 3,
+         "y": 2,
+         "delivery": false
+      },
+      {
+         "x": 3,
+         "y": 3,
+         "delivery": false
+      },
+      {
+         "x": 3,
+         "y": 4,
+         "delivery": false
+      },
+      {
+         "x": 4,
+         "y": 0,
+         "delivery": false
+      },
+      {
+         "x": 4,
+         "y": 1,
+         "delivery": false
+      },
+      {
+         "x": 4,
+         "y": 2,
+         "delivery": false
+      },
+      {
+         "x": 4,
+         "y": 3,
+         "delivery": false
+      },
+      {
+         "x": 4,
+         "y": 4,
+         "delivery": false
+      }
+   ]
+}
+
+You are in the spot (1, 3).
+
+ACTIONS you can do:
+U): move up
+D): move down
+L): move left
+R): move right
+T): take the parcel that is in your tile
+S): ship a parcel (you must be in a delivery=true tile)
+
+Your final goal is to go to a delivery zone, I need the next action that gets you closer. Don't explain the reasoning and don't add any comment, just provide the action. What is your next action?

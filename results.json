@@ -2,12 +2,12 @@
   "ANTI_LOOP": true,
   "HELP_THE_BOT": true,
   "SELECT_ONLY_ACTION": true,
-  "USE_HISTORY": true,
+  "USE_HISTORY": false,
   "REDUCED_MAP": true,
   "HELP_FIND_DELIVERY": true,
   "HELP_SIMULATE_NEXT_ACTIONS": false,
   "score": 0,
   "actions": 0,
-  "tokens": 37881,
-  "elapsed_time_seconds": 25.082
+  "tokens": 5922,
+  "elapsed_time_seconds": 25.72
 }
