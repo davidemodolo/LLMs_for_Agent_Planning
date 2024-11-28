@@ -477,41 +477,50 @@ function getRawPrompt() {
   var prompt = "";
   // repeat the prompt every 5 steps
   if (conversationHistory.length % 10 == 0 || !USE_HISTORY) {
-    prompt = `You are a delivery agent in a web-based delivery game\nI am going to give you the raw information I receive from the server and the possible actions.\nYour current goal is to go to a tile with delivery == true.`;
+    prompt = `You are a delivery agent in a web-based delivery game where the map is a matrix.\nI am going to give you the raw information I receive from the server and the possible actions.\nYour current goal is to go to a tile with delivery == true.`;
   }
 
-  // work on the coordinates of the tiles
-  if (CUSTOM_ORIENTATION) {
-    for (let tile of rawOnMap.tiles) {
-      const tmp = tile.x;
-      tile.x = Math.abs(tile.y - (heightMax - 1));
-      tile.y = tmp;
-    }
-  }
   // remove the parcelSpawned property from the tiles, tiles are {"x":0,"y":0,"delivery":false,"parcelSpawner":true}
   const noParcelSpawnerTiles = [];
   for (let tile of rawOnMap.tiles) {
-    tile = { x: tile.x, y: tile.y, delivery: tile.delivery };
+    var tileX = tile.x;
+    var tileY = tile.y;
+    if (CUSTOM_ORIENTATION) {
+      const tmp = tileX;
+      tileX = Math.abs(tileY - (heightMax - 1));
+      tileY = tmp;
+    }
+    tile = { x: tileX, y: tileY, delivery: tile.delivery };
     noParcelSpawnerTiles.push(tile);
   }
-  rawOnMap.tiles = noParcelSpawnerTiles;
   // sort the tiles first by x and then by y
-  //rawOnMap.tiles.sort((a, b) => a.x - b.x || a.y - b.y);
+  noParcelSpawnerTiles.sort((a, b) => {
+    if (a.x == b.x) {
+      return a.y - b.y;
+    }
+    return a.x - b.x;
+  });
 
   // raw onMap
-  prompt += `\nMap: ${JSON.stringify(rawOnMap, null, 3)}\n`;
+  prompt += `\nMap width: ${rawOnMap.width}\nMap height: ${
+    rawOnMap.height
+  }\nTiles are arranged as ${rawOnMap.height} rows in ${
+    rawOnMap.width
+  } columns:${JSON.stringify(noParcelSpawnerTiles, null, 3)}\n`;
   // work on the coordinates of the agent
+  var agentX = rawOnYou.x;
+  var agentY = rawOnYou.y;
   if (CUSTOM_ORIENTATION) {
     console.log("Before: ", rawOnYou);
-    const tmpX = rawOnYou.x;
-    rawOnYou.x = Math.abs(rawOnYou.y - (heightMax - 1));
-    rawOnYou.y = tmpX;
+    const tmp = agentX;
+    agentX = Math.abs(agentY - (heightMax - 1));
+    agentY = tmp;
     console.log("After: ", rawOnYou);
   }
 
   // raw onYou
   //prompt += `\nRaw 'onYou' response: ${JSON.stringify(rawOnYou)}\n`;
-  prompt += `\nYou are in the spot (${rawOnYou.x}, ${rawOnYou.y}).\n`;
+  prompt += `\nYou are in the spot (${agentX}, ${agentY}).\n`;
   // work on the coordinates of the parcels
   if (CUSTOM_ORIENTATION) {
     for (let parcel of rawOnParcelsSensing) {

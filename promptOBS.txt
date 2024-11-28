@@ -1,64 +1,62 @@
-You are a delivery agent in a web-based delivery game
+You are a delivery agent in a web-based delivery game where the map is a matrix.
 I am going to give you the raw information I receive from the server and the possible actions.
 Your current goal is to go to a tile with delivery == true.
-Map: {
-   "width": 2,
-   "height": 5,
-   "tiles": [
-      {
-         "x": 4,
-         "y": 4,
-         "delivery": false
-      },
-      {
-         "x": 4,
-         "y": 3,
-         "delivery": false
-      },
-      {
-         "x": 4,
-         "y": 2,
-         "delivery": false
-      },
-      {
-         "x": 4,
-         "y": 1,
-         "delivery": false
-      },
-      {
-         "x": 4,
-         "y": 0,
-         "delivery": false
-      },
-      {
-         "x": 3,
-         "y": 4,
-         "delivery": false
-      },
-      {
-         "x": 3,
-         "y": 3,
-         "delivery": false
-      },
-      {
-         "x": 3,
-         "y": 2,
-         "delivery": false
-      },
-      {
-         "x": 3,
-         "y": 1,
-         "delivery": false
-      },
-      {
-         "x": 3,
-         "y": 0,
-         "delivery": true
-      }
-   ]
-}
+Map width: 2
+Map height: 5
+Tiles are arranged as 5 rows in 2 columns:[
+   {
+      "x": 0,
+      "y": 0,
+      "delivery": false
+   },
+   {
+      "x": 0,
+      "y": 1,
+      "delivery": true
+   },
+   {
+      "x": 1,
+      "y": 0,
+      "delivery": false
+   },
+   {
+      "x": 1,
+      "y": 1,
+      "delivery": false
+   },
+   {
+      "x": 2,
+      "y": 0,
+      "delivery": false
+   },
+   {
+      "x": 2,
+      "y": 1,
+      "delivery": false
+   },
+   {
+      "x": 3,
+      "y": 0,
+      "delivery": false
+   },
+   {
+      "x": 3,
+      "y": 1,
+      "delivery": false
+   },
+   {
+      "x": 4,
+      "y": 0,
+      "delivery": false
+   },
+   {
+      "x": 4,
+      "y": 1,
+      "delivery": false
+   }
+]
 
-You are in the spot (1, 0).
+You are in the spot (0, 0).
 
 ACTIONS you can do:
 U): move up
