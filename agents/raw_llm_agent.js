@@ -477,7 +477,7 @@ function getRawPrompt() {
   var prompt = "";
   // repeat the prompt every 5 steps
   if (conversationHistory.length % 10 == 0 || !USE_HISTORY) {
-    prompt = `You are a delivery agent in a web-based delivery game where the map is a matrix.\nI am going to give you the raw information I receive from the server and the possible actions.\nYour current goal is to go to a tile with delivery == true.`;
+    prompt = `You are a delivery agent in a web-based delivery game where the map is a matrix.\nI am going to give you the raw information I receive from the server and the possible actions.`;
   }
 
   // remove the parcelSpawned property from the tiles, tiles are {"x":0,"y":0,"delivery":false,"parcelSpawner":true}
@@ -520,14 +520,23 @@ function getRawPrompt() {
 
   // raw onYou
   //prompt += `\nRaw 'onYou' response: ${JSON.stringify(rawOnYou)}\n`;
-  prompt += `\nYou are in the spot (${agentX}, ${agentY}).\n`;
+
   // work on the coordinates of the parcels
-  if (CUSTOM_ORIENTATION) {
-    for (let parcel of rawOnParcelsSensing) {
-      const tmp = parcel.x;
-      parcel.x = Math.abs(parcel.y - (heightMax - 1));
-      parcel.y = tmp;
+
+  const parcels = [];
+
+  for (let parcel of rawOnParcelsSensing) {
+    const newParcel = { x: parcel.x, y: parcel.y };
+    var parcelX = parcel.x;
+    var parcelY = parcel.y;
+    if (CUSTOM_ORIENTATION) {
+      const tmp = parcelX;
+      parcelX = Math.abs(parcelY - (heightMax - 1));
+      parcelY = tmp;
     }
+    newParcel.x = parcelX;
+    newParcel.y = parcelY;
+    parcels.push(newParcel);
   }
 
   if (PARCERL_CATEGORIZATION) {
@@ -537,9 +546,7 @@ function getRawPrompt() {
     }
   }
   // raw onParcelsSensing
-  // prompt += `\nRaw 'onParcelsSensing' response: ${JSON.stringify(
-  //   rawOnParcelsSensing
-  // )}\n`;
+  prompt += `\nThe parcel you seek is in the spot (${parcels[0].x}, ${parcels[0].y}).\n`;
 
   // work on the coordinates of the agents
   if (rawOnAgentsSensing.length > 0) {
@@ -555,8 +562,9 @@ function getRawPrompt() {
       rawOnAgentsSensing
     )}\n`;
   }
+  prompt += `\nYou are in the spot (${agentX}, ${agentY}).\n`;
   prompt += `\nACTIONS you can do:\n${buildActionsText(POSSIBLE_ACTIONS)}\n\n`;
-  prompt += `Your final goal is to go to a delivery zone, I need the next action that gets you closer. Don't explain the reasoning and don't add any comment, just provide the action. What is your next action?`;
+  prompt += `Your final goal is to go to a tile with a parcel and take it, I need the next action that gets you closer. Don't explain the reasoning and don't add any comment, just provide the action. What is your next action?`;
   // save the prompt to prompt.txt
   //fs.writeFileSync(`prompt${fullConversationHistory.length}.txt`, prompt);
   fs.writeFileSync(`promptOBS.txt`, prompt);

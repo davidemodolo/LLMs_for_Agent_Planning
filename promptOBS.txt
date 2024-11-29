@@ -1,6 +1,5 @@
 You are a delivery agent in a web-based delivery game where the map is a matrix.
 I am going to give you the raw information I receive from the server and the possible actions.
-Your current goal is to go to a tile with delivery == true.
 Map width: 2
 Map height: 5
 Tiles are arranged as 5 rows in 2 columns:[
@@ -56,7 +55,9 @@ Tiles are arranged as 5 rows in 2 columns:[
    }
 ]
 
-You are in the spot (0, 0).
+The parcel you seek is in the spot (2, 1).
+
+You are in the spot (2, 0).
 
 ACTIONS you can do:
 U): move up
@@ -66,4 +67,4 @@ R): move right
 T): take the parcel that is in your tile
 S): ship a parcel (you must be in a delivery=true tile)
 
-Your final goal is to go to a delivery zone, I need the next action that gets you closer. Don't explain the reasoning and don't add any comment, just provide the action. What is your next action?
+Your final goal is to go to a tile with a parcel and take it, I need the next action that gets you closer. Don't explain the reasoning and don't add any comment, just provide the action. What is your next action?
