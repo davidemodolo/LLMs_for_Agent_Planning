@@ -55,7 +55,7 @@ Tiles are arranged as 5 rows in 2 columns:[
    }
 ]
 
-The parcel you seek is in the spot (2, 1).
+The parcel you seek is in the spot (3, 1). Go and take it.
 
 You are in the spot (2, 0).
 

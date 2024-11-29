@@ -21,7 +21,7 @@ gpt-4o - $2.50 / 1M input tokens
 const ANTI_LOOP = true; // set to true to avoid the agent to go back and forth
 const HELP_THE_BOT = true; // set to true to force the bot to take the parcel if it is below the agent or to ship the parcel if the agent is in the delivery point
 const SELECT_ONLY_ACTION = true; // set to true to select the only action if the list of available actions has only one element
-const USE_HISTORY = false; // set to true to use the conversation history
+const USE_HISTORY = true; // set to true to use the conversation history
 const REDUCED_MAP = true; // using the server configuration infos, reduce the dimension of the map given to the LLM depending on the max(PARCELS_OBSERVATION_DISTANCE, AGENTS_OBSERVATION_DISTANCE)
 // see this help as "the robot always knows where it started and can always go back to the starting point"
 const HELP_FIND_DELIVERY = true; // set to true to add to the prompt the closest delivery point even if it is not in the field of view
@@ -546,7 +546,7 @@ function getRawPrompt() {
     }
   }
   // raw onParcelsSensing
-  prompt += `\nThe parcel you seek is in the spot (${parcels[0].x}, ${parcels[0].y}).\n`;
+  prompt += `\nThe parcel you seek is in the spot (${parcels[0].x}, ${parcels[0].y}). Go and take it.\n`;
 
   // work on the coordinates of the agents
   if (rawOnAgentsSensing.length > 0) {
