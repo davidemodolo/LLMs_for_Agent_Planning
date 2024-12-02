@@ -21,7 +21,7 @@ gpt-4o - $2.50 / 1M input tokens
 const ANTI_LOOP = true; // set to true to avoid the agent to go back and forth
 const HELP_THE_BOT = true; // set to true to force the bot to take the parcel if it is below the agent or to ship the parcel if the agent is in the delivery point
 const SELECT_ONLY_ACTION = true; // set to true to select the only action if the list of available actions has only one element
-const USE_HISTORY = true; // set to true to use the conversation history
+const USE_HISTORY = false; // set to true to use the conversation history
 const REDUCED_MAP = true; // using the server configuration infos, reduce the dimension of the map given to the LLM depending on the max(PARCELS_OBSERVATION_DISTANCE, AGENTS_OBSERVATION_DISTANCE)
 // see this help as "the robot always knows where it started and can always go back to the starting point"
 const HELP_FIND_DELIVERY = true; // set to true to add to the prompt the closest delivery point even if it is not in the field of view
@@ -471,13 +471,23 @@ function getLegalActions(antiLoop = ANTI_LOOP, helpTheBot = HELP_THE_BOT) {
   return legalActions;
 }
 
+var GOAL = "pickup";
+
 function getRawPrompt() {
+  if (numParcels > 0) {
+    GOAL = "deliver";
+  } else {
+    GOAL = "pickup";
+  }
   const CUSTOM_ORIENTATION = true;
   const PARCERL_CATEGORIZATION = false;
   var prompt = "";
   // repeat the prompt every 5 steps
   if (conversationHistory.length % 10 == 0 || !USE_HISTORY) {
     prompt = `You are a delivery agent in a web-based delivery game where the map is a matrix.\nI am going to give you the raw information I receive from the server and the possible actions.`;
+    if (GOAL == "deliver") {
+      prompt += `\nYour current goal is to go to a tile with delivery == true.`;
+    }
   }
 
   // remove the parcelSpawned property from the tiles, tiles are {"x":0,"y":0,"delivery":false,"parcelSpawner":true}
@@ -546,7 +556,9 @@ function getRawPrompt() {
     }
   }
   // raw onParcelsSensing
-  prompt += `\nThe parcel you seek is in the spot (${parcels[0].x}, ${parcels[0].y}). Go and take it.\n`;
+  if (GOAL == "pickup") {
+    prompt += `\nThe parcel you need to take is in the spot (${parcels[0].x}, ${parcels[0].y}).\n`;
+  }
 
   // work on the coordinates of the agents
   if (rawOnAgentsSensing.length > 0) {
@@ -564,7 +576,12 @@ function getRawPrompt() {
   }
   prompt += `\nYou are in the spot (${agentX}, ${agentY}).\n`;
   prompt += `\nACTIONS you can do:\n${buildActionsText(POSSIBLE_ACTIONS)}\n\n`;
-  prompt += `Your final goal is to go to a tile with a parcel and take it, I need the next action that gets you closer. Don't explain the reasoning and don't add any comment, just provide the action. What is your next action?`;
+  if (GOAL == "pickup") {
+    prompt += `Your final goal is to go to a tile with the parcel and take it, `;
+  } else if (GOAL == "deliver") {
+    prompt += `Your final goal is to go to a delivery zone and ship the parcel, `;
+  }
+  prompt += `I need the best action that will get you there. Don't explain the reasoning and don't add any comment, just provide the action. What is your next action?`;
   // save the prompt to prompt.txt
   //fs.writeFileSync(`prompt${fullConversationHistory.length}.txt`, prompt);
   fs.writeFileSync(`promptOBS.txt`, prompt);
@@ -962,7 +979,7 @@ async function agentLoop() {
     );
 
     //await client.timer(ACTION_DELAY);
-    await client.timer(1000);
+    await client.timer(2000);
   }
   // save the conversation history to a file
   fs.writeFileSync(
