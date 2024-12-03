@@ -1,31 +1,7 @@
 [
   {
     "role": "user",
-    "content": "You are a delivery agent in a web-based game I am going to give you the raw information I receive from the server and the possible actions.\nRaw 'onMap' response: {\"width\":2,\"height\":5,\"tiles\":[{\"x\":4,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":0,\"delivery\":true,\"parcelSpawner\":false}]}\n\nRaw 'onYou' response: {\"id\":\"75d4e78ed8e\",\"name\":\"raw_llm_agent\",\"x\":4,\"y\":2,\"score\":0}\n\nRaw 'onParcelsSensing' response: [{\"id\":\"p0\",\"x\":3,\"y\":4,\"carriedBy\":null,\"reward\":10}]\n\nRaw 'onAgentsSensing' response: []\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take a parcel\nS): ship a parcel\nDon't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
-  },
-  {
-    "role": "assistant",
-    "content": "D"
-  },
-  {
-    "role": "user",
-    "content": "\nRaw 'onMap' response: {\"width\":2,\"height\":5,\"tiles\":[{\"x\":0,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":4,\"delivery\":true,\"parcelSpawner\":false}]}\n\nRaw 'onYou' response: {\"id\":\"75d4e78ed8e\",\"name\":\"raw_llm_agent\",\"x\":4,\"y\":3,\"score\":0}\n\nRaw 'onParcelsSensing' response: [{\"id\":\"p0\",\"x\":3,\"y\":4,\"carriedBy\":null,\"reward\":10}]\n\nRaw 'onAgentsSensing' response: []\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take a parcel\nS): ship a parcel\nDon't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
-  },
-  {
-    "role": "assistant",
-    "content": "S"
-  },
-  {
-    "role": "user",
-    "content": "\nRaw 'onMap' response: {\"width\":2,\"height\":5,\"tiles\":[{\"x\":4,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":0,\"delivery\":true,\"parcelSpawner\":false}]}\n\nRaw 'onYou' response: {\"id\":\"75d4e78ed8e\",\"name\":\"raw_llm_agent\",\"x\":0,\"y\":1,\"score\":0}\n\nRaw 'onParcelsSensing' response: [{\"id\":\"p0\",\"x\":1,\"y\":0,\"carriedBy\":null,\"reward\":10}]\n\nRaw 'onAgentsSensing' response: []\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take a parcel\nS): ship a parcel\nDon't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
-  },
-  {
-    "role": "assistant",
-    "content": "D"
-  },
-  {
-    "role": "user",
-    "content": "\nRaw 'onMap' response: {\"width\":2,\"height\":5,\"tiles\":[{\"x\":0,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":4,\"delivery\":true,\"parcelSpawner\":false}]}\n\nRaw 'onYou' response: {\"id\":\"75d4e78ed8e\",\"name\":\"raw_llm_agent\",\"x\":4,\"y\":4,\"score\":0}\n\nRaw 'onParcelsSensing' response: [{\"id\":\"p0\",\"x\":3,\"y\":4,\"carriedBy\":null,\"reward\":10}]\n\nRaw 'onAgentsSensing' response: []\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take a parcel\nS): ship a parcel\nDon't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
+    "content": "You are a delivery agent in a web-based delivery game where the map is a matrix.\nI am going to give you the raw information I receive from the server and the possible actions.\nMap width: 2\nMap height: 5\nTiles are arranged as 5 rows in 2 columns:[\n   {\n      \"x\": 0,\n      \"y\": 0,\n      \"delivery\": false\n   },\n   {\n      \"x\": 0,\n      \"y\": 1,\n      \"delivery\": true\n   },\n   {\n      \"x\": 1,\n      \"y\": 0,\n      \"delivery\": false\n   },\n   {\n      \"x\": 1,\n      \"y\": 1,\n      \"delivery\": false\n   },\n   {\n      \"x\": 2,\n      \"y\": 0,\n      \"delivery\": false\n   },\n   {\n      \"x\": 2,\n      \"y\": 1,\n      \"delivery\": false\n   },\n   {\n      \"x\": 3,\n      \"y\": 0,\n      \"delivery\": false\n   },\n   {\n      \"x\": 3,\n      \"y\": 1,\n      \"delivery\": false\n   },\n   {\n      \"x\": 4,\n      \"y\": 0,\n      \"delivery\": false\n   },\n   {\n      \"x\": 4,\n      \"y\": 1,\n      \"delivery\": false\n   }\n]\n\nThe parcel you need to take is in the spot (2, 0).\n\nYou are in the spot (3, 1).\n\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take the parcel that is in your tile\nS): ship a parcel (you must be in a delivery=true tile)\n\nYour final goal is to go to a tile with the parcel and (T)ake it, I need the best action that will get you there. Don't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
   },
   {
     "role": "assistant",
@@ -33,15 +9,15 @@
   },
   {
     "role": "user",
-    "content": "\nRaw 'onMap' response: {\"width\":2,\"height\":5,\"tiles\":[{\"x\":4,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":0,\"delivery\":true,\"parcelSpawner\":false}]}\n\nRaw 'onYou' response: {\"id\":\"75d4e78ed8e\",\"name\":\"raw_llm_agent\",\"x\":0,\"y\":0,\"score\":0}\n\nRaw 'onParcelsSensing' response: [{\"id\":\"p0\",\"x\":1,\"y\":0,\"carriedBy\":null,\"reward\":10}]\n\nRaw 'onAgentsSensing' response: []\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take a parcel\nS): ship a parcel\nDon't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
+    "content": "\nMap width: 2\nMap height: 5\nTiles are arranged as 5 rows in 2 columns:[\n   {\n      \"x\": 0,\n      \"y\": 0,\n      \"delivery\": false\n   },\n   {\n      \"x\": 0,\n      \"y\": 1,\n      \"delivery\": true\n   },\n   {\n      \"x\": 1,\n      \"y\": 0,\n      \"delivery\": false\n   },\n   {\n      \"x\": 1,\n      \"y\": 1,\n      \"delivery\": false\n   },\n   {\n      \"x\": 2,\n      \"y\": 0,\n      \"delivery\": false\n   },\n   {\n      \"x\": 2,\n      \"y\": 1,\n      \"delivery\": false\n   },\n   {\n      \"x\": 3,\n      \"y\": 0,\n      \"delivery\": false\n   },\n   {\n      \"x\": 3,\n      \"y\": 1,\n      \"delivery\": false\n   },\n   {\n      \"x\": 4,\n      \"y\": 0,\n      \"delivery\": false\n   },\n   {\n      \"x\": 4,\n      \"y\": 1,\n      \"delivery\": false\n   }\n]\n\nThe parcel you need to take is in the spot (2, 0).\n\nYou are in the spot (3, 0).\n\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take the parcel that is in your tile\nS): ship a parcel (you must be in a delivery=true tile)\n\nYour final goal is to go to a tile with the parcel and (T)ake it, I need the best action that will get you there. Don't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
   },
   {
     "role": "assistant",
-    "content": "R"
+    "content": "U"
   },
   {
     "role": "user",
-    "content": "\nRaw 'onMap' response: {\"width\":2,\"height\":5,\"tiles\":[{\"x\":0,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":4,\"delivery\":true,\"parcelSpawner\":false}]}\n\nRaw 'onYou' response: {\"id\":\"75d4e78ed8e\",\"name\":\"raw_llm_agent\",\"x\":3,\"y\":4,\"score\":0}\n\nRaw 'onParcelsSensing' response: [{\"id\":\"p0\",\"x\":3,\"y\":4,\"carriedBy\":null,\"reward\":10}]\n\nRaw 'onAgentsSensing' response: []\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take a parcel\nS): ship a parcel\nDon't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
+    "content": "\nMap width: 2\nMap height: 5\nTiles are arranged as 5 rows in 2 columns:[\n   {\n      \"x\": 0,\n      \"y\": 0,\n      \"delivery\": false\n   },\n   {\n      \"x\": 0,\n      \"y\": 1,\n      \"delivery\": true\n   },\n   {\n      \"x\": 1,\n      \"y\": 0,\n      \"delivery\": false\n   },\n   {\n      \"x\": 1,\n      \"y\": 1,\n      \"delivery\": false\n   },\n   {\n      \"x\": 2,\n      \"y\": 0,\n      \"delivery\": false\n   },\n   {\n      \"x\": 2,\n      \"y\": 1,\n      \"delivery\": false\n   },\n   {\n      \"x\": 3,\n      \"y\": 0,\n      \"delivery\": false\n   },\n   {\n      \"x\": 3,\n      \"y\": 1,\n      \"delivery\": false\n   },\n   {\n      \"x\": 4,\n      \"y\": 0,\n      \"delivery\": false\n   },\n   {\n      \"x\": 4,\n      \"y\": 1,\n      \"delivery\": false\n   }\n]\n\nThe parcel you need to take is in the spot (2, 0).\n\nYou are in the spot (2, 0).\n\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take the parcel that is in your tile\nS): ship a parcel (you must be in a delivery=true tile)\n\nYour final goal is to go to a tile with the parcel and (T)ake it, I need the best action that will get you there. Don't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
   },
   {
     "role": "assistant",
@@ -49,39 +25,23 @@
   },
   {
     "role": "user",
-    "content": "\nRaw 'onMap' response: {\"width\":2,\"height\":5,\"tiles\":[{\"x\":4,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":0,\"delivery\":true,\"parcelSpawner\":false}]}\n\nRaw 'onYou' response: {\"id\":\"75d4e78ed8e\",\"name\":\"raw_llm_agent\",\"x\":1,\"y\":0,\"score\":0}\n\nRaw 'onParcelsSensing' response: [{\"id\":\"p0\",\"x\":3,\"y\":4,\"carriedBy\":\"75d4e78ed8e\",\"reward\":10}]\n\nRaw 'onAgentsSensing' response: []\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take a parcel\nS): ship a parcel\nDon't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
+    "content": "You are a delivery agent in a web-based delivery game where the map is a matrix.\nI am going to give you the raw information I receive from the server and the possible actions.\nYour current goal is to go to a tile with delivery == true.\nMap width: 2\nMap height: 5\nTiles are arranged as 5 rows in 2 columns:[\n   {\n      \"x\": 0,\n      \"y\": 0,\n      \"delivery\": false\n   },\n   {\n      \"x\": 0,\n      \"y\": 1,\n      \"delivery\": true\n   },\n   {\n      \"x\": 1,\n      \"y\": 0,\n      \"delivery\": false\n   },\n   {\n      \"x\": 1,\n      \"y\": 1,\n      \"delivery\": false\n   },\n   {\n      \"x\": 2,\n      \"y\": 0,\n      \"delivery\": false\n   },\n   {\n      \"x\": 2,\n      \"y\": 1,\n      \"delivery\": false\n   },\n   {\n      \"x\": 3,\n      \"y\": 0,\n      \"delivery\": false\n   },\n   {\n      \"x\": 3,\n      \"y\": 1,\n      \"delivery\": false\n   },\n   {\n      \"x\": 4,\n      \"y\": 0,\n      \"delivery\": false\n   },\n   {\n      \"x\": 4,\n      \"y\": 1,\n      \"delivery\": false\n   }\n]\n\nYou are in the spot (2, 0).\n\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take the parcel that is in your tile\nS): ship a parcel (you must be in a delivery=true tile)\n\nYour final goal is to go to a delivery zone and (S)hip the parcel, I need the best action that will get you there. Don't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
   },
   {
     "role": "assistant",
-    "content": "S"
+    "content": "U"
   },
   {
     "role": "user",
-    "content": "\nRaw 'onMap' response: {\"width\":2,\"height\":5,\"tiles\":[{\"x\":0,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":4,\"delivery\":true,\"parcelSpawner\":false}]}\n\nRaw 'onYou' response: {\"id\":\"75d4e78ed8e\",\"name\":\"raw_llm_agent\",\"x\":3,\"y\":4,\"score\":0}\n\nRaw 'onParcelsSensing' response: [{\"id\":\"p0\",\"x\":3,\"y\":4,\"carriedBy\":null,\"reward\":10}]\n\nRaw 'onAgentsSensing' response: []\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take a parcel\nS): ship a parcel\nDon't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
+    "content": "You are a delivery agent in a web-based delivery game where the map is a matrix.\nI am going to give you the raw information I receive from the server and the possible actions.\nYour current goal is to go to a tile with delivery == true.\nMap width: 2\nMap height: 5\nTiles are arranged as 5 rows in 2 columns:[\n   {\n      \"x\": 0,\n      \"y\": 0,\n      \"delivery\": false\n   },\n   {\n      \"x\": 0,\n      \"y\": 1,\n      \"delivery\": true\n   },\n   {\n      \"x\": 1,\n      \"y\": 0,\n      \"delivery\": false\n   },\n   {\n      \"x\": 1,\n      \"y\": 1,\n      \"delivery\": false\n   },\n   {\n      \"x\": 2,\n      \"y\": 0,\n      \"delivery\": false\n   },\n   {\n      \"x\": 2,\n      \"y\": 1,\n      \"delivery\": false\n   },\n   {\n      \"x\": 3,\n      \"y\": 0,\n      \"delivery\": false\n   },\n   {\n      \"x\": 3,\n      \"y\": 1,\n      \"delivery\": false\n   },\n   {\n      \"x\": 4,\n      \"y\": 0,\n      \"delivery\": false\n   },\n   {\n      \"x\": 4,\n      \"y\": 1,\n      \"delivery\": false\n   }\n]\n\nYou are in the spot (1, 0).\n\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take the parcel that is in your tile\nS): ship a parcel (you must be in a delivery=true tile)\n\nYour final goal is to go to a delivery zone and (S)hip the parcel, I need the best action that will get you there. Don't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
   },
   {
     "role": "assistant",
-    "content": "T"
+    "content": "U"
   },
   {
     "role": "user",
-    "content": "\nRaw 'onMap' response: {\"width\":2,\"height\":5,\"tiles\":[{\"x\":4,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":0,\"delivery\":true,\"parcelSpawner\":false}]}\n\nRaw 'onYou' response: {\"id\":\"75d4e78ed8e\",\"name\":\"raw_llm_agent\",\"x\":1,\"y\":0,\"score\":0}\n\nRaw 'onParcelsSensing' response: [{\"id\":\"p0\",\"x\":3,\"y\":4,\"carriedBy\":\"75d4e78ed8e\",\"reward\":10}]\n\nRaw 'onAgentsSensing' response: []\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take a parcel\nS): ship a parcel\nDon't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
-  },
-  {
-    "role": "assistant",
-    "content": "L"
-  },
-  {
-    "role": "user",
-    "content": "\nRaw 'onMap' response: {\"width\":2,\"height\":5,\"tiles\":[{\"x\":0,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":4,\"delivery\":true,\"parcelSpawner\":false}]}\n\nRaw 'onYou' response: {\"id\":\"75d4e78ed8e\",\"name\":\"raw_llm_agent\",\"x\":4,\"y\":4,\"score\":0}\n\nRaw 'onParcelsSensing' response: [{\"id\":\"p0\",\"x\":4,\"y\":4,\"carriedBy\":\"75d4e78ed8e\",\"reward\":10}]\n\nRaw 'onAgentsSensing' response: []\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take a parcel\nS): ship a parcel\nDon't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
-  },
-  {
-    "role": "assistant",
-    "content": "S"
-  },
-  {
-    "role": "user",
-    "content": "\nRaw 'onMap' response: {\"width\":2,\"height\":5,\"tiles\":[{\"x\":4,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":0,\"delivery\":true,\"parcelSpawner\":false}]}\n\nRaw 'onYou' response: {\"id\":\"75d4e78ed8e\",\"name\":\"raw_llm_agent\",\"x\":0,\"y\":0,\"score\":0}\n\nRaw 'onParcelsSensing' response: [{\"id\":\"p0\",\"x\":4,\"y\":4,\"carriedBy\":null,\"reward\":10}]\n\nRaw 'onAgentsSensing' response: []\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take a parcel\nS): ship a parcel\nDon't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
+    "content": "You are a delivery agent in a web-based delivery game where the map is a matrix.\nI am going to give you the raw information I receive from the server and the possible actions.\nYour current goal is to go to a tile with delivery == true.\nMap width: 2\nMap height: 5\nTiles are arranged as 5 rows in 2 columns:[\n   {\n      \"x\": 0,\n      \"y\": 0,\n      \"delivery\": false\n   },\n   {\n      \"x\": 0,\n      \"y\": 1,\n      \"delivery\": true\n   },\n   {\n      \"x\": 1,\n      \"y\": 0,\n      \"delivery\": false\n   },\n   {\n      \"x\": 1,\n      \"y\": 1,\n      \"delivery\": false\n   },\n   {\n      \"x\": 2,\n      \"y\": 0,\n      \"delivery\": false\n   },\n   {\n      \"x\": 2,\n      \"y\": 1,\n      \"delivery\": false\n   },\n   {\n      \"x\": 3,\n      \"y\": 0,\n      \"delivery\": false\n   },\n   {\n      \"x\": 3,\n      \"y\": 1,\n      \"delivery\": false\n   },\n   {\n      \"x\": 4,\n      \"y\": 0,\n      \"delivery\": false\n   },\n   {\n      \"x\": 4,\n      \"y\": 1,\n      \"delivery\": false\n   }\n]\n\nYou are in the spot (0, 0).\n\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take the parcel that is in your tile\nS): ship a parcel (you must be in a delivery=true tile)\n\nYour final goal is to go to a delivery zone and (S)hip the parcel, I need the best action that will get you there. Don't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
   },
   {
     "role": "assistant",
@@ -89,391 +49,7 @@
   },
   {
     "role": "user",
-    "content": "\nRaw 'onMap' response: {\"width\":2,\"height\":5,\"tiles\":[{\"x\":0,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":4,\"delivery\":true,\"parcelSpawner\":false}]}\n\nRaw 'onYou' response: {\"id\":\"75d4e78ed8e\",\"name\":\"raw_llm_agent\",\"x\":3,\"y\":4,\"score\":0}\n\nRaw 'onParcelsSensing' response: [{\"id\":\"p0\",\"x\":4,\"y\":4,\"carriedBy\":null,\"reward\":10}]\n\nRaw 'onAgentsSensing' response: []\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take a parcel\nS): ship a parcel\nDon't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
-  },
-  {
-    "role": "assistant",
-    "content": "R"
-  },
-  {
-    "role": "user",
-    "content": "\nRaw 'onMap' response: {\"width\":2,\"height\":5,\"tiles\":[{\"x\":4,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":0,\"delivery\":true,\"parcelSpawner\":false}]}\n\nRaw 'onYou' response: {\"id\":\"75d4e78ed8e\",\"name\":\"raw_llm_agent\",\"x\":1,\"y\":0,\"score\":0}\n\nRaw 'onParcelsSensing' response: [{\"id\":\"p0\",\"x\":0,\"y\":0,\"carriedBy\":null,\"reward\":10}]\n\nRaw 'onAgentsSensing' response: []\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take a parcel\nS): ship a parcel\nDon't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
-  },
-  {
-    "role": "assistant",
-    "content": "R"
-  },
-  {
-    "role": "user",
-    "content": "\nRaw 'onMap' response: {\"width\":2,\"height\":5,\"tiles\":[{\"x\":0,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":4,\"delivery\":true,\"parcelSpawner\":false}]}\n\nRaw 'onYou' response: {\"id\":\"75d4e78ed8e\",\"name\":\"raw_llm_agent\",\"x\":3,\"y\":4,\"score\":0}\n\nRaw 'onParcelsSensing' response: [{\"id\":\"p0\",\"x\":4,\"y\":4,\"carriedBy\":null,\"reward\":10}]\n\nRaw 'onAgentsSensing' response: []\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take a parcel\nS): ship a parcel\nDon't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
-  },
-  {
-    "role": "assistant",
-    "content": "R"
-  },
-  {
-    "role": "user",
-    "content": "\nRaw 'onMap' response: {\"width\":2,\"height\":5,\"tiles\":[{\"x\":4,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":0,\"delivery\":true,\"parcelSpawner\":false}]}\n\nRaw 'onYou' response: {\"id\":\"75d4e78ed8e\",\"name\":\"raw_llm_agent\",\"x\":1,\"y\":0,\"score\":0}\n\nRaw 'onParcelsSensing' response: [{\"id\":\"p0\",\"x\":0,\"y\":0,\"carriedBy\":null,\"reward\":10}]\n\nRaw 'onAgentsSensing' response: []\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take a parcel\nS): ship a parcel\nDon't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
-  },
-  {
-    "role": "assistant",
-    "content": "R"
-  },
-  {
-    "role": "user",
-    "content": "\nRaw 'onMap' response: {\"width\":2,\"height\":5,\"tiles\":[{\"x\":0,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":4,\"delivery\":true,\"parcelSpawner\":false}]}\n\nRaw 'onYou' response: {\"id\":\"75d4e78ed8e\",\"name\":\"raw_llm_agent\",\"x\":3,\"y\":4,\"score\":0}\n\nRaw 'onParcelsSensing' response: [{\"id\":\"p0\",\"x\":4,\"y\":4,\"carriedBy\":null,\"reward\":10}]\n\nRaw 'onAgentsSensing' response: []\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take a parcel\nS): ship a parcel\nDon't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
-  },
-  {
-    "role": "assistant",
-    "content": "L"
-  },
-  {
-    "role": "user",
-    "content": "\nRaw 'onMap' response: {\"width\":2,\"height\":5,\"tiles\":[{\"x\":4,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":0,\"delivery\":true,\"parcelSpawner\":false}]}\n\nRaw 'onYou' response: {\"id\":\"75d4e78ed8e\",\"name\":\"raw_llm_agent\",\"x\":4,\"y\":4,\"score\":0}\n\nRaw 'onParcelsSensing' response: [{\"id\":\"p0\",\"x\":4,\"y\":4,\"carriedBy\":null,\"reward\":10}]\n\nRaw 'onAgentsSensing' response: []\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take a parcel\nS): ship a parcel\nDon't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
-  },
-  {
-    "role": "assistant",
-    "content": "T"
-  },
-  {
-    "role": "user",
-    "content": "\nRaw 'onMap' response: {\"width\":2,\"height\":5,\"tiles\":[{\"x\":0,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":4,\"delivery\":true,\"parcelSpawner\":false}]}\n\nRaw 'onYou' response: {\"id\":\"75d4e78ed8e\",\"name\":\"raw_llm_agent\",\"x\":0,\"y\":0,\"score\":0}\n\nRaw 'onParcelsSensing' response: [{\"id\":\"p0\",\"x\":4,\"y\":4,\"carriedBy\":\"75d4e78ed8e\",\"reward\":10}]\n\nRaw 'onAgentsSensing' response: []\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take a parcel\nS): ship a parcel\nDon't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
-  },
-  {
-    "role": "assistant",
-    "content": "S"
-  },
-  {
-    "role": "user",
-    "content": "\nRaw 'onMap' response: {\"width\":2,\"height\":5,\"tiles\":[{\"x\":4,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":0,\"delivery\":true,\"parcelSpawner\":false}]}\n\nRaw 'onYou' response: {\"id\":\"75d4e78ed8e\",\"name\":\"raw_llm_agent\",\"x\":4,\"y\":4,\"score\":0}\n\nRaw 'onParcelsSensing' response: [{\"id\":\"p0\",\"x\":4,\"y\":4,\"carriedBy\":null,\"reward\":10}]\n\nRaw 'onAgentsSensing' response: []\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take a parcel\nS): ship a parcel\nDon't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
-  },
-  {
-    "role": "assistant",
-    "content": "T"
-  },
-  {
-    "role": "user",
-    "content": "\nRaw 'onMap' response: {\"width\":2,\"height\":5,\"tiles\":[{\"x\":0,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":4,\"delivery\":true,\"parcelSpawner\":false}]}\n\nRaw 'onYou' response: {\"id\":\"75d4e78ed8e\",\"name\":\"raw_llm_agent\",\"x\":0,\"y\":0,\"score\":0}\n\nRaw 'onParcelsSensing' response: [{\"id\":\"p0\",\"x\":4,\"y\":4,\"carriedBy\":\"75d4e78ed8e\",\"reward\":10}]\n\nRaw 'onAgentsSensing' response: []\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take a parcel\nS): ship a parcel\nDon't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
-  },
-  {
-    "role": "assistant",
-    "content": "R"
-  },
-  {
-    "role": "user",
-    "content": "\nRaw 'onMap' response: {\"width\":2,\"height\":5,\"tiles\":[{\"x\":4,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":0,\"delivery\":true,\"parcelSpawner\":false}]}\n\nRaw 'onYou' response: {\"id\":\"75d4e78ed8e\",\"name\":\"raw_llm_agent\",\"x\":3,\"y\":4,\"score\":0}\n\nRaw 'onParcelsSensing' response: [{\"id\":\"p0\",\"x\":3,\"y\":4,\"carriedBy\":\"75d4e78ed8e\",\"reward\":10}]\n\nRaw 'onAgentsSensing' response: []\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take a parcel\nS): ship a parcel\nDon't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
-  },
-  {
-    "role": "assistant",
-    "content": "S"
-  },
-  {
-    "role": "user",
-    "content": "\nRaw 'onMap' response: {\"width\":2,\"height\":5,\"tiles\":[{\"x\":0,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":4,\"delivery\":true,\"parcelSpawner\":false}]}\n\nRaw 'onYou' response: {\"id\":\"75d4e78ed8e\",\"name\":\"raw_llm_agent\",\"x\":1,\"y\":0,\"score\":0}\n\nRaw 'onParcelsSensing' response: [{\"id\":\"p0\",\"x\":3,\"y\":4,\"carriedBy\":null,\"reward\":10}]\n\nRaw 'onAgentsSensing' response: []\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take a parcel\nS): ship a parcel\nDon't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
-  },
-  {
-    "role": "assistant",
-    "content": "R"
-  },
-  {
-    "role": "user",
-    "content": "\nRaw 'onMap' response: {\"width\":2,\"height\":5,\"tiles\":[{\"x\":4,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":0,\"delivery\":true,\"parcelSpawner\":false}]}\n\nRaw 'onYou' response: {\"id\":\"75d4e78ed8e\",\"name\":\"raw_llm_agent\",\"x\":3,\"y\":4,\"score\":0}\n\nRaw 'onParcelsSensing' response: [{\"id\":\"p0\",\"x\":1,\"y\":0,\"carriedBy\":null,\"reward\":10}]\n\nRaw 'onAgentsSensing' response: []\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take a parcel\nS): ship a parcel\nDon't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
-  },
-  {
-    "role": "assistant",
-    "content": "L"
-  },
-  {
-    "role": "user",
-    "content": "\nRaw 'onMap' response: {\"width\":2,\"height\":5,\"tiles\":[{\"x\":0,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":4,\"delivery\":true,\"parcelSpawner\":false}]}\n\nRaw 'onYou' response: {\"id\":\"75d4e78ed8e\",\"name\":\"raw_llm_agent\",\"x\":4,\"y\":4,\"score\":0}\n\nRaw 'onParcelsSensing' response: [{\"id\":\"p0\",\"x\":3,\"y\":4,\"carriedBy\":null,\"reward\":10}]\n\nRaw 'onAgentsSensing' response: []\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take a parcel\nS): ship a parcel\nDon't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
-  },
-  {
-    "role": "assistant",
-    "content": "L"
-  },
-  {
-    "role": "user",
-    "content": "\nRaw 'onMap' response: {\"width\":2,\"height\":5,\"tiles\":[{\"x\":4,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":0,\"delivery\":true,\"parcelSpawner\":false}]}\n\nRaw 'onYou' response: {\"id\":\"75d4e78ed8e\",\"name\":\"raw_llm_agent\",\"x\":0,\"y\":0,\"score\":0}\n\nRaw 'onParcelsSensing' response: [{\"id\":\"p0\",\"x\":1,\"y\":0,\"carriedBy\":null,\"reward\":10}]\n\nRaw 'onAgentsSensing' response: []\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take a parcel\nS): ship a parcel\nDon't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
-  },
-  {
-    "role": "assistant",
-    "content": "R"
-  },
-  {
-    "role": "user",
-    "content": "\nRaw 'onMap' response: {\"width\":2,\"height\":5,\"tiles\":[{\"x\":0,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":4,\"delivery\":true,\"parcelSpawner\":false}]}\n\nRaw 'onYou' response: {\"id\":\"75d4e78ed8e\",\"name\":\"raw_llm_agent\",\"x\":3,\"y\":4,\"score\":0}\n\nRaw 'onParcelsSensing' response: [{\"id\":\"p0\",\"x\":3,\"y\":4,\"carriedBy\":null,\"reward\":10}]\n\nRaw 'onAgentsSensing' response: []\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take a parcel\nS): ship a parcel\nDon't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
-  },
-  {
-    "role": "assistant",
-    "content": "R"
-  },
-  {
-    "role": "user",
-    "content": "\nRaw 'onMap' response: {\"width\":2,\"height\":5,\"tiles\":[{\"x\":4,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":0,\"delivery\":true,\"parcelSpawner\":false}]}\n\nRaw 'onYou' response: {\"id\":\"75d4e78ed8e\",\"name\":\"raw_llm_agent\",\"x\":1,\"y\":0,\"score\":0}\n\nRaw 'onParcelsSensing' response: [{\"id\":\"p0\",\"x\":1,\"y\":0,\"carriedBy\":null,\"reward\":10}]\n\nRaw 'onAgentsSensing' response: []\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take a parcel\nS): ship a parcel\nDon't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
-  },
-  {
-    "role": "assistant",
-    "content": "R"
-  },
-  {
-    "role": "user",
-    "content": "\nRaw 'onMap' response: {\"width\":2,\"height\":5,\"tiles\":[{\"x\":0,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":4,\"delivery\":true,\"parcelSpawner\":false}]}\n\nRaw 'onYou' response: {\"id\":\"75d4e78ed8e\",\"name\":\"raw_llm_agent\",\"x\":3,\"y\":4,\"score\":0}\n\nRaw 'onParcelsSensing' response: [{\"id\":\"p0\",\"x\":3,\"y\":4,\"carriedBy\":null,\"reward\":10}]\n\nRaw 'onAgentsSensing' response: []\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take a parcel\nS): ship a parcel\nDon't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
-  },
-  {
-    "role": "assistant",
-    "content": "R"
-  },
-  {
-    "role": "user",
-    "content": "\nRaw 'onMap' response: {\"width\":2,\"height\":5,\"tiles\":[{\"x\":4,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":0,\"delivery\":true,\"parcelSpawner\":false}]}\n\nRaw 'onYou' response: {\"id\":\"75d4e78ed8e\",\"name\":\"raw_llm_agent\",\"x\":1,\"y\":0,\"score\":0}\n\nRaw 'onParcelsSensing' response: [{\"id\":\"p0\",\"x\":1,\"y\":0,\"carriedBy\":null,\"reward\":10}]\n\nRaw 'onAgentsSensing' response: []\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take a parcel\nS): ship a parcel\nDon't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
-  },
-  {
-    "role": "assistant",
-    "content": "R"
-  },
-  {
-    "role": "user",
-    "content": "\nRaw 'onMap' response: {\"width\":2,\"height\":5,\"tiles\":[{\"x\":0,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":4,\"delivery\":true,\"parcelSpawner\":false}]}\n\nRaw 'onYou' response: {\"id\":\"75d4e78ed8e\",\"name\":\"raw_llm_agent\",\"x\":3,\"y\":4,\"score\":0}\n\nRaw 'onParcelsSensing' response: [{\"id\":\"p0\",\"x\":3,\"y\":4,\"carriedBy\":null,\"reward\":10}]\n\nRaw 'onAgentsSensing' response: []\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take a parcel\nS): ship a parcel\nDon't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
-  },
-  {
-    "role": "assistant",
-    "content": "L"
-  },
-  {
-    "role": "user",
-    "content": "\nRaw 'onMap' response: {\"width\":2,\"height\":5,\"tiles\":[{\"x\":4,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":0,\"delivery\":true,\"parcelSpawner\":false}]}\n\nRaw 'onYou' response: {\"id\":\"75d4e78ed8e\",\"name\":\"raw_llm_agent\",\"x\":4,\"y\":4,\"score\":0}\n\nRaw 'onParcelsSensing' response: [{\"id\":\"p0\",\"x\":3,\"y\":4,\"carriedBy\":null,\"reward\":10}]\n\nRaw 'onAgentsSensing' response: []\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take a parcel\nS): ship a parcel\nDon't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
-  },
-  {
-    "role": "assistant",
-    "content": "L"
-  },
-  {
-    "role": "user",
-    "content": "\nRaw 'onMap' response: {\"width\":2,\"height\":5,\"tiles\":[{\"x\":0,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":4,\"delivery\":true,\"parcelSpawner\":false}]}\n\nRaw 'onYou' response: {\"id\":\"75d4e78ed8e\",\"name\":\"raw_llm_agent\",\"x\":0,\"y\":0,\"score\":0}\n\nRaw 'onParcelsSensing' response: [{\"id\":\"p0\",\"x\":1,\"y\":0,\"carriedBy\":null,\"reward\":10}]\n\nRaw 'onAgentsSensing' response: []\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take a parcel\nS): ship a parcel\nDon't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
-  },
-  {
-    "role": "assistant",
-    "content": "R"
-  },
-  {
-    "role": "user",
-    "content": "\nRaw 'onMap' response: {\"width\":2,\"height\":5,\"tiles\":[{\"x\":4,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":0,\"delivery\":true,\"parcelSpawner\":false}]}\n\nRaw 'onYou' response: {\"id\":\"75d4e78ed8e\",\"name\":\"raw_llm_agent\",\"x\":3,\"y\":4,\"score\":0}\n\nRaw 'onParcelsSensing' response: [{\"id\":\"p0\",\"x\":3,\"y\":4,\"carriedBy\":null,\"reward\":10}]\n\nRaw 'onAgentsSensing' response: []\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take a parcel\nS): ship a parcel\nDon't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
-  },
-  {
-    "role": "assistant",
-    "content": "T"
-  },
-  {
-    "role": "user",
-    "content": "\nRaw 'onMap' response: {\"width\":2,\"height\":5,\"tiles\":[{\"x\":0,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":4,\"delivery\":true,\"parcelSpawner\":false}]}\n\nRaw 'onYou' response: {\"id\":\"75d4e78ed8e\",\"name\":\"raw_llm_agent\",\"x\":1,\"y\":0,\"score\":0}\n\nRaw 'onParcelsSensing' response: [{\"id\":\"p0\",\"x\":3,\"y\":4,\"carriedBy\":\"75d4e78ed8e\",\"reward\":10}]\n\nRaw 'onAgentsSensing' response: []\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take a parcel\nS): ship a parcel\nDon't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
-  },
-  {
-    "role": "assistant",
-    "content": "S"
-  },
-  {
-    "role": "user",
-    "content": "\nRaw 'onMap' response: {\"width\":2,\"height\":5,\"tiles\":[{\"x\":4,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":0,\"delivery\":true,\"parcelSpawner\":false}]}\n\nRaw 'onYou' response: {\"id\":\"75d4e78ed8e\",\"name\":\"raw_llm_agent\",\"x\":3,\"y\":4,\"score\":0}\n\nRaw 'onParcelsSensing' response: [{\"id\":\"p0\",\"x\":3,\"y\":4,\"carriedBy\":null,\"reward\":10}]\n\nRaw 'onAgentsSensing' response: []\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take a parcel\nS): ship a parcel\nDon't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
-  },
-  {
-    "role": "assistant",
-    "content": "T"
-  },
-  {
-    "role": "user",
-    "content": "\nRaw 'onMap' response: {\"width\":2,\"height\":5,\"tiles\":[{\"x\":0,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":4,\"delivery\":true,\"parcelSpawner\":false}]}\n\nRaw 'onYou' response: {\"id\":\"75d4e78ed8e\",\"name\":\"raw_llm_agent\",\"x\":1,\"y\":0,\"score\":0}\n\nRaw 'onParcelsSensing' response: [{\"id\":\"p0\",\"x\":3,\"y\":4,\"carriedBy\":\"75d4e78ed8e\",\"reward\":10}]\n\nRaw 'onAgentsSensing' response: []\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take a parcel\nS): ship a parcel\nDon't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
-  },
-  {
-    "role": "assistant",
-    "content": "R"
-  },
-  {
-    "role": "user",
-    "content": "\nRaw 'onMap' response: {\"width\":2,\"height\":5,\"tiles\":[{\"x\":4,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":0,\"delivery\":true,\"parcelSpawner\":false}]}\n\nRaw 'onYou' response: {\"id\":\"75d4e78ed8e\",\"name\":\"raw_llm_agent\",\"x\":3,\"y\":4,\"score\":0}\n\nRaw 'onParcelsSensing' response: [{\"id\":\"p0\",\"x\":1,\"y\":0,\"carriedBy\":\"75d4e78ed8e\",\"reward\":10}]\n\nRaw 'onAgentsSensing' response: []\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take a parcel\nS): ship a parcel\nDon't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
-  },
-  {
-    "role": "assistant",
-    "content": "L"
-  },
-  {
-    "role": "user",
-    "content": "\nRaw 'onMap' response: {\"width\":2,\"height\":5,\"tiles\":[{\"x\":0,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":4,\"delivery\":true,\"parcelSpawner\":false}]}\n\nRaw 'onYou' response: {\"id\":\"75d4e78ed8e\",\"name\":\"raw_llm_agent\",\"x\":4,\"y\":4,\"score\":0}\n\nRaw 'onParcelsSensing' response: [{\"id\":\"p0\",\"x\":4,\"y\":4,\"carriedBy\":\"75d4e78ed8e\",\"reward\":10}]\n\nRaw 'onAgentsSensing' response: []\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take a parcel\nS): ship a parcel\nDon't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
-  },
-  {
-    "role": "assistant",
-    "content": "S"
-  },
-  {
-    "role": "user",
-    "content": "\nRaw 'onMap' response: {\"width\":2,\"height\":5,\"tiles\":[{\"x\":4,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":0,\"delivery\":true,\"parcelSpawner\":false}]}\n\nRaw 'onYou' response: {\"id\":\"75d4e78ed8e\",\"name\":\"raw_llm_agent\",\"x\":0,\"y\":0,\"score\":0}\n\nRaw 'onParcelsSensing' response: [{\"id\":\"p0\",\"x\":4,\"y\":4,\"carriedBy\":null,\"reward\":10}]\n\nRaw 'onAgentsSensing' response: []\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take a parcel\nS): ship a parcel\nDon't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
-  },
-  {
-    "role": "assistant",
-    "content": "R"
-  },
-  {
-    "role": "user",
-    "content": "\nRaw 'onMap' response: {\"width\":2,\"height\":5,\"tiles\":[{\"x\":0,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":4,\"delivery\":true,\"parcelSpawner\":false}]}\n\nRaw 'onYou' response: {\"id\":\"75d4e78ed8e\",\"name\":\"raw_llm_agent\",\"x\":3,\"y\":4,\"score\":0}\n\nRaw 'onParcelsSensing' response: [{\"id\":\"p0\",\"x\":4,\"y\":4,\"carriedBy\":null,\"reward\":10}]\n\nRaw 'onAgentsSensing' response: []\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take a parcel\nS): ship a parcel\nDon't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
-  },
-  {
-    "role": "assistant",
-    "content": "S"
-  },
-  {
-    "role": "user",
-    "content": "\nRaw 'onMap' response: {\"width\":2,\"height\":5,\"tiles\":[{\"x\":4,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":0,\"delivery\":true,\"parcelSpawner\":false}]}\n\nRaw 'onYou' response: {\"id\":\"75d4e78ed8e\",\"name\":\"raw_llm_agent\",\"x\":1,\"y\":0,\"score\":0}\n\nRaw 'onParcelsSensing' response: [{\"id\":\"p0\",\"x\":0,\"y\":0,\"carriedBy\":null,\"reward\":10}]\n\nRaw 'onAgentsSensing' response: []\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take a parcel\nS): ship a parcel\nDon't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
-  },
-  {
-    "role": "assistant",
-    "content": "R"
-  },
-  {
-    "role": "user",
-    "content": "\nRaw 'onMap' response: {\"width\":2,\"height\":5,\"tiles\":[{\"x\":0,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":4,\"delivery\":true,\"parcelSpawner\":false}]}\n\nRaw 'onYou' response: {\"id\":\"75d4e78ed8e\",\"name\":\"raw_llm_agent\",\"x\":3,\"y\":4,\"score\":0}\n\nRaw 'onParcelsSensing' response: [{\"id\":\"p0\",\"x\":4,\"y\":4,\"carriedBy\":null,\"reward\":10}]\n\nRaw 'onAgentsSensing' response: []\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take a parcel\nS): ship a parcel\nDon't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
-  },
-  {
-    "role": "assistant",
-    "content": "R"
-  },
-  {
-    "role": "user",
-    "content": "\nRaw 'onMap' response: {\"width\":2,\"height\":5,\"tiles\":[{\"x\":4,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":0,\"delivery\":true,\"parcelSpawner\":false}]}\n\nRaw 'onYou' response: {\"id\":\"75d4e78ed8e\",\"name\":\"raw_llm_agent\",\"x\":1,\"y\":0,\"score\":0}\n\nRaw 'onParcelsSensing' response: [{\"id\":\"p0\",\"x\":0,\"y\":0,\"carriedBy\":null,\"reward\":10}]\n\nRaw 'onAgentsSensing' response: []\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take a parcel\nS): ship a parcel\nDon't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
-  },
-  {
-    "role": "assistant",
-    "content": "R"
-  },
-  {
-    "role": "user",
-    "content": "\nRaw 'onMap' response: {\"width\":2,\"height\":5,\"tiles\":[{\"x\":0,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":4,\"delivery\":true,\"parcelSpawner\":false}]}\n\nRaw 'onYou' response: {\"id\":\"75d4e78ed8e\",\"name\":\"raw_llm_agent\",\"x\":3,\"y\":4,\"score\":0}\n\nRaw 'onParcelsSensing' response: [{\"id\":\"p0\",\"x\":4,\"y\":4,\"carriedBy\":null,\"reward\":10}]\n\nRaw 'onAgentsSensing' response: []\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take a parcel\nS): ship a parcel\nDon't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
-  },
-  {
-    "role": "assistant",
-    "content": "D"
-  },
-  {
-    "role": "user",
-    "content": "\nRaw 'onMap' response: {\"width\":2,\"height\":5,\"tiles\":[{\"x\":4,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":0,\"delivery\":true,\"parcelSpawner\":false}]}\n\nRaw 'onYou' response: {\"id\":\"75d4e78ed8e\",\"name\":\"raw_llm_agent\",\"x\":1,\"y\":0,\"score\":0}\n\nRaw 'onParcelsSensing' response: [{\"id\":\"p0\",\"x\":0,\"y\":0,\"carriedBy\":null,\"reward\":10}]\n\nRaw 'onAgentsSensing' response: []\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take a parcel\nS): ship a parcel\nDon't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
-  },
-  {
-    "role": "assistant",
-    "content": "L"
-  },
-  {
-    "role": "user",
-    "content": "\nRaw 'onMap' response: {\"width\":2,\"height\":5,\"tiles\":[{\"x\":0,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":4,\"delivery\":true,\"parcelSpawner\":false}]}\n\nRaw 'onYou' response: {\"id\":\"75d4e78ed8e\",\"name\":\"raw_llm_agent\",\"x\":4,\"y\":4,\"score\":0}\n\nRaw 'onParcelsSensing' response: [{\"id\":\"p0\",\"x\":4,\"y\":4,\"carriedBy\":null,\"reward\":10}]\n\nRaw 'onAgentsSensing' response: []\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take a parcel\nS): ship a parcel\nDon't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
-  },
-  {
-    "role": "assistant",
-    "content": "T"
-  },
-  {
-    "role": "user",
-    "content": "\nRaw 'onMap' response: {\"width\":2,\"height\":5,\"tiles\":[{\"x\":4,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":0,\"delivery\":true,\"parcelSpawner\":false}]}\n\nRaw 'onYou' response: {\"id\":\"75d4e78ed8e\",\"name\":\"raw_llm_agent\",\"x\":0,\"y\":0,\"score\":0}\n\nRaw 'onParcelsSensing' response: [{\"id\":\"p0\",\"x\":4,\"y\":4,\"carriedBy\":\"75d4e78ed8e\",\"reward\":10}]\n\nRaw 'onAgentsSensing' response: []\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take a parcel\nS): ship a parcel\nDon't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
-  },
-  {
-    "role": "assistant",
-    "content": "R"
-  },
-  {
-    "role": "user",
-    "content": "\nRaw 'onMap' response: {\"width\":2,\"height\":5,\"tiles\":[{\"x\":0,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":4,\"delivery\":true,\"parcelSpawner\":false}]}\n\nRaw 'onYou' response: {\"id\":\"75d4e78ed8e\",\"name\":\"raw_llm_agent\",\"x\":3,\"y\":4,\"score\":0}\n\nRaw 'onParcelsSensing' response: [{\"id\":\"p0\",\"x\":3,\"y\":4,\"carriedBy\":\"75d4e78ed8e\",\"reward\":10}]\n\nRaw 'onAgentsSensing' response: []\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take a parcel\nS): ship a parcel\nDon't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
-  },
-  {
-    "role": "assistant",
-    "content": "S"
-  },
-  {
-    "role": "user",
-    "content": "\nRaw 'onMap' response: {\"width\":2,\"height\":5,\"tiles\":[{\"x\":4,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":0,\"delivery\":true,\"parcelSpawner\":false}]}\n\nRaw 'onYou' response: {\"id\":\"75d4e78ed8e\",\"name\":\"raw_llm_agent\",\"x\":1,\"y\":0,\"score\":0}\n\nRaw 'onParcelsSensing' response: [{\"id\":\"p0\",\"x\":3,\"y\":4,\"carriedBy\":null,\"reward\":10}]\n\nRaw 'onAgentsSensing' response: []\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take a parcel\nS): ship a parcel\nDon't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
-  },
-  {
-    "role": "assistant",
-    "content": "R"
-  },
-  {
-    "role": "user",
-    "content": "\nRaw 'onMap' response: {\"width\":2,\"height\":5,\"tiles\":[{\"x\":0,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":4,\"delivery\":true,\"parcelSpawner\":false}]}\n\nRaw 'onYou' response: {\"id\":\"75d4e78ed8e\",\"name\":\"raw_llm_agent\",\"x\":3,\"y\":4,\"score\":0}\n\nRaw 'onParcelsSensing' response: [{\"id\":\"p0\",\"x\":1,\"y\":0,\"carriedBy\":null,\"reward\":10}]\n\nRaw 'onAgentsSensing' response: []\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take a parcel\nS): ship a parcel\nDon't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
-  },
-  {
-    "role": "assistant",
-    "content": "D"
-  },
-  {
-    "role": "user",
-    "content": "\nRaw 'onMap' response: {\"width\":2,\"height\":5,\"tiles\":[{\"x\":4,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":0,\"delivery\":true,\"parcelSpawner\":false}]}\n\nRaw 'onYou' response: {\"id\":\"75d4e78ed8e\",\"name\":\"raw_llm_agent\",\"x\":1,\"y\":0,\"score\":0}\n\nRaw 'onParcelsSensing' response: [{\"id\":\"p0\",\"x\":3,\"y\":4,\"carriedBy\":null,\"reward\":10}]\n\nRaw 'onAgentsSensing' response: []\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take a parcel\nS): ship a parcel\nDon't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
-  },
-  {
-    "role": "assistant",
-    "content": "R"
-  },
-  {
-    "role": "user",
-    "content": "\nRaw 'onMap' response: {\"width\":2,\"height\":5,\"tiles\":[{\"x\":0,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":4,\"delivery\":true,\"parcelSpawner\":false}]}\n\nRaw 'onYou' response: {\"id\":\"75d4e78ed8e\",\"name\":\"raw_llm_agent\",\"x\":3,\"y\":4,\"score\":0}\n\nRaw 'onParcelsSensing' response: [{\"id\":\"p0\",\"x\":1,\"y\":0,\"carriedBy\":null,\"reward\":10}]\n\nRaw 'onAgentsSensing' response: []\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take a parcel\nS): ship a parcel\nDon't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
-  },
-  {
-    "role": "assistant",
-    "content": "S"
-  },
-  {
-    "role": "user",
-    "content": "\nRaw 'onMap' response: {\"width\":2,\"height\":5,\"tiles\":[{\"x\":4,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":0,\"delivery\":true,\"parcelSpawner\":false}]}\n\nRaw 'onYou' response: {\"id\":\"75d4e78ed8e\",\"name\":\"raw_llm_agent\",\"x\":1,\"y\":0,\"score\":0}\n\nRaw 'onParcelsSensing' response: [{\"id\":\"p0\",\"x\":3,\"y\":4,\"carriedBy\":null,\"reward\":10}]\n\nRaw 'onAgentsSensing' response: []\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take a parcel\nS): ship a parcel\nDon't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
-  },
-  {
-    "role": "assistant",
-    "content": "R"
-  },
-  {
-    "role": "user",
-    "content": "\nRaw 'onMap' response: {\"width\":2,\"height\":5,\"tiles\":[{\"x\":0,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":4,\"delivery\":true,\"parcelSpawner\":false}]}\n\nRaw 'onYou' response: {\"id\":\"75d4e78ed8e\",\"name\":\"raw_llm_agent\",\"x\":3,\"y\":4,\"score\":0}\n\nRaw 'onParcelsSensing' response: [{\"id\":\"p0\",\"x\":1,\"y\":0,\"carriedBy\":null,\"reward\":10}]\n\nRaw 'onAgentsSensing' response: []\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take a parcel\nS): ship a parcel\nDon't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
-  },
-  {
-    "role": "assistant",
-    "content": "S"
-  },
-  {
-    "role": "user",
-    "content": "\nRaw 'onMap' response: {\"width\":2,\"height\":5,\"tiles\":[{\"x\":4,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":0,\"delivery\":true,\"parcelSpawner\":false}]}\n\nRaw 'onYou' response: {\"id\":\"75d4e78ed8e\",\"name\":\"raw_llm_agent\",\"x\":1,\"y\":0,\"score\":0}\n\nRaw 'onParcelsSensing' response: [{\"id\":\"p0\",\"x\":3,\"y\":4,\"carriedBy\":null,\"reward\":10}]\n\nRaw 'onAgentsSensing' response: []\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take a parcel\nS): ship a parcel\nDon't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
-  },
-  {
-    "role": "assistant",
-    "content": "R"
-  },
-  {
-    "role": "user",
-    "content": "\nRaw 'onMap' response: {\"width\":2,\"height\":5,\"tiles\":[{\"x\":0,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":4,\"delivery\":true,\"parcelSpawner\":false}]}\n\nRaw 'onYou' response: {\"id\":\"75d4e78ed8e\",\"name\":\"raw_llm_agent\",\"x\":3,\"y\":4,\"score\":0}\n\nRaw 'onParcelsSensing' response: [{\"id\":\"p0\",\"x\":1,\"y\":0,\"carriedBy\":null,\"reward\":10}]\n\nRaw 'onAgentsSensing' response: []\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take a parcel\nS): ship a parcel\nDon't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
-  },
-  {
-    "role": "assistant",
-    "content": "D"
-  },
-  {
-    "role": "user",
-    "content": "\nRaw 'onMap' response: {\"width\":2,\"height\":5,\"tiles\":[{\"x\":4,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":0,\"delivery\":true,\"parcelSpawner\":false}]}\n\nRaw 'onYou' response: {\"id\":\"75d4e78ed8e\",\"name\":\"raw_llm_agent\",\"x\":1,\"y\":0,\"score\":0}\n\nRaw 'onParcelsSensing' response: [{\"id\":\"p0\",\"x\":3,\"y\":4,\"carriedBy\":null,\"reward\":10}]\n\nRaw 'onAgentsSensing' response: []\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take a parcel\nS): ship a parcel\nDon't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
-  },
-  {
-    "role": "assistant",
-    "content": "R"
-  },
-  {
-    "role": "user",
-    "content": "\nRaw 'onMap' response: {\"width\":2,\"height\":5,\"tiles\":[{\"x\":0,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":4,\"delivery\":true,\"parcelSpawner\":false}]}\n\nRaw 'onYou' response: {\"id\":\"75d4e78ed8e\",\"name\":\"raw_llm_agent\",\"x\":3,\"y\":4,\"score\":0}\n\nRaw 'onParcelsSensing' response: [{\"id\":\"p0\",\"x\":1,\"y\":0,\"carriedBy\":null,\"reward\":10}]\n\nRaw 'onAgentsSensing' response: []\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take a parcel\nS): ship a parcel\nDon't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
-  },
-  {
-    "role": "assistant",
-    "content": "S"
-  },
-  {
-    "role": "user",
-    "content": "\nRaw 'onMap' response: {\"width\":2,\"height\":5,\"tiles\":[{\"x\":4,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":4,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":3,\"y\":0,\"delivery\":true,\"parcelSpawner\":false}]}\n\nRaw 'onYou' response: {\"id\":\"75d4e78ed8e\",\"name\":\"raw_llm_agent\",\"x\":1,\"y\":0,\"score\":0}\n\nRaw 'onParcelsSensing' response: [{\"id\":\"p0\",\"x\":3,\"y\":4,\"carriedBy\":null,\"reward\":10}]\n\nRaw 'onAgentsSensing' response: []\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take a parcel\nS): ship a parcel\nDon't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
-  },
-  {
-    "role": "assistant",
-    "content": "R"
-  },
-  {
-    "role": "user",
-    "content": "\nRaw 'onMap' response: {\"width\":2,\"height\":5,\"tiles\":[{\"x\":0,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":0,\"y\":4,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":0,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":1,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":2,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":3,\"delivery\":false,\"parcelSpawner\":true},{\"x\":1,\"y\":4,\"delivery\":true,\"parcelSpawner\":false}]}\n\nRaw 'onYou' response: {\"id\":\"75d4e78ed8e\",\"name\":\"raw_llm_agent\",\"x\":3,\"y\":4,\"score\":0}\n\nRaw 'onParcelsSensing' response: [{\"id\":\"p0\",\"x\":1,\"y\":0,\"carriedBy\":null,\"reward\":10}]\n\nRaw 'onAgentsSensing' response: []\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take a parcel\nS): ship a parcel\nDon't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
+    "content": "You are a delivery agent in a web-based delivery game where the map is a matrix.\nI am going to give you the raw information I receive from the server and the possible actions.\nYour current goal is to go to a tile with delivery == true.\nMap width: 2\nMap height: 5\nTiles are arranged as 5 rows in 2 columns:[\n   {\n      \"x\": 0,\n      \"y\": 0,\n      \"delivery\": false\n   },\n   {\n      \"x\": 0,\n      \"y\": 1,\n      \"delivery\": true\n   },\n   {\n      \"x\": 1,\n      \"y\": 0,\n      \"delivery\": false\n   },\n   {\n      \"x\": 1,\n      \"y\": 1,\n      \"delivery\": false\n   },\n   {\n      \"x\": 2,\n      \"y\": 0,\n      \"delivery\": false\n   },\n   {\n      \"x\": 2,\n      \"y\": 1,\n      \"delivery\": false\n   },\n   {\n      \"x\": 3,\n      \"y\": 0,\n      \"delivery\": false\n   },\n   {\n      \"x\": 3,\n      \"y\": 1,\n      \"delivery\": false\n   },\n   {\n      \"x\": 4,\n      \"y\": 0,\n      \"delivery\": false\n   },\n   {\n      \"x\": 4,\n      \"y\": 1,\n      \"delivery\": false\n   }\n]\n\nYou are in the spot (0, 1).\n\nACTIONS you can do:\nU): move up\nD): move down\nL): move left\nR): move right\nT): take the parcel that is in your tile\nS): ship a parcel (you must be in a delivery=true tile)\n\nYour final goal is to go to a delivery zone and (S)hip the parcel, I need the best action that will get you there. Don't explain the reasoning and don't add any comment, just provide the action. What is your next action?"
   },
   {
     "role": "assistant",
