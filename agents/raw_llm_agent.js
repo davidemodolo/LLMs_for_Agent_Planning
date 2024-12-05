@@ -378,10 +378,10 @@ function buildMap() {
 
 const POSSIBLE_ACTIONS = ["U", "D", "L", "R", "T", "S"];
 const POSSIBLE_ACTIONS_DESCRIPTION = {
-  U: "move up",
-  D: "move down",
-  L: "move left",
-  R: "move right",
+  U: "move up (decrease your x by 1)",
+  D: "move down (increase your x by 1)",
+  L: "move left (decrease your y by 1)",
+  R: "move right (increase your y by 1)",
   T: "take the parcel that is in your tile",
   S: "ship a parcel (you must be in a delivery=true tile)",
 };
@@ -473,11 +473,13 @@ function getLegalActions(antiLoop = ANTI_LOOP, helpTheBot = HELP_THE_BOT) {
 
 var GOAL = "pickup";
 var repeatStart = false;
+var first = true;
 
 function getRawPrompt() {
-  if (numParcels > 0) {
+  if (numParcels > 0 && first) {
     GOAL = "deliver";
     repeatStart = true;
+    first = false;
   } else {
     GOAL = "pickup";
   }
@@ -492,35 +494,36 @@ function getRawPrompt() {
       prompt += `\nYour current goal is to go to a tile with delivery == true.`;
     }
     repeatStart = false;
+    const noParcelSpawnerTiles = [];
+    for (let tile of rawOnMap.tiles) {
+      var tileX = tile.x;
+      var tileY = tile.y;
+      if (CUSTOM_ORIENTATION) {
+        const tmp = tileX;
+        tileX = Math.abs(tileY - (heightMax - 1));
+        tileY = tmp;
+      }
+      tile = { x: tileX, y: tileY, delivery: tile.delivery };
+      noParcelSpawnerTiles.push(tile);
+    }
+    // sort the tiles first by x and then by y
+    noParcelSpawnerTiles.sort((a, b) => {
+      if (a.x == b.x) {
+        return a.y - b.y;
+      }
+      return a.x - b.x;
+    });
+
+    // raw onMap
+    prompt += `\nMap width: ${rawOnMap.width}\nMap height: ${
+      rawOnMap.height
+    }\nTiles are arranged as ${rawOnMap.height} rows in ${
+      rawOnMap.width
+    } columns:${JSON.stringify(noParcelSpawnerTiles, null, 3)}\n`;
   }
 
   // remove the parcelSpawned property from the tiles, tiles are {"x":0,"y":0,"delivery":false,"parcelSpawner":true}
-  const noParcelSpawnerTiles = [];
-  for (let tile of rawOnMap.tiles) {
-    var tileX = tile.x;
-    var tileY = tile.y;
-    if (CUSTOM_ORIENTATION) {
-      const tmp = tileX;
-      tileX = Math.abs(tileY - (heightMax - 1));
-      tileY = tmp;
-    }
-    tile = { x: tileX, y: tileY, delivery: tile.delivery };
-    noParcelSpawnerTiles.push(tile);
-  }
-  // sort the tiles first by x and then by y
-  noParcelSpawnerTiles.sort((a, b) => {
-    if (a.x == b.x) {
-      return a.y - b.y;
-    }
-    return a.x - b.x;
-  });
 
-  // raw onMap
-  prompt += `\nMap width: ${rawOnMap.width}\nMap height: ${
-    rawOnMap.height
-  }\nTiles are arranged as ${rawOnMap.height} rows in ${
-    rawOnMap.width
-  } columns:${JSON.stringify(noParcelSpawnerTiles, null, 3)}\n`;
   // work on the coordinates of the agent
   var agentX = rawOnYou.x;
   var agentY = rawOnYou.y;
