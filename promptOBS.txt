@@ -1,9 +1,8 @@
 You are a delivery agent in a web-based delivery game where the map is a matrix.
 I am going to give you the raw information I receive from the server and the possible actions.
-Your current goal is to go to a tile with delivery == true.
-Map width: 5
-Map height: 6
-Tiles are arranged as 6 rows in 5 columns:[
+Map width: 3
+Map height: 4
+Tiles are arranged as 4 rows in 3 columns:[
    {
       "x": 0,
       "y": 0,
@@ -20,16 +19,6 @@ Tiles are arranged as 6 rows in 5 columns:[
       "delivery": true
    },
    {
-      "x": 0,
-      "y": 3,
-      "delivery": false
-   },
-   {
-      "x": 0,
-      "y": 4,
-      "delivery": false
-   },
-   {
       "x": 1,
       "y": 0,
       "delivery": false
@@ -42,16 +31,6 @@ Tiles are arranged as 6 rows in 5 columns:[
    {
       "x": 1,
       "y": 2,
-      "delivery": false
-   },
-   {
-      "x": 1,
-      "y": 3,
-      "delivery": false
-   },
-   {
-      "x": 1,
-      "y": 4,
       "delivery": false
    },
    {
@@ -70,16 +49,6 @@ Tiles are arranged as 6 rows in 5 columns:[
       "delivery": false
    },
    {
-      "x": 2,
-      "y": 3,
-      "delivery": false
-   },
-   {
-      "x": 2,
-      "y": 4,
-      "delivery": false
-   },
-   {
       "x": 3,
       "y": 0,
       "delivery": false
@@ -92,71 +61,13 @@ Tiles are arranged as 6 rows in 5 columns:[
    {
       "x": 3,
       "y": 2,
-      "delivery": false
-   },
-   {
-      "x": 3,
-      "y": 3,
-      "delivery": false
-   },
-   {
-      "x": 3,
-      "y": 4,
-      "delivery": false
-   },
-   {
-      "x": 4,
-      "y": 0,
-      "delivery": false
-   },
-   {
-      "x": 4,
-      "y": 1,
-      "delivery": false
-   },
-   {
-      "x": 4,
-      "y": 2,
-      "delivery": false
-   },
-   {
-      "x": 4,
-      "y": 3,
-      "delivery": false
-   },
-   {
-      "x": 4,
-      "y": 4,
-      "delivery": false
-   },
-   {
-      "x": 5,
-      "y": 0,
-      "delivery": false
-   },
-   {
-      "x": 5,
-      "y": 1,
-      "delivery": false
-   },
-   {
-      "x": 5,
-      "y": 2,
-      "delivery": false
-   },
-   {
-      "x": 5,
-      "y": 3,
-      "delivery": false
-   },
-   {
-      "x": 5,
-      "y": 4,
       "delivery": false
    }
 ]
 
-You are in the spot (0, 2).
+The parcel you need to take is in the spot (2, 1).
+
+You are in the spot (3, 2).
 
 ACTIONS you can do:
 U): move up (decrease your x by 1)
@@ -166,4 +77,4 @@ R): move right (increase your y by 1)
 T): take the parcel that is in your tile
 S): ship a parcel (you must be in a delivery=true tile)
 
-Your final goal is to go to a delivery zone and (S)hip the parcel, I need the best action that will get you there. Don't explain the reasoning and don't add any comment, just provide the action. What is your next action?
+Your final goal is to go to a tile with the parcel and (T)ake it, I need the best action that will get you there. Don't explain the reasoning and don't add any comment, just provide the action. What is your next action?

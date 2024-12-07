@@ -488,7 +488,6 @@ function getRawPrompt() {
   var prompt = "";
   // repeat the prompt every 5 steps
   if (conversationHistory.length == 0 || !USE_HISTORY || repeatStart) {
-    //TODO: repeat the starting prompt when the goal changes
     prompt = `You are a delivery agent in a web-based delivery game where the map is a matrix.\nI am going to give you the raw information I receive from the server and the possible actions.`;
     if (GOAL == "deliver") {
       prompt += `\nYour current goal is to go to a tile with delivery == true.`;

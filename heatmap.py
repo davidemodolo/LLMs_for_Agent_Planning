@@ -11,12 +11,12 @@ def create_square_pie(ax, data, color):
     data: Dictionary of labels and values for the pie chart
     color: Base color for the pie chart
     """
-    total = sum(data.values())
+    total = sum(data.values())*100
     current_pos = 0
 
     for label, value in data.items():
-        sector_size = value / total
-        rect = patches.Rectangle((0, current_pos), 1, sector_size, linewidth=1, facecolor=color, alpha=value / total)
+        sector_size = value*100 / total
+        rect = patches.Rectangle((0, current_pos), 1, sector_size, linewidth=1, facecolor=color if label != "GOAL" else '#d16278', alpha=sector_size)
         ax.add_patch(rect)
 
         # Add label in the middle of the sector
@@ -28,7 +28,7 @@ def create_square_pie(ax, data, color):
     ax.set_ylim(0, 1)
     ax.axis('off')
 
-def create_table_of_square_pies(data_list, width, length, color):
+def create_table_of_square_pies(data_list, width, length, color, title):
     """
     Create a table of square pie charts.
 
@@ -57,22 +57,66 @@ def create_table_of_square_pies(data_list, width, length, color):
     for j in range(len(data_list), width * length):
         axes[j].axis('off')
 
+    # Add title
+    fig.suptitle(title, fontsize=16)
     plt.tight_layout()
     plt.show()
 
 # Example usage
 data_list = [
-    {'A': 20, 'B': 30, 'C': 50},
-    {'X': 20, 'Y': 80},
-    {'P': 50, 'Q': 50},
-    {'K': 25, 'L': 25, 'M': 50},
-    {'D': 40, 'E': 30, 'F': 30},
-    {'GOAL': 100},
-    {'P': 50, 'Q': 50},
-    {'K': 25, 'L': 25, 'M': 50},
-    {'D': 40, 'E': 30, 'F': 30}
+    {
+'D': 0.8744592772277636,
+'R': 0.09168143721742084
+},
+{
+'D': 0.9204125376796807
+},
+{
+'D': 0.6409207000455684,
+'R': 0.2792282900742623
+},
+{
+'D': 0.7683680895638543,
+'R': 0.17179977980935932
+},
+{
+'D': 0.6675399776913973,
+'R': 0.22117274591673186
+},
+{
+'D': 0.526055867413674,
+'L': 0.21073049646567263,
+'U': 0.10004790118307458,
+'R': 0.0960842527008502
+},
+{
+'U': 0.5085014732434758,
+'D': 0.2264857522555833,
+'R': 0.1677446671656261
+},
+{
+'GOAL': 1
+},
+{
+'L': 0.6449431769165592,
+'U': 0.24838881872636456
+},
+{
+'U': 0.7240179931322405,
+'D': 0.10798546440941836,
+'L': 0.08268178239241625
+},
+{
+'U': 0.8347481503730149
+},
+{
+'U': 0.5787276016078792,
+'L': 0.2577341389034301,
+'D': 0.080534024732989
+},
+
 ]
 width = 3
-length = 3
+length = 4
 color = 'green'
-create_table_of_square_pies(data_list, width, length, color)
+create_table_of_square_pies(data_list, width, length, color, title='Table of Square Pies')
