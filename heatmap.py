@@ -2,6 +2,15 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import math
 
+colors = {
+    "U": "#4a90e2",  # blue
+    "D": "#e94e77",  # red
+    "L": "#7ed321",  # green
+    "R": "#f8e71c",  # yellow
+    "T": "#bd10e0",  # purple
+    "S": "#f5a623"   # orange
+}
+
 def create_square_pie(ax, data, color):
     """
     Create a square pie chart within the provided Axes object.
@@ -16,7 +25,7 @@ def create_square_pie(ax, data, color):
 
     for label, value in data.items():
         sector_size = value*100 / total
-        rect = patches.Rectangle((0, current_pos), 1, sector_size, linewidth=1, facecolor=color if label != "GOAL" else '#d16278', alpha=sector_size)
+        rect = patches.Rectangle((0, current_pos), 1, sector_size, linewidth=1, facecolor=colors[label] if label != "GOAL" else '#ffffff', alpha=sector_size)
         ax.add_patch(rect)
 
         # Add label in the middle of the sector
@@ -90,9 +99,9 @@ data_list = [
 'R': 0.0960842527008502
 },
 {
-'U': 0.5085014732434758,
-'D': 0.2264857522555833,
-'R': 0.1677446671656261
+'R': 0.4537744183814276,
+'U': 0.26937673181045335,
+'D': 0.1842493557668505
 },
 {
 'GOAL': 1

@@ -67,7 +67,7 @@ Tiles are arranged as 4 rows in 3 columns:[
 
 The parcel you need to take is in the spot (2, 1).
 
-You are in the spot (3, 2).
+You are in the spot (2, 0).
 
 ACTIONS you can do:
 U): move up (decrease your x by 1)
