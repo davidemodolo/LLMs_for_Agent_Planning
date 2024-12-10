@@ -25,7 +25,10 @@ def create_square_pie(ax, data, color):
 
     for label, value in data.items():
         sector_size = value*100 / total
-        rect = patches.Rectangle((0, current_pos), 1, sector_size, linewidth=1, facecolor=colors[label] if label != "GOAL" else '#ffffff', alpha=sector_size)
+        if label == "GOAL":
+            rect = patches.Rectangle((0, current_pos), 1, sector_size, linewidth=10, edgecolor='grey', facecolor='#ffffff', alpha=sector_size)
+        else:
+            rect = patches.Rectangle((0, current_pos), 1, sector_size, linewidth=1, facecolor=colors[label], alpha=sector_size)
         ax.add_patch(rect)
 
         # Add label in the middle of the sector
@@ -128,4 +131,4 @@ data_list = [
 width = 3
 length = 4
 color = 'green'
-create_table_of_square_pies(data_list, width, length, color, title='Table of Square Pies')
+create_table_of_square_pies(data_list, width, length, color, title='GPT-4o-mini, 3x4 pickup')

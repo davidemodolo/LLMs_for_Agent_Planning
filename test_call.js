@@ -1,5 +1,3 @@
-// Example JavaScript code for calling the Python API
-
 async function queryLLM(prompt, logprobs, top_logprobs, logit_bias_dict) {
   const apiUrl = "http://localhost:8000/query"; // Update with the actual server URL
 
