@@ -43,14 +43,14 @@ def query(prompt, logprobs, top_logprobs, logit_bias_dict, end_when_error=False,
             break
         try:
             print("[INFO] Connecting to the LLM ...")
-            llm_output = __connect_openai(messages, logprobs, top_logprobs, logit_bias_dict)
+            llm_output, total_tokens = __connect_openai(messages, logprobs, top_logprobs, logit_bias_dict)
             conn_success = True
         except Exception as e:
             print(f"[ERROR] LLM error: {e}")
             if end_when_error:
                 break
 
-    return conn_success, llm_output
+    return conn_success, llm_output, total_tokens
 
 @retry(tries=2, delay=30)
 def __connect_openai(messages, logprobs, top_logprobs, logit_bias_dict):
@@ -74,8 +74,7 @@ def __connect_openai(messages, logprobs, top_logprobs, logit_bias_dict):
         seed=llm_default_config["seed"],
         stop=llm_default_config["stop"],
     )
-
-    return build_log_probs(response.choices[0].logprobs.content[0].top_logprobs)
+    return build_log_probs(response.choices[0].logprobs.content[0].top_logprobs), response.usage.total_tokens
 
 def build_log_probs(top_logprobs):
     log_probs = {}
@@ -87,14 +86,14 @@ def build_log_probs(top_logprobs):
 @app.post("/query")
 async def query_llm(request: QueryRequest):
     try:
-        succ, output = query(
+        succ, output, total_tokens = query(
             request.prompt,
             request.logprobs,
             request.top_logprobs,
             request.logit_bias_dict,
         )
         if succ:
-            return {"success": True, "log_probs": output}
+            return {"success": True, "log_probs": output, "total_tokens": total_tokens}
         else:
             raise HTTPException(status_code=500, detail="Failed to connect to the LLM.")
     except Exception as e:

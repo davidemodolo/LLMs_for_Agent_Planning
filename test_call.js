@@ -23,7 +23,11 @@ async function queryLLM(prompt, logprobs, top_logprobs, logit_bias_dict) {
 
     const result = await response.json();
     console.log("Log Probs Result:", result.log_probs);
-    return result.log_probs;
+    console.log("Total Tokens:", result.total_tokens);
+    for (const element in result.log_probs) {
+      console.log("Element:", element, "Log Prob:", result.log_probs[element]);
+    }
+    return result;
   } catch (error) {
     console.error("Error querying LLM:", error);
   }
@@ -33,6 +37,13 @@ async function queryLLM(prompt, logprobs, top_logprobs, logit_bias_dict) {
 const prompt = "What is the oldest capital of Italy?";
 const logprobs = true;
 const top_logprobs = 20;
-const logit_bias_dict = {};
+const logit_bias_dict = {
+  35: 100,
+  43: 100,
+  49: 100,
+  50: 100,
+  51: 100,
+  52: 100,
+};
 
 queryLLM(prompt, logprobs, top_logprobs, logit_bias_dict);

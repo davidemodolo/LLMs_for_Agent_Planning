@@ -1,5 +1,4 @@
 import { DeliverooApi } from "@unitn-asa/deliveroo-js-client";
-import axios from "axios";
 import OpenAI from "openai";
 import fs from "fs";
 import tiktoken from "tiktoken";
@@ -41,16 +40,21 @@ results.set("HELP_SIMULATE_NEXT_ACTIONS", HELP_SIMULATE_NEXT_ACTIONS);
 const LEVELS = ["NO_PLAN", "ONLY_GOAL", "FULL_PLAN"];
 const LEVEL = LEVELS[0];
 const POSSIBLE_LOGICS = ["raw", "random", "threshold"];
-const LOGIC = POSSIBLE_LOGICS[0];
+const LOGIC = POSSIBLE_LOGICS[1];
+
+var GOAL = "pickup";
+var OLD_GOAL = "pickup";
 
 const conversationHistory = [];
 const fullConversationHistory = [];
 function addHistory(roleAdd, contentAdd) {
   conversationHistory.push({ role: roleAdd, content: contentAdd });
   fullConversationHistory.push({ role: roleAdd, content: contentAdd });
-  // if (conversationHistory.length > 5) {
-  //   conversationHistory.splice(0, 2);
-  // }
+  if (conversationHistory.length > 10) {
+    // keep the last three elements
+    conversationHistory.splice(0, conversationHistory.length - 3);
+    OLD_GOAL = "";
+  }
 }
 
 async function knowno_OpenAI(
@@ -471,28 +475,18 @@ function getLegalActions(antiLoop = ANTI_LOOP, helpTheBot = HELP_THE_BOT) {
   return legalActions;
 }
 
-var GOAL = "pickup";
-var repeatStart = false;
-var first = true;
-
 function getRawPrompt() {
-  if (numParcels > 0 && first) {
-    GOAL = "deliver";
-    repeatStart = true;
-    first = false;
-  } else {
-    GOAL = "pickup";
-  }
+  GOAL = numParcels > 0 ? "deliver" : "pickup";
   const CUSTOM_ORIENTATION = true;
   const PARCERL_CATEGORIZATION = false;
   var prompt = "";
   // repeat the prompt every 5 steps
-  if (conversationHistory.length == 0 || !USE_HISTORY || repeatStart) {
+  if (conversationHistory.length == 0 || !USE_HISTORY || GOAL != OLD_GOAL) {
     prompt = `You are a delivery agent in a web-based delivery game where the map is a matrix.\nI am going to give you the raw information I receive from the server and the possible actions.`;
     if (GOAL == "deliver") {
       prompt += `\nYour current goal is to go to a tile with delivery == true.`;
     }
-    repeatStart = false;
+    OLD_GOAL = GOAL;
     const noParcelSpawnerTiles = [];
     for (let tile of rawOnMap.tiles) {
       var tileX = tile.x;
@@ -585,9 +579,9 @@ function getRawPrompt() {
   if (GOAL == "pickup") {
     prompt += `Your final goal is to go to a tile with the parcel and (T)ake it, `;
   } else if (GOAL == "deliver") {
-    prompt += `Your final goal is to go to a delivery zone and (S)hip the parcel, `;
+    prompt += `You have a parcel to ship, your final goal is to go to the delivery zone (delivery = true) and (S)hip the parcel, `;
   }
-  prompt += `I need the best action that will get you there. Don't explain the reasoning and don't add any comment, just provide the action. What is your next action?`;
+  prompt += `I need the best action that will get you there, if you are in the goal tile, Take or Ship based on the current goal. Don't explain the reasoning and don't add any comment, just provide the action. What is your next action?`;
   // save the prompt to prompt.txt
   //fs.writeFileSync(`prompt${fullConversationHistory.length}.txt`, prompt);
   fs.writeFileSync(`promptOBS.txt`, prompt);
