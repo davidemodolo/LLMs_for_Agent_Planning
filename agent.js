@@ -483,17 +483,7 @@ function uncertaintyLogic(response, threshold = null, logic = LOGIC) {
   }
 }
 
-var availableActions = [...POSSIBLE_ACTIONS];
-var prevAction = null;
-var previousEnvironment = null; // put this inside the loop to test without the filtering
-
-// create a moving window of the last 10 actions
-const lastActions = [];
-const MAX_ACTIONS = 10;
-
-//TODO: keep track of the uncertainty
 async function agentLoop() {
-  var num_actions = 0;
   // get current time
   const start = new Date().getTime();
   // stop after 5 minutes

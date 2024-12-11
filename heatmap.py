@@ -25,7 +25,7 @@ def create_square_pie(ax, data, color):
 
     for label, value in data.items():
         sector_size = value*100 / total
-        if label == "GOAL":
+        if label == "PICKUP":
             rect = patches.Rectangle((0, current_pos), 1, sector_size, linewidth=10, edgecolor='grey', facecolor='#ffffff', alpha=sector_size)
         else:
             rect = patches.Rectangle((0, current_pos), 1, sector_size, linewidth=1, facecolor=colors[label], alpha=sector_size)
@@ -107,7 +107,7 @@ data_list = [
 'D': 0.1842493557668505
 },
 {
-'GOAL': 1
+'PICKUP': 1
 },
 {
 'L': 0.6449431769165592,
