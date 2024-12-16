@@ -50,11 +50,10 @@ const fullConversationHistory = [];
 function addHistory(roleAdd, contentAdd) {
   conversationHistory.push({ role: roleAdd, content: contentAdd });
   fullConversationHistory.push({ role: roleAdd, content: contentAdd });
-  if (conversationHistory.length > 10) {
-    // keep the last three elements
-    conversationHistory.splice(0, conversationHistory.length - 3);
-    OLD_GOAL = "";
-  }
+  // if (conversationHistory.length > 10) {
+  //   // keep the first and the last three elements
+  //   conversationHistory.splice(1, conversationHistory.length - 4);
+  // }
 }
 
 async function knowno_OpenAI(
@@ -481,7 +480,14 @@ function getRawPrompt() {
   const PARCERL_CATEGORIZATION = false;
   var prompt = "";
   // repeat the prompt every 5 steps
-  if (conversationHistory.length == 0 || !USE_HISTORY || GOAL != OLD_GOAL) {
+  if (
+    conversationHistory.length == 0 ||
+    !USE_HISTORY ||
+    GOAL != OLD_GOAL ||
+    conversationHistory.length % 16 == 0
+  ) {
+    // empty conversation history
+    //conversationHistory.length = 0;
     prompt = `You are a delivery agent in a web-based delivery game where the map is a matrix.\nI am going to give you the raw information I receive from the server and the possible actions.`;
     if (GOAL == "deliver") {
       prompt += `\nYour current goal is to go to a tile with delivery == true.`;
@@ -969,6 +975,7 @@ async function agentLoop() {
       }
       process.exit();
     }
+    num_actions++;
     results.set("score", me.score);
     results.set("actions", num_actions);
     results.set("tokens", total_tokens);

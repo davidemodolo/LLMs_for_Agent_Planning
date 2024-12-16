@@ -19,7 +19,8 @@ const USE_HISTORY = true; // set to true to use the conversation history
 const MODEL = "gpt-4o-mini";
 const POSSIBLE_LOGICS = ["raw", "random", "threshold"];
 const LOGIC = POSSIBLE_LOGICS[0];
-
+var GOAL = "pickup";
+var OLD_GOAL = "pickup";
 const conversationHistory = [];
 const fullConversationHistory = [];
 function addHistory(roleAdd, contentAdd) {
@@ -309,28 +310,18 @@ function buildActionsText(allowedActions) {
     .join("\n");
 }
 
-var GOAL = "pickup";
-var repeatStart = false;
-var first = true;
-
 function getRawPrompt() {
-  if (numParcels > 0 && first) {
-    GOAL = "deliver";
-    repeatStart = true;
-    first = false;
-  } else {
-    GOAL = "pickup";
-  }
+  GOAL = numParcels > 0 ? "deliver" : "pickup";
   const CUSTOM_ORIENTATION = true;
   const PARCERL_CATEGORIZATION = false;
   var prompt = "";
   // repeat the prompt every 5 steps
-  if (conversationHistory.length == 0 || !USE_HISTORY || repeatStart) {
+  if (conversationHistory.length == 0 || !USE_HISTORY || GOAL != OLD_GOAL) {
+    OLD_GOAL = GOAL;
     prompt = `You are a delivery agent in a web-based delivery game where the map is a matrix.\nI am going to give you the raw information I receive from the server and the possible actions.`;
     if (GOAL == "deliver") {
       prompt += `\nYour current goal is to go to a tile with delivery == true.`;
     }
-    repeatStart = false;
     const noParcelSpawnerTiles = [];
     for (let tile of rawOnMap.tiles) {
       var tileX = tile.x;
@@ -502,7 +493,9 @@ async function agentLoop() {
       await client.timer(100);
       continue;
     }
-    var response = await knowno_OpenAI(getRawPrompt(), POSSIBLE_ACTIONS);
+    const rawPrompt = getRawPrompt();
+    console.log("Raw prompt: ", rawPrompt);
+    var response = await knowno_OpenAI(rawPrompt, POSSIBLE_ACTIONS);
     response = uncertaintyLogic(response);
     console.log("Action: ", response);
     fs.writeFileSync("action.txt", response);

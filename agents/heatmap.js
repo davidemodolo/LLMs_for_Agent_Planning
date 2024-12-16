@@ -505,7 +505,9 @@ async function agentLoop() {
       await client.timer(100);
       continue;
     }
-    var response = await knowno_OpenAI(getRawPrompt(), POSSIBLE_ACTIONS);
+    const rawPrompt = getRawPrompt();
+    console.log("Prompt: ", rawPrompt);
+    var response = await knowno_OpenAI(rawPrompt, POSSIBLE_ACTIONS);
     response = uncertaintyLogic(response);
     console.log("Action: ", response);
     process.exit();
