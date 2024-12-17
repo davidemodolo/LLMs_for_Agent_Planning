@@ -20,7 +20,7 @@ gpt-4o - $2.50 / 1M input tokens
 const ANTI_LOOP = true; // set to true to avoid the agent to go back and forth
 const HELP_THE_BOT = true; // set to true to force the bot to take the parcel if it is below the agent or to ship the parcel if the agent is in the delivery point
 const SELECT_ONLY_ACTION = true; // set to true to select the only action if the list of available actions has only one element
-const USE_HISTORY = true; // set to true to use the conversation history
+const USE_HISTORY = false; // set to true to use the conversation history
 const REDUCED_MAP = true; // using the server configuration infos, reduce the dimension of the map given to the LLM depending on the max(PARCELS_OBSERVATION_DISTANCE, AGENTS_OBSERVATION_DISTANCE)
 // see this help as "the robot always knows where it started and can always go back to the starting point"
 const HELP_FIND_DELIVERY = true; // set to true to add to the prompt the closest delivery point even if it is not in the field of view
@@ -512,6 +512,11 @@ function getRawPrompt() {
       }
       return a.x - b.x;
     });
+    // save the tiles to map.txt as a list of (x, y) coordinates
+    fs.writeFileSync(
+      "map.txt",
+      noParcelSpawnerTiles.map((tile) => `(${tile.x}, ${tile.y})`).join(", ")
+    );
 
     // raw onMap
     prompt += `\nMap width: ${rawOnMap.width}\nMap height: ${
@@ -580,6 +585,8 @@ function getRawPrompt() {
       rawOnAgentsSensing
     )}\n`;
   }
+  // open the file path.txt (create it if it doesn't exist) and append (agentX, agentY) to it
+  fs.appendFileSync("path.txt", `(${agentX}, ${agentY}), `);
   prompt += `\nYou are in the spot (${agentX}, ${agentY}).\n`;
   prompt += `\nACTIONS you can do:\n${buildActionsText(POSSIBLE_ACTIONS)}\n\n`;
   if (GOAL == "pickup") {

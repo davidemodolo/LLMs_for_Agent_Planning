@@ -30,10 +30,10 @@ def compare_paths(optimal_paths, given_path):
 # Example usage
 matrix = [(0, 0), (0, 1), (0, 2), (1, 0), (1, 1), (1, 2), (2, 0), (2, 1), (2, 2)]
 start = (0, 0)
-goal = (2, 2)
+goal = (2, 1)
 optimal_paths = find_paths(matrix, start, goal)
 print(f"Optimal Paths: {optimal_paths}")
-given_path = [(0, 0), (1, 0), (2, 0), (2, 1), (2, 0), (2, 1), (2, 2)]
+given_path = [(0, 0), (1, 0), (1, 1), (1, 2), (2, 2), (2, 1)]
 accuracy, best_path = compare_paths(optimal_paths, given_path)
 print(f"Given Path: {given_path}")
 print(f"Best Path: {best_path}")
