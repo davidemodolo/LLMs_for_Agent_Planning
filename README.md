@@ -54,3 +54,14 @@ POSSIBLE TITLE: "Using LLM as choice selector for an agent in a web-based game e
 Add cost in $$$ and token of every run
 
 Expand with RAG
+
+LAST NOTES:
+if full raw, impossible, random weighted goes to the goal
+
+When generating goal keep in mind something
+
+find the closest cell and give me the action to go there (plot as the bigger distance between the goal is source fo uncertainty)
+
+test with a shortest description of the map "di bocca buona"
+
+also try step1: closest cell>? -> step 2: action to go to closest cell?
