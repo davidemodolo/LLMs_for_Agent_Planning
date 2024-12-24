@@ -1,58 +1,11 @@
 You are a delivery agent in a web-based delivery game where the map is a matrix.
 I am going to give you the raw information I receive from the server and the possible actions.
-Map width: 3
-Map height: 3
-Tiles are arranged as 3 rows in 3 columns:[
-   {
-      "x": 0,
-      "y": 0,
-      "delivery": false
-   },
-   {
-      "x": 0,
-      "y": 1,
-      "delivery": false
-   },
-   {
-      "x": 0,
-      "y": 2,
-      "delivery": true
-   },
-   {
-      "x": 1,
-      "y": 0,
-      "delivery": false
-   },
-   {
-      "x": 1,
-      "y": 1,
-      "delivery": false
-   },
-   {
-      "x": 1,
-      "y": 2,
-      "delivery": false
-   },
-   {
-      "x": 2,
-      "y": 0,
-      "delivery": false
-   },
-   {
-      "x": 2,
-      "y": 1,
-      "delivery": false
-   },
-   {
-      "x": 2,
-      "y": 2,
-      "delivery": false
-   }
-]
-
-The parcel you need to take is in the spot (2, 1).
-
-You are in the spot (2, 1).
+Your current goal is to go to a tile with delivery == true.
+Map width: 5
+Map height: 6
+Tiles are arranged as 6 rows in 5 columns.
+The available delivery points are: (0, 2)
+You are in the spot (0, 2).
 
 ACTIONS you can do:
 U): move up (decrease your x by 1)
@@ -62,4 +15,4 @@ R): move right (increase your y by 1)
 T): take the parcel that is in your tile
 S): ship a parcel (you must be in a delivery=true tile)
 
-Your final goal is to go to a tile with the parcel and (T)ake it, I need the best action that will get you there, if you are in the goal tile, Take or Ship based on the current goal. Don't explain the reasoning and don't add any comment, just provide the action. What is your next action?
+You have a parcel to ship, your final goal is to go to the delivery zone (delivery = true) and (S)hip the parcel, I need the best action that will get you there, if you are in the goal tile, Take or Ship based on the current goal. Don't explain the reasoning and don't add any comment, just provide the action. What is your next action?
