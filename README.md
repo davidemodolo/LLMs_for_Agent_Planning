@@ -58,6 +58,8 @@ Expand with RAG
 LAST NOTES:
 if full raw, impossible, random weighted goes to the goal
 
+check attention when map in the prompt https://github.com/jessevig/bertviz
+
 When generating goal keep in mind something
 
 find the closest cell and give me the action to go there (plot as the bigger distance between the goal is source fo uncertainty)
