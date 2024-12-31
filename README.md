@@ -64,6 +64,10 @@ When generating goal keep in mind something
 
 find the closest cell and give me the action to go there (plot as the bigger distance between the goal is source fo uncertainty)
 
-test with a shortest description of the map "di bocca buona"
+test with a shortest description of the map "di bocca buona" -> test with some kind of compression (base64?)
 
 also try step1: closest cell>? -> step 2: action to go to closest cell?
+
+Write about multi-choice benchmark for LLMs
+
+This approach is like "Statelss" prompt
