@@ -71,3 +71,10 @@ also try step1: closest cell>? -> step 2: action to go to closest cell?
 Write about multi-choice benchmark for LLMs
 
 This approach is like "Statelss" prompt
+
+Next Technical TODO:
+
+- [ ] create a folder with prompts' blueprint (so that I can read them from file and add just the parts)
+- [ ] rework the entire agent code to be even more modular
+- [ ] test with base64 map encoding to reduce the prompt length
+- [ ] test with blocked tiles
