@@ -10,15 +10,19 @@ FINAL GOAL: March 2025
 
 # LIST OF TODOs IMPLEMENTATION:
 
+> bold means ongoing
+
 - [ ] rework the agent code to be even more modular
 - [ ] module for encoded map (base64)
 - [ ] ask for best tile to move on
 - [ ] ask for action to the best tile
-- [ ] visualize attention for prompt
+- [ ] **visualize attention for prompt**
 - [ ] RAG implementation for artificially added categories to parcels
 - [ ] RAG implementation for blocked tiles workaround
 
 # LIST OF TODOs EVALUATION (code update):
+
+> bold means ongoing
 
 - [ ] automatic heatmap creation
 - [ ] metrics for path/best path
@@ -26,6 +30,8 @@ FINAL GOAL: March 2025
 - [ ] plot the ratio between distance_to_goal/uncertainty to see if the distance to the goal is source for uncertainty
 
 # MAYBE TODO:
+
+> bold means ongoing
 
 - [ ] add image to the prompt
 - [ ] create a parcer for the map response that would work even if the API changes completely, and at the same time it reduces the size in the prompt for the map (keeping it human-readable)
