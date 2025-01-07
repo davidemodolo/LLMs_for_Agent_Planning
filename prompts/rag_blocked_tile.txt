@@ -1,0 +1,2 @@
+
+The last time you wanted to go to ({goalX}, {goalY}) it was blocked and you correctly decided to go to {direction}.

@@ -1,0 +1,17 @@
+You are a delivery agent in a web-based delivery game where the map is a matrix.
+I am going to give you the raw information I receive from the server and the possible actions.
+Map width: {width}
+Map height: {height}
+Tiles are arranged as {height} rows in {width} columns:
+{tiles}
+
+You have {numParcel} to deliver, if the number is 0, you must pick up a parcel, otherwise you must deliver it into a delivery tile.
+This is the list of parcels you can see and their location:
+{parcels}
+
+You are on the spot ({agentX}, {agentY}).
+What is the closes cell that will get you closer to the goal tile?
+{possibleTiles}
+
+If you are in the goal tile, answer with "G".
+Don't explain the reasoning and don't add any comment, just provide the better tile's letter. Which tile is the closest to the goal?
