@@ -17,14 +17,7 @@ gpt-4o - $2.50 / 1M input tokens
 
 */
 
-const ANTI_LOOP = true; // set to true to avoid the agent to go back and forth
-const HELP_THE_BOT = true; // set to true to force the bot to take the parcel if it is below the agent or to ship the parcel if the agent is in the delivery point
-const SELECT_ONLY_ACTION = true; // set to true to select the only action if the list of available actions has only one element
 const USE_HISTORY = false; // set to true to use the conversation history
-const REDUCED_MAP = true; // using the server configuration infos, reduce the dimension of the map given to the LLM depending on the max(PARCELS_OBSERVATION_DISTANCE, AGENTS_OBSERVATION_DISTANCE)
-// see this help as "the robot always knows where it started and can always go back to the starting point"
-const HELP_FIND_DELIVERY = true; // set to true to add to the prompt the closest delivery point even if it is not in the field of view
-const HELP_SIMULATE_NEXT_ACTIONS = false; // set to true to add to the prompt the effect (the resulting environment) of every action -> poor results
 
 const MODEL = "gpt-4o-mini";
 
@@ -914,77 +907,6 @@ async function agentLoop() {
         console.log("Error in action:", action);
     }
     addHistory("assistant", response);
-    // set to false since I'm just testing
-    // here we have the full logic
-    if (false) {
-      const [promptGoal, goals] = getPrompt([null, null], "ONLY_GOAL");
-      console.log(promptGoal);
-      console.log("Goals: ", Array.from(goals.keys()));
-
-      var response = await knowno_OpenAI(promptGoal, Array.from(goals.keys()));
-      response = uncertaintyLogic(response);
-      console.log("Goal: ", response);
-
-      var parameterGoal = null;
-      if (goals[response] == "deliver") {
-        parameterGoal = ["deliver", null];
-      } else {
-        console.log("goals", goals);
-        console.log("Goals[reponse]:", goals.get(response));
-        parameterGoal = [
-          "pick_up",
-          [goals.get(response)[0], goals.get(response)[1]],
-        ];
-      }
-      const [promptPlan, _] = getPrompt(parameterGoal, "FULL_PLAN");
-      console.log(promptPlan);
-
-      var response = await getCompletion(promptPlan);
-      console.log("Response: ", response);
-      // Remove the starting ```javascript
-      response = response.replace("```javascript", "");
-      // Remove the ending ```
-      response = response.replace("```", "");
-      // TODO: make this better with a regex
-      const actionsRaw = eval(response);
-      console.log("ActionsRaw: ", actionsRaw);
-      for (const action of actionsRaw) {
-        addHistory("assistant", action);
-        console.log("Action: ", action);
-        switch (action) {
-          case "U":
-            await client.move("up");
-            break;
-          case "D":
-            await client.move("down");
-            break;
-          case "L":
-            await client.move("left");
-            break;
-          case "R":
-            await client.move("right");
-            break;
-          case "T":
-            await client.pickup();
-            break;
-          case "S":
-            await client.putdown();
-            break;
-          default:
-            console.log("Error in action:", action);
-        }
-        num_actions++;
-        prevAction = action;
-        lastActions.push(action);
-        if (lastActions.length > MAX_ACTIONS) {
-          lastActions
-            .splice(0, lastActions.length - MAX_ACTIONS)
-            .forEach((action) => availableActions.push(action));
-        }
-        await client.timer(ACTION_DELAY);
-      }
-      process.exit();
-    }
     num_actions++;
     results.set("score", me.score);
     results.set("actions", num_actions);
