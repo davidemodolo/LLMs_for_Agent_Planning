@@ -1,6 +1,6 @@
 # MASTER THESIS PROJECT - LLM uncertainty with log-probability as Agent in Deliveroo.js
 
-March 2025
+FINAL GOAL: March 2025
 
 ## Deliveroo.js code
 
@@ -8,7 +8,29 @@ March 2025
 
 [Deliveroo Server](https://github.com/unitn-ASA/Deliveroo.js)
 
-## TODO README, now just a list of notes
+# LIST OF TODOs IMPLEMENTATION:
+
+- [ ] rework the agent code to be even more modular
+- [ ] module for encoded map (base64)
+- [ ] ask for best tile to move on
+- [ ] ask for action to the best tile
+- [ ] visualize attention for prompt
+- [ ] RAG implementation for artificially added categories to parcels
+- [ ] RAG implementation for blocked tiles workaround
+
+# LIST OF TODOs EVALUATION (code update):
+
+- [ ] automatic heatmap creation
+- [ ] metrics for path/best path
+- [ ] uncertainty in non-ambiguous situations
+- [ ] plot the ratio between distance_to_goal/uncertainty to see if the distance to the goal is source for uncertainty
+
+# MAYBE TODO:
+
+- [ ] add image to the prompt
+- [ ] create a parcer for the map response that would work even if the API changes completely, and at the same time it reduces the size in the prompt for the map (keeping it human-readable)
+
+# Random Notes
 
 **Idea**: we give an agent the atomic actions, let's see if it is able to solve a goal without giving instructions.
 Generative AI solving general problem with not previous information.
@@ -27,13 +49,15 @@ Started with raw input and raw output with llama 3.2 and Mistral.
 
 Selecting only the top choice is called “greedy sampling” and actually doesn’t produce language that seems as human, despite being more reliable.
 
-DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead. -> IGNORED
+_DeprecationWarning_: The `punycode` module is deprecated. Please use a userland alternative instead. -> IGNORED
 
-Cannot use batch API (50% discount) since I need to perform everything and I need to check the state of the environment after each action.
+---
 
-Add prompt caching - not under 1000 tokens prompt, but used when using conversation history.
+I cannot use batch API (50% discount) since I need to perform everything and I need to check the state of the environment after each action.
 
-TODO in order:
+Automatic prompt caching - not under 1000 tokens - but when using conversation history it is being used.
+
+OLD TODO:
 
 - [x] parametrize helping levels
 - [x] use chat history (parametrize)
@@ -41,42 +65,35 @@ TODO in order:
 - [x] using the server configuration infos, better map the parcel reward to H, M, L
 - [x] if no delivery point in sight, append the distance and the direction to the nearest one
 - [x] use server output as raw input for the LLM
-- [ ] test uncertainty in obvious situations
 - [x] random weighted choice
-- [ ] DFS to find the best path to the goal given the map
-- [ ] test as steps vs DFS steps
-- [ ] basic RAG implementation to add preferences (randomly assign ["pears", "apples", "bananas"] to the parcels and give a preference to the agent, to be recalled via RAG)
-- [ ] custom server to select where to put the parcel (maybe using "god" mode)
-- [ ] Add the image to the prompt
+- [ ] ~~test uncertainty in obvious situations~~ Included to metrics todo
+- [ ] ~~DFS to find the best path to the goal given the map~~ Included to metrics todo
+- [ ] ~~test as steps vs DFS steps~~ Included to metrics todo
+- [ ] ~~basic RAG implementation to add preferences (randomly assign ["pears", "apples", "bananas"] to the parcels and give a preference to the agent, to be recalled via RAG)~~ Included in RAG todo
+- [ ] ~~custom server to select where to put the parcel (maybe using "god" mode)~~ Already possible in god mode
+- [ ] ~~Add the image to the prompt~~ Included in implementation todo
+- [x] Add cost in $$$ and token of every run: added token count, will calculate the price automatically **at the end**;
 
-POSSIBLE TITLE: "Using LLM as choice selector for an agent in a web-based game environment, at different level of freedom, weighted by confidence"
+LAST MEETING NOTES:
 
-Add cost in $$$ and token of every run
+Using 'full raw' output makes the goal impossible to achieve due to some tiles where the best action is perceived as uniform probability between all actions -> Using the random choice weighted by probability, the agent will reach the goal.
 
-Expand with RAG
+Example on "Attention visualization": https://github.com/jessevig/bertviz - it can be use to see if my idea is correct (the attentions flats out due to the long map description, but it should be needed to keep the project robust even if the Deliveroojs server API response changes).
 
-LAST NOTES:
-if full raw, impossible, random weighted goes to the goal
+There are a couple of well known LLM benchmarks that are basically multi-choice quiz answers. This may be included in the thesis.
 
-check attention when map in the prompt https://github.com/jessevig/bertviz
+Information for the _possible title_:
 
-When generating goal keep in mind something
+- stateless prompt: if no history is used, the prompt contains all the information for the current request
+- LLM as choice selector
+- conformal prediction, logprobs based uncertainty
+- web-based game environment
+- confidence based choice
 
-find the closest cell and give me the action to go there (plot as the bigger distance between the goal is source fo uncertainty)
+# Resources
 
-test with a shortest description of the map "di bocca buona" -> test with some kind of compression (base64?)
-
-also try step1: closest cell>? -> step 2: action to go to closest cell?
-
-Write about multi-choice benchmark for LLMs
-
-This approach is like "Statelss" prompt
-
-Next Technical TODO:
-
-- [ ] create a folder with prompts' blueprint (so that I can read them from file and add just the parts)
-- [ ] rework the entire agent code to be even more modular
-- [ ] test with base64 map encoding to reduce the prompt length
-- [ ] test with blocked tiles
-
-RAG with preference on he direction when cell blocked.
+> **Robots That Ask For Help: Uncertainty Alignment for Large Language Model Planners**  
+> Allen Z. Ren, Anushri Dixit, Alexandra Bodrova, Sumeet Singh, Stephen Tu, Noah Brown, Peng Xu,  
+> Leila Takayama, Fei Xia, Jake Varley, Zhenjia Xu, Dorsa Sadigh, Andy Zeng, Anirudha Majumdar  
+> _2023_.  
+> [arXiv:2307.01928](https://arxiv.org/abs/2307.01928)
