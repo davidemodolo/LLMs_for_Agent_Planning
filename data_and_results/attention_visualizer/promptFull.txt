@@ -1,4 +1,4 @@
-Raw 'onMap' response: {"width":2,"height":5,"tiles":[{"x":0,"y":3,"delivery":false},{"x":0,"y":4,"delivery":false},{"x":1,"y":3,"delivery":false},{"x":1,"y":4,"delivery":false},{"x":2,"y":3,"delivery":false},{"x":2,"y":4,"delivery":false},{"x":3,"y":3,"delivery":false},{"x":3,"y":4,"delivery":false},{"x":4,"y":3,"delivery":true},{"x":4,"y":4,"delivery":false}]}
+Map response: {"width":2,"height":5,"tiles":[{"x":0,"y":3,"delivery":false},{"x":0,"y":4,"delivery":false},{"x":1,"y":3,"delivery":false},{"x":1,"y":4,"delivery":false},{"x":2,"y":3,"delivery":false},{"x":2,"y":4,"delivery":false},{"x":3,"y":3,"delivery":false},{"x":3,"y":4,"delivery":false},{"x":4,"y":3,"delivery":true},{"x":4,"y":4,"delivery":false}]}
 
 Raw 'onYou' response: {"id":"75d4e78ed8e","name":"raw_llm_agent","x":4,"y":0,"score":0}
 
