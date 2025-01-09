@@ -157,6 +157,7 @@ client.onParcelsSensing(async (perceived_parcels) => {
   }
 });
 
+//TODO: add base64 encoding
 function generateText(filePath, variables) {
   try {
     let data = fs.readFileSync(filePath, "utf8");
@@ -199,6 +200,7 @@ function getRawPrompt() {
     return a.x - b.x;
   });
   tiles = JSON.stringify(tiles);
+  // tiles = btoa(JSON.stringify(tiles));
 
   // TODO: choose the prompt blueprint
   GOAL = numParcels > 0 ? "deliver" : "pickup";
@@ -218,7 +220,7 @@ function getRawPrompt() {
     variables = {
       width: rawOnMap.width,
       height: rawOnMap.height,
-      tiles: tiles,
+      //tiles: tiles,
       parcelX: parcels[0].x,
       parcelY: parcels[0].y,
       agentX: agentX,
@@ -315,6 +317,8 @@ async function agentLoop() {
     var response = await knowno_OpenAI(getRawPrompt(), POSSIBLE_ACTIONS);
     response = uncertaintyLogic(response);
     console.log("Action: ", response);
+    console.log("Total tokens: ", total_tokens);
+    process.exit();
     switch (response) {
       case "U":
         await client.move("up");
