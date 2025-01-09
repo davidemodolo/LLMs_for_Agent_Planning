@@ -12,11 +12,12 @@ FINAL GOAL: March 2025
 
 > bold means ongoing
 
-- [ ] rework the agent code to be even more modular
+- [ ] **rework the agent code to be even more modular**
+- [ ] prepare the blueprint for the prompts
 - [ ] module for encoded map (base64)
 - [ ] ask for best tile to move on
 - [ ] ask for action to the best tile
-- [ ] **visualize attention for prompt**
+- [x] visualize attention for prompt -> results in `data_and_results\attention_visualizer\attention_visualize.ipynb` -> need to study the plots
 - [ ] RAG implementation for artificially added categories to parcels
 - [ ] RAG implementation for blocked tiles workaround
 
