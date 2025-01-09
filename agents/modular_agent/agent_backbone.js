@@ -160,6 +160,18 @@ client.onParcelsSensing(async (perceived_parcels) => {
 });
 
 function getRawPrompt() {
+  // get variables needed for the blueprint
+  const width = rawOnMap.width;
+  const height = rawOnMap.height;
+  const tiles = rawOnMap.tiles;
+  const agentX = rawOnYou.x;
+  const agentY = rawOnYou.y;
+  const parcels = rawOnParcelsSensing;
+
+  // TODO: fix all the orientation of x and y
+
+  // TODO: choose the prompt blueprint
+
   GOAL = numParcels > 0 ? "deliver" : "pickup";
   const CUSTOM_ORIENTATION = true;
   const PARCEL_CATEGORIZATION = false;
