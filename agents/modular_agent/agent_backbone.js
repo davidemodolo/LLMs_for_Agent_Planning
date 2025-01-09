@@ -15,7 +15,6 @@ const POSSIBLE_LOGICS = ["raw", "random", "threshold"];
 const LOGIC = POSSIBLE_LOGICS[1];
 
 var GOAL = "pickup";
-var OLD_GOAL = "pickup";
 
 const conversationHistory = [];
 function addHistory(roleAdd, contentAdd) {
@@ -54,6 +53,7 @@ function temperatureScaling(logits, temperature = 0.1) {
 }
 
 var total_tokens = 0;
+const POSSIBLE_ACTIONS = ["U", "D", "L", "R", "T", "S"];
 async function knowno_OpenAI(
   prompt,
   tokens_to_check,
@@ -78,8 +78,6 @@ async function knowno_OpenAI(
     logit_bias: createLogitsBiasDict(tokens_to_check),
   });
   total_tokens += completion.usage.total_tokens;
-  fs.writeFileSync("completion.json", JSON.stringify(completion, null, 2));
-
   const top_logprobs_full =
     completion.choices[0].logprobs.content[0].top_logprobs;
   const top_tokens = [];
@@ -153,124 +151,91 @@ client.onParcelsSensing(async (perceived_parcels) => {
   rawOnParcelsSensing = perceived_parcels;
   numParcels = 0;
   for (const p of perceived_parcels) {
-    if (p.carriedBy == me.id) {
+    if (p.carriedBy == rawOnYou.id) {
       numParcels++;
     }
   }
 });
 
+function generateText(filePath, variables) {
+  try {
+    let data = fs.readFileSync(filePath, "utf8");
+
+    // Replace placeholders with actual values
+    for (const [key, value] of Object.entries(variables)) {
+      const placeholder = new RegExp(`{${key}}`, "g"); // Create a regex for {key}
+      data = data.replace(placeholder, value);
+    }
+
+    return data;
+  } catch (err) {
+    console.error("Error reading file:", err);
+    return null;
+  }
+}
+
 function getRawPrompt() {
-  // get variables needed for the blueprint
-  const width = rawOnMap.width;
-  const height = rawOnMap.height;
-  const tiles = rawOnMap.tiles;
-  const agentX = rawOnYou.x;
-  const agentY = rawOnYou.y;
-  const parcels = rawOnParcelsSensing;
-
-  // TODO: fix all the orientation of x and y
-
-  // TODO: choose the prompt blueprint
-
-  GOAL = numParcels > 0 ? "deliver" : "pickup";
-  const CUSTOM_ORIENTATION = true;
-  const PARCEL_CATEGORIZATION = false;
-  var prompt = "";
-  // repeat the prompt every 5 steps
-  if (
-    conversationHistory.length == 0 ||
-    !USE_HISTORY ||
-    GOAL != OLD_GOAL ||
-    conversationHistory.length % 16 == 0
-  ) {
-    prompt = `You are a delivery agent in a web-based delivery game where the map is a matrix.\nI am going to give you the raw information I receive from the server and the possible actions.`;
-    if (GOAL == "deliver") {
-      prompt += `\nYour current goal is to go to a tile with delivery == true.`;
-    }
-    OLD_GOAL = GOAL;
-    const noParcelSpawnerTiles = [];
-    for (let tile of rawOnMap.tiles) {
-      var tileX = tile.x;
-      var tileY = tile.y;
-      if (CUSTOM_ORIENTATION) {
-        const tmp = tileX;
-        tileX = Math.abs(tileY - (heightMax - 1));
-        tileY = tmp;
-      }
-      tile = { x: tileX, y: tileY, delivery: tile.delivery };
-      noParcelSpawnerTiles.push(tile);
-    }
-    // sort the tiles first by x and then by y
-    noParcelSpawnerTiles.sort((a, b) => {
-      if (a.x == b.x) {
-        return a.y - b.y;
-      }
-      return a.x - b.x;
-    });
-    // save the tiles to map.txt as a list of (x, y) coordinates
-    fs.writeFileSync(
-      "map.txt",
-      noParcelSpawnerTiles.map((tile) => `(${tile.x}, ${tile.y})`).join(", ")
-    );
-
-    // raw onMap
-    prompt += `\nMap width: ${rawOnMap.width}\nMap height: ${
-      rawOnMap.height
-    }\nTiles are arranged as ${rawOnMap.height} rows in ${
-      rawOnMap.width
-    } columns:${JSON.stringify(noParcelSpawnerTiles, null, 3)}\n`;
-  }
-
-  var agentX = rawOnYou.x;
-  var agentY = rawOnYou.y;
-  if (CUSTOM_ORIENTATION) {
-    console.log("Before: ", rawOnYou);
-    const tmp = agentX;
-    agentX = Math.abs(agentY - (heightMax - 1));
-    agentY = tmp;
-    console.log("After: ", rawOnYou);
-  }
+  // TODO: prepare all the variables for all the blueprints
+  const agentX = Math.abs(rawOnYou.y - (rawOnMap.height - 1));
+  const agentY = rawOnYou.x;
 
   const parcels = [];
-
   for (let parcel of rawOnParcelsSensing) {
     const newParcel = { x: parcel.x, y: parcel.y };
-    var parcelX = parcel.x;
-    var parcelY = parcel.y;
-    if (CUSTOM_ORIENTATION) {
-      const tmp = parcelX;
-      parcelX = Math.abs(parcelY - (heightMax - 1));
-      parcelY = tmp;
-    }
-    newParcel.x = parcelX;
-    newParcel.y = parcelY;
+    newParcel.x = Math.abs(parcel.y - (rawOnMap.height - 1));
+    newParcel.y = parcel.x;
     parcels.push(newParcel);
   }
-
-  if (PARCEL_CATEGORIZATION) {
-    for (let parcel of rawOnParcelsSensing) {
-      const parcelIdNumber = parseInt(parcel.id.substring(1));
-      parcel.food = parcelIdNumber % 2 === 0 ? "banana" : "pineapple";
+  // TODO: add tiles encoding
+  var tiles = rawOnMap.tiles.map((tile) => ({
+    x: Math.abs(tile.y - (rawOnMap.height - 1)),
+    y: tile.x,
+    delivery: tile.delivery,
+  }));
+  tiles.sort((a, b) => {
+    if (a.x == b.x) {
+      return a.y - b.y;
     }
-  }
-  // raw onParcelsSensing
-  if (GOAL == "pickup") {
-    prompt += `\nThe parcel you need to take is in the spot (${parcels[0].x}, ${parcels[0].y}).\n`;
-  }
+    return a.x - b.x;
+  });
+  tiles = JSON.stringify(tiles);
 
-  // open the file path.txt (create it if it doesn't exist) and append (agentX, agentY) to it
-  fs.appendFileSync("path.txt", `(${agentX}, ${agentY}), `);
-  prompt += `\nYou are in the spot (${agentX}, ${agentY}).\n`;
-  prompt += `\nACTIONS you can do:\n${buildActionsText(POSSIBLE_ACTIONS)}\n\n`;
-  if (GOAL == "pickup") {
-    prompt += `Your final goal is to go to a tile with the parcel and (T)ake it, `;
-  } else if (GOAL == "deliver") {
-    prompt += `You have a parcel to ship, your final goal is to go to the delivery zone (delivery = true) and (S)hip the parcel, `;
+  // TODO: choose the prompt blueprint
+  GOAL = numParcels > 0 ? "deliver" : "pickup";
+  const promptBlueprint = `prompts/${GOAL}.txt`;
+  var variables = null;
+  if (GOAL == "deliver") {
+    // (width, height, tiles, agentX, agentY)
+    variables = {
+      width: rawOnMap.width,
+      height: rawOnMap.height,
+      tiles: tiles,
+      agentX: agentX,
+      agentY: agentY,
+    };
+  } else if (GOAL == "pickup") {
+    //(width, height, tiles, parcelX, parcelY, agentX, agentY)
+    variables = {
+      width: rawOnMap.width,
+      height: rawOnMap.height,
+      tiles: tiles,
+      parcelX: parcels[0].x,
+      parcelY: parcels[0].y,
+      agentX: agentX,
+      agentY: agentY,
+      parcels: parcels,
+    };
+  } else {
+    console.log("Error: the goal is not valid.");
   }
-  prompt += `I need the best action that will get you there, if you are in the goal tile, Take or Ship based on the current goal. Don't explain the reasoning and don't add any comment, just provide the action. What is your next action?`;
-  // save the prompt to prompt.txt
-  //fs.writeFileSync(`prompt${fullConversationHistory.length}.txt`, prompt);
-  fs.writeFileSync(`promptOBS.txt`, prompt);
+  const prompt = generateText(promptBlueprint, variables);
+  console.log("Prompt: ", prompt);
+  // if (PARCEL_CATEGORIZATION) {
+  //   for (let parcel of rawOnParcelsSensing) {
+  //     const parcelIdNumber = parseInt(parcel.id.substring(1));
+  //     parcel.food = parcelIdNumber % 2 === 0 ? "banana" : "pineapple";
+  //   }
+  // }
   return prompt;
 }
 
@@ -331,7 +296,11 @@ async function agentLoop() {
   const start = new Date().getTime();
   const MINUTES = 5;
   while (new Date().getTime() - start < MINUTES * 60 * 1000) {
-    if (me.score > 0) {
+    if (!rawOnMap) {
+      await client.timer(100);
+      continue;
+    }
+    if (rawOnYou.score > 0) {
       console.log(
         "Time elapsed:",
         (new Date().getTime() - start) / 1000,
@@ -346,7 +315,6 @@ async function agentLoop() {
     var response = await knowno_OpenAI(getRawPrompt(), POSSIBLE_ACTIONS);
     response = uncertaintyLogic(response);
     console.log("Action: ", response);
-    fs.writeFileSync("action.txt", response);
     switch (response) {
       case "U":
         await client.move("up");
