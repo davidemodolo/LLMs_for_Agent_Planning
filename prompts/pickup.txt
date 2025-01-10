@@ -6,7 +6,7 @@ Tiles are arranged as {height} rows in {width} columns, if a cell does not appea
 {tiles}
 The parcel you need to take is in the spot ({parcelX}, {parcelY}).
 You are on the spot ({agentX}, {agentY}).
-The actions you can do are:
+The actions you can do ONLY if the next tile is available are:
 U) move up (decrease your x by 1)
 D) move down (increase your x by 1)
 L) move left (decrease your y by 1)

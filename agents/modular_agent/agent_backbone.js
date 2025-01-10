@@ -245,7 +245,7 @@ function getRawPrompt() {
       possibleTiles.push({ val: "D) ", x: agentX + 1, y: agentY });
     }
     const possibleTilesText = possibleTiles.map(
-      (tile) => `${tile.val}(${tile.x}, ${tile.y})`
+      (tile) => `${tile.val}(${tile.x}, ${tile.y})\n`
     );
     console.log("Possible tiles: ", possibleTilesText);
     // (width, height, tiles, parcels, agentX, agentY, possibleTiles)
