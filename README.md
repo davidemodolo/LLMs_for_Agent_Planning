@@ -12,11 +12,11 @@ FINAL GOAL: March 2025
 
 > bold means ongoing
 
-- [ ] **rework the agent code to be even more modular**
-- [ ] prepare the blueprint for the prompts
+- [x] rework the agent code to be even more modular -> not much modular, I think it's not needed
+- [ ] **prepare the blueprint for all the prompts**
 - [x] module for encoded map (base64) -> it uses more tokens, it could work (https://arxiv.org/abs/2305.18396) but it may be outside of the scope of this project since they encode for safe transmission
-- [ ] **ask for best tile to move on** -> if it's blocked, should I ignore it or should the LLM infer from tile list?
-- [ ] ask for action to the best tile
+- [x] ask for best tile to move on -> if it's blocked, should I ignore it or should the LLM infer from tile list?
+- [ ] ask for action to the best tile (whole process)
 - [x] visualize attention for prompt -> results in `data_and_results\attention_visualizer\attention_visualize.ipynb` -> need to study the plots
 - [ ] RAG implementation for artificially added categories to parcels
 - [ ] RAG implementation for blocked tiles workaround
