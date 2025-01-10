@@ -20,12 +20,13 @@ FINAL GOAL: March 2025
 - [x] visualize attention for prompt -> results in `data_and_results\attention_visualizer\attention_visualize.ipynb` -> need to study the plots
 - [ ] RAG implementation for artificially added categories to parcels
 - [ ] RAG implementation for blocked tiles workaround
+  > The last time you were on (5, 1) you tried to move up but the path was blocked.
 
 # LIST OF TODOs EVALUATION (code update):
 
 > bold means ongoing
 
-- [ ] automatic heatmap creation
+- [ ] **automatic heatmap creation**
 - [ ] metrics for path/best path
 - [ ] uncertainty in non-ambiguous situations
 - [ ] plot the ratio between distance_to_goal/uncertainty to see if the distance to the goal is source for uncertainty

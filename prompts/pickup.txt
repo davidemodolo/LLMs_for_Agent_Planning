@@ -2,7 +2,7 @@ You are a delivery agent in a web-based delivery game where the map is a matrix.
 I am going to give you the raw information I receive from the server and the possible actions.
 Map width: {width}
 Map height: {height}
-Tiles are arranged as {height} rows in {width} columns, if a cell does not appear in the list, it is blocked:
+Tiles are arranged as {height} rows in {width} columns:
 {tiles}
 The parcel you need to take is in the spot ({parcelX}, {parcelY}).
 You are on the spot ({agentX}, {agentY}).
