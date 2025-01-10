@@ -358,7 +358,7 @@ async function agentLoop() {
     response = uncertaintyLogic(response);
     console.log("Action: ", response);
     console.log("Total tokens: ", total_tokens);
-    // process.exit();
+    process.exit();
     switch (response) {
       case "U":
         await client.move("up");
