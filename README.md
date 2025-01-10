@@ -12,7 +12,7 @@ FINAL GOAL: March 2025
 
 > bold means ongoing
 
-- [x] rework the agent code to be even more modular -> not much modular, I think it's not needed
+- [x] rework the agent code to be even more modular -> not much modular, I think it's not needed anymore
 - [ ] **prepare the blueprint for all the prompts**
 - [x] module for encoded map (base64) -> it uses more tokens, it could work (https://arxiv.org/abs/2305.18396) but it may be outside of the scope of this project since they encode for safe transmission
 - [x] ask for best tile to move on -> if it's blocked, should I ignore it or should the LLM infer from tile list?
@@ -21,6 +21,7 @@ FINAL GOAL: March 2025
 - [ ] RAG implementation for artificially added categories to parcels
 - [ ] RAG implementation for blocked tiles workaround
   > The last time you were on (5, 1) you tried to move up but the path was blocked.
+  > problem: if the map is not necessary, this becomes a trial and error with RAG as history
 
 # LIST OF TODOs EVALUATION (code update):
 

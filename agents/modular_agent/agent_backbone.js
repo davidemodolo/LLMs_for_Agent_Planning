@@ -192,8 +192,13 @@ function getRawPrompt() {
   var tiles = rawOnMap.tiles.map((tile) => ({
     x: Math.abs(tile.y - (rawOnMap.height - 1)),
     y: tile.x,
-    delivery: tile.delivery,
+    //delivery: tile.delivery,
   }));
+  // the tile x = 4, y = 1 must be modified to have delivery = "blocked"
+  tiles = tiles.filter((tile) => !(tile.x == 4 && tile.y == 1));
+  //tiles.push({ x: 4, y: 1, blocked: true });
+  // still going up
+
   tiles.sort((a, b) => {
     if (a.x == b.x) {
       return a.y - b.y;
@@ -201,7 +206,10 @@ function getRawPrompt() {
     return a.x - b.x;
   });
   tiles = JSON.stringify(tiles);
-  // tiles = btoa(JSON.stringify(tiles));
+  // from tiles replace },{ with a space
+  tiles = tiles.replace(/},{/g, "\n- ");
+  // from tiles remove the following character: ", {, }, [, ]"
+  tiles = tiles.replace(/"|{|}|[|]/g, "");
 
   // TODO: choose the prompt blueprint
   GOAL = numParcels > 0 ? "deliver" : "pickup";
@@ -329,7 +337,7 @@ async function agentLoop() {
   var num_actions = 0;
   // get current time
   const start = new Date().getTime();
-  const MINUTES = 5;
+  const MINUTES = 0.2;
   while (new Date().getTime() - start < MINUTES * 60 * 1000) {
     if (!rawOnMap) {
       await client.timer(100);
@@ -382,7 +390,7 @@ async function agentLoop() {
   // save the conversation history to a file
   fs.writeFileSync(
     "conversationHistory.json",
-    JSON.stringify(fullConversationHistory, null, 2)
+    JSON.stringify(conversationHistory, null, 2)
   );
   // end the program
   process.exit();
