@@ -175,6 +175,7 @@ function generateText(filePath, variables) {
   }
 }
 
+//node agents/modular_agent/agent_backbone.js
 function getRawPrompt() {
   // TODO: prepare all the variables for all the blueprints
   const agentX = Math.abs(rawOnYou.y - (rawOnMap.height - 1));
@@ -204,6 +205,7 @@ function getRawPrompt() {
 
   // TODO: choose the prompt blueprint
   GOAL = numParcels > 0 ? "deliver" : "pickup";
+  //GOAL = "best_tile";
   const promptBlueprint = `prompts/${GOAL}.txt`;
   var variables = null;
   if (GOAL == "deliver") {
@@ -220,16 +222,47 @@ function getRawPrompt() {
     variables = {
       width: rawOnMap.width,
       height: rawOnMap.height,
-      //tiles: tiles,
+      tiles: tiles,
       parcelX: parcels[0].x,
       parcelY: parcels[0].y,
       agentX: agentX,
       agentY: agentY,
-      parcels: parcels,
+      parcels: JSON.stringify(parcels),
+    };
+  } else if (GOAL == "best_tile") {
+    const possibleTiles = [];
+    // add the left, right, up, down tiles wrt the agent position, if they exist
+    if (agentY > 0) {
+      possibleTiles.push({ val: "L) ", x: agentX, y: agentY - 1 });
+    }
+    if (agentY < rawOnMap.width - 1) {
+      possibleTiles.push({ val: "R) ", x: agentX, y: agentY + 1 });
+    }
+    if (agentX > 0) {
+      possibleTiles.push({ val: "U) ", x: agentX - 1, y: agentY });
+    }
+    if (agentX < rawOnMap.height - 1) {
+      possibleTiles.push({ val: "D) ", x: agentX + 1, y: agentY });
+    }
+    const possibleTilesText = possibleTiles.map(
+      (tile) => `${tile.val}(${tile.x}, ${tile.y})`
+    );
+    console.log("Possible tiles: ", possibleTilesText);
+    // (width, height, tiles, parcels, agentX, agentY, possibleTiles)
+    variables = {
+      width: rawOnMap.width,
+      height: rawOnMap.height,
+      tiles: tiles,
+      numParcel: numParcels,
+      parcels: JSON.stringify(parcels),
+      agentX: agentX,
+      agentY: agentY,
+      possibleTiles: possibleTilesText,
     };
   } else {
     console.log("Error: the goal is not valid.");
   }
+
   const prompt = generateText(promptBlueprint, variables);
   console.log("Prompt: ", prompt);
   // if (PARCEL_CATEGORIZATION) {

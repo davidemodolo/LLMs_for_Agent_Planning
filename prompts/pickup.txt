@@ -2,7 +2,7 @@ You are a delivery agent in a web-based delivery game where the map is a matrix.
 I am going to give you the raw information I receive from the server and the possible actions.
 Map width: {width}
 Map height: {height}
-Tiles are arranged as {height} rows in {width} columns:
+Tiles are arranged as {height} rows in {width} columns, if a cell does not appear in the list, it is blocked:
 {tiles}
 The parcel you need to take is in the spot ({parcelX}, {parcelY}).
 You are on the spot ({agentX}, {agentY}).
@@ -15,4 +15,4 @@ T) take the parcel that is in your tile
 S) ship a parcel (you must be in a delivery=true tile)
 
 Your final goal is to go to a tile with the parcel and (T)ake it, I need the best action that will get you there, if you are in the goal tile, Take or Ship based on the current goal.
-Don't explain the reasoning and don't add any comment, just provide the action's letter. What is your next action?
+Don't explain the reasoning and don't add any comment, just provide the action's letter. Before deciding, be sure the tile is available in the list above. What is your next action?

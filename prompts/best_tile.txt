@@ -13,5 +13,5 @@ You are on the spot ({agentX}, {agentY}).
 What is the closes cell that will get you closer to the goal tile?
 {possibleTiles}
 
-If you are in the goal tile, answer with "G".
+If you are in the goal tile, answer with "T" or "S", depending on if you are on a parcel you want to (T)ake or a delivery zone and want to (S)hip.
 Don't explain the reasoning and don't add any comment, just provide the better tile's letter. Which tile is the closest to the goal?
