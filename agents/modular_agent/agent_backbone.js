@@ -196,7 +196,6 @@ function getRawPrompt() {
   }));
   // the tile x = 4, y = 1 must be modified to have delivery = "blocked"
   tiles = tiles.filter((tile) => !(tile.x == 4 && tile.y == 1));
-  //tiles.push({ x: 4, y: 1, blocked: true });
   // still going up
 
   tiles.sort((a, b) => {
@@ -337,7 +336,7 @@ async function agentLoop() {
   var num_actions = 0;
   // get current time
   const start = new Date().getTime();
-  const MINUTES = 0.2;
+  const MINUTES = 2;
   while (new Date().getTime() - start < MINUTES * 60 * 1000) {
     if (!rawOnMap) {
       await client.timer(100);
@@ -359,7 +358,7 @@ async function agentLoop() {
     response = uncertaintyLogic(response);
     console.log("Action: ", response);
     console.log("Total tokens: ", total_tokens);
-    process.exit();
+    // process.exit();
     switch (response) {
       case "U":
         await client.move("up");

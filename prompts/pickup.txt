@@ -7,12 +7,12 @@ Tiles are arranged as {height} rows in {width} columns:
 The parcel you need to take is in the spot ({parcelX}, {parcelY}).
 You are on the spot ({agentX}, {agentY}).
 The actions you can do ONLY if the next tile is available are:
-U) move up (decrease your x by 1)
-D) move down (increase your x by 1)
-L) move left (decrease your y by 1)
-R) move right (increase your y by 1)
+U) move up
+D) move down
+L) move left
+R) move right
 T) take the parcel that is in your tile
 S) ship a parcel (you must be in a delivery=true tile)
 
 Your final goal is to go to a tile with the parcel and (T)ake it, I need the best action that will get you there, if you are in the goal tile, Take or Ship based on the current goal.
-Don't explain the reasoning and don't add any comment, just provide the action's letter. Before deciding, be sure the tile is available in the list above. What is your next action?
+Don't explain the reasoning and don't add any comment, just provide the action's letter. Before deciding, be sure the tile is available in the list above, and if your position didn't change from your last move, change it. What is your next action?
