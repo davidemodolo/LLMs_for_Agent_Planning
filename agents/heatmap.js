@@ -12,7 +12,7 @@ const openai = new OpenAI({
 const MODEL = "gpt-4o-mini";
 const USE_HISTORY = false;
 
-var GOAL = "pickup";
+var GOAL = "deliver";
 
 const conversationHistory = [];
 function addHistory(roleAdd, contentAdd) {
@@ -190,7 +190,7 @@ function getRawPrompt() {
   var tiles = rawOnMap.tiles.map((tile) => ({
     x: Math.abs(tile.y - (rawOnMap.height - 1)),
     y: tile.x,
-    //delivery: tile.delivery,
+    delivery: tile.delivery,
   }));
   // the tile x = 4, y = 1 must be modified to have delivery = "blocked"
   tiles = tiles.filter((tile) => !(tile.x == 4 && tile.y == 1));
@@ -288,14 +288,14 @@ function getWeightedRandomIndex(weights) {
     random -= weights[i];
   }
 }
-
+const TIMER = 150;
 const heatmapJson = [];
 async function agentLoop() {
   while (!rawOnMap) {
     await client.timer(100);
   }
-  for (let i = 0; i < rawOnMap.height; i++) {
-    for (let j = 0; j < rawOnMap.width; j++) {
+  for (let i = rawOnMap.height - 1; i >= 0; i--) {
+    for (let j = rawOnMap.width; j >= 0; j--) {
       var response = await knowno_OpenAI(getRawPrompt(), POSSIBLE_ACTIONS);
       if (
         !heatmapJson.some(
@@ -321,12 +321,13 @@ async function agentLoop() {
       } else if (i % 2 == 1) {
         console.log("Moving horizontally");
         await client.move("left");
+        console.log(heatmapJson);
       }
-      await client.timer(2000);
+      await client.timer(TIMER);
     }
     console.log("Moving vertically");
-    await client.move("down");
-    await client.timer(2000);
+    await client.move("up");
+    await client.timer(TIMER);
   }
   heatmapJson.push({
     goal: GOAL,
@@ -341,7 +342,7 @@ async function agentLoop() {
   heatmapJson.push({
     h: rawOnMap.height,
   });
-  heatmapJson.push({
+  c.push({
     goal: `(${Math.abs(rawOnParcelsSensing[0].y - (rawOnMap.height - 1))},${
       rawOnParcelsSensing[0].x
     })`,

@@ -14,18 +14,11 @@ def create_square_pie(ax, values, color):
     total = sum(value for _, _, value in values)
     current_pos = 0
 
-    for label, is_active, value in values:
+    for label, _, value in values:
         sector_size = value / total
-
-        if is_active:
-            rect = patches.Rectangle(
-                (0, current_pos), 1, sector_size, linewidth=10, 
-                edgecolor='grey', facecolor='#ffffff', alpha=sector_size
-            )
-        else:
-            rect = patches.Rectangle(
-                (0, current_pos), 1, sector_size, linewidth=1, 
-                facecolor=color, alpha=sector_size
+        rect = patches.Rectangle(
+                (0, current_pos), 1, sector_size, linewidth=4, edgecolor='black', 
+                facecolor=colors[label] if label in colors else "white", alpha=sector_size
             )
 
         ax.add_patch(rect)
@@ -41,23 +34,27 @@ def create_square_pie(ax, values, color):
     ax.set_ylim(0, 1)
     ax.axis('off')
 
+
 def create_table_of_square_pies(data_list, width, length, color, title):
     if len(data_list) > width * length:
         raise ValueError("The number of data dictionaries exceeds the available table cells.")
 
-    fig, axes = plt.subplots(length, width, figsize=(width * 2, length * 2))
-
+    fig, axes = plt.subplots(length, width, figsize=(min(width * 2, 10), min(length * 2, 10)))
     if length > 1 and width > 1:
         axes = axes.flatten()
     elif length == 1 or width == 1:
-        axes = [axes] 
+        axes = [axes]  # Ensure it's always iterable
 
     for i, data in enumerate(data_list):
-        x, y, values = data['x'], data['y'], data['values']
+        values = data['values']
+        print()
+        print(data['x'], data['y'])
+        print(values)
         create_square_pie(axes[i], values, color)
 
     fig.suptitle(title, fontsize=16)
     plt.tight_layout()
+    plt.savefig(f"{title}.png")
     plt.show()
 
 json_path = "heatmap.json"
@@ -68,10 +65,23 @@ goal = data_list[-5]['goal']
 model = data_list[-4]['model']
 width = data_list[-3]['w']
 height = data_list[-2]['h']
-goal_x, goal_y = data_list[-1]['goal'][1:].split(',')[0], data_list[-1]['goal'][:-1].split(',')[1]
+goal_x, goal_y = int(data_list[-1]['goal'][1:].split(',')[0]), int(data_list[-1]['goal'][:-1].split(',')[1])
 title = f"{model}, {width}x{height} {goal}"
 print(width, height, goal_x, goal_y)
 tiles = data_list[:-5]
 print(tiles[0])
+# sort the tiles by x and y
+tiles = sorted(tiles, key=lambda x: (x['x'], x['y']))
+# change the values of the tile with x = goal_x and y = goal_y to GOAL, otherwise keep only the values where values[1] == True
+for tile in tiles:
+    if tile['x'] == goal_x and tile['y'] == goal_y:
+        tile['values'] = [(goal.upper(), True, 1)]
+    else:
+        # keep only the values where values[1] == True
+        # print(tile["values"])
+        # print(tile["values"][0][1])
+        tile['values'] = [tupla for tupla in tile['values'] if tupla[1] == True]
+        # print(tile["values"])
+
 
 create_table_of_square_pies(tiles, width, height, color='green', title=title)
