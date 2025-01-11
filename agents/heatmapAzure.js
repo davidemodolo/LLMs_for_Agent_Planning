@@ -1,18 +1,12 @@
 import { DeliverooApi } from "@unitn-asa/deliveroo-js-client";
-import OpenAI from "openai";
 import tiktoken from "tiktoken";
 
 import fs from "fs";
-const apiKey = fs.readFileSync("key.txt", "utf8").trim();
 
-const openai = new OpenAI({
-  apiKey: apiKey,
-});
-
-const MODEL = "gpt-4o-mini";
+const MODEL = "gpt-4o";
 const USE_HISTORY = false;
 
-var GOAL = "deliver";
+var GOAL = "pickup";
 
 const conversationHistory = [];
 function addHistory(roleAdd, contentAdd) {
@@ -52,17 +46,51 @@ function temperatureScaling(logits, temperature = 0.1) {
 
 var total_tokens = 0;
 const POSSIBLE_ACTIONS = ["U", "D", "L", "R", "T", "S"];
-async function knowno_OpenAI(
-  prompt,
-  tokens_to_check,
-  max_tokens = 1,
-  qhat = 0.928
-) {
+async function queryAzureLLM(prompt, logprobs, top_logprobs, logit_bias_dict) {
+  const apiUrl = "http://localhost:8000/query"; // Update with the actual server URL
+  var promptString = JSON.stringify(prompt);
+  //remove the \ns
+  promptString = promptString.replace(/\\n/g, " ");
+  promptString = promptString.replace(/\\"/g, '"');
+  console.log("Prompt: ", promptString);
+  console.log("Logprobs: ", logprobs);
+  console.log("Top logprobs: ", top_logprobs);
+  console.log("Logit bias dict: ", logit_bias_dict);
+  const requestBody = {
+    prompt: promptString,
+    logprobs: logprobs,
+    top_logprobs: top_logprobs,
+    logit_bias_dict: logit_bias_dict,
+  };
+
+  try {
+    const response = await fetch(apiUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestBody),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Server error: ${response.status}`);
+    }
+
+    const result = await response.json();
+    console.log("Log Probs Result:", result.log_probs);
+    console.log("Total Tokens:", result.total_tokens);
+    return result;
+  } catch (error) {
+    console.error("Error querying LLM:", error);
+  }
+}
+async function knowno_OpenAI(prompt, tokens_to_check, qhat = 0.928) {
   const LOGIT_BIAS = 20;
+  const logits_bias_dict = createLogitsBiasDict(tokens_to_check);
+  // if prompt == null, exit and print
   addHistory("user", prompt);
-  const completion = await openai.chat.completions.create({
-    model: MODEL,
-    messages: USE_HISTORY
+  const completion = await queryAzureLLM(
+    USE_HISTORY
       ? conversationHistory
       : [
           {
@@ -70,33 +98,32 @@ async function knowno_OpenAI(
             content: prompt,
           },
         ],
-    max_tokens: max_tokens,
-    logprobs: true,
-    top_logprobs: LOGIT_BIAS,
-    logit_bias: createLogitsBiasDict(tokens_to_check),
-  });
-  total_tokens += completion.usage.total_tokens;
-  const top_logprobs_full =
-    completion.choices[0].logprobs.content[0].top_logprobs;
+    true,
+    LOGIT_BIAS,
+    logits_bias_dict
+  );
+  //total_tokens += completion.total_tokens;
+
+  const top_logprobs_full = completion.log_probs;
   const top_tokens = [];
   const top_logprobs = [];
-  for (const element of top_logprobs_full) {
-    top_tokens.push(element.token);
-    top_logprobs.push(element.logprob);
+  for (const element in top_logprobs_full) {
+    top_tokens.push(element);
+    top_logprobs.push(top_logprobs_full[element]);
   }
 
-  // console.log("Top tokens: ", top_tokens);
-  // console.log("Top logprobs: ", top_logprobs);
+  console.log("Top tokens: ", top_tokens);
+  console.log("Top logprobs: ", top_logprobs);
 
   const results_dict = {};
-  // console.log("Tokens to check: ", tokens_to_check);
+  console.log("Tokens to check: ", tokens_to_check);
   top_tokens.forEach((token, i) => {
     const character = token.trim().toUpperCase();
     if (tokens_to_check.includes(character) && !results_dict[character]) {
       results_dict[character] = top_logprobs[i];
     }
   });
-  // console.log("Results dict: ", results_dict);
+  console.log("Results dict: ", results_dict);
 
   tokens_to_check.forEach((token) => {
     if (!results_dict[token]) {
@@ -105,7 +132,7 @@ async function knowno_OpenAI(
         top_logprobs[top_logprobs.length - 2];
     }
   });
-  // console.log("Results dict: ", results_dict);
+  console.log("Results dict: ", results_dict);
 
   const temperature_softmax = 10; // Define the temperature
   const exp_logprobs = Object.values(results_dict).map((logprob) =>
@@ -113,9 +140,9 @@ async function knowno_OpenAI(
   );
   const sum_exp_logprobs = exp_logprobs.reduce((sum, val) => sum + val, 0);
   const top_logprobs_norm = exp_logprobs.map((val) => val / sum_exp_logprobs);
-  // console.log("Top logprobs norm: ", top_logprobs_norm);
+  console.log("Top logprobs norm: ", top_logprobs_norm);
   const mc_smx_all = temperatureScaling(top_logprobs_norm);
-  // console.log("MC SMX all: ", mc_smx_all);
+  console.log("MC SMX all: ", mc_smx_all);
 
   const final = Object.keys(results_dict).map((element, i) => [
     element,
@@ -123,7 +150,7 @@ async function knowno_OpenAI(
     mc_smx_all[i],
   ]);
   final.sort((a, b) => b[2] - a[2]);
-  // console.log("Final: ", final);
+  console.log("Final: ", final);
   return final;
 }
 
@@ -217,7 +244,7 @@ function getRawPrompt() {
     variables = {
       width: rawOnMap.width,
       height: rawOnMap.height,
-      //tiles: tiles,
+      tiles: tiles,
       agentX: agentX,
       agentY: agentY,
     };
@@ -288,7 +315,7 @@ function getWeightedRandomIndex(weights) {
     random -= weights[i];
   }
 }
-const TIMER = 80;
+const TIMER = 500;
 const heatmapJson = [];
 async function agentLoop() {
   while (!rawOnMap) {
@@ -359,7 +386,7 @@ async function agentLoop() {
   }
 
   // save the heatmapJson to a file
-  fs.writeFileSync("heatmap.json", JSON.stringify(heatmapJson));
+  fs.writeFileSync("heatmapAzure.json", JSON.stringify(heatmapJson));
   // end the program
   process.exit();
 }

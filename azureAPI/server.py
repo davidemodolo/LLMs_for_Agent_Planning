@@ -15,9 +15,9 @@ llm_default_config = {
 }
 
 engine = "gpt-4o"
-with open("key_python.txt", "r") as file:
+with open("azureAPI/key_python.txt", "r") as file:
     API_KEY_NAME = file.read().strip()
-with open("endpoint_python.txt", "r") as file:
+with open("azureAPI/endpoint_python.txt", "r") as file:
     ENDPOINT = file.read().strip()
 API_VERSION = "2024-08-01-preview"
 
