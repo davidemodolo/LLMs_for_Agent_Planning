@@ -288,14 +288,15 @@ function getWeightedRandomIndex(weights) {
     random -= weights[i];
   }
 }
-const TIMER = 150;
+const TIMER = 80;
 const heatmapJson = [];
 async function agentLoop() {
   while (!rawOnMap) {
     await client.timer(100);
   }
-  for (let i = rawOnMap.height - 1; i >= 0; i--) {
-    for (let j = rawOnMap.width; j >= 0; j--) {
+  // FOR TOMORROW FIX HERE
+  for (let i = 0; i < rawOnMap.height; i++) {
+    for (let j = 0; j < rawOnMap.width; j++) {
       var response = await knowno_OpenAI(getRawPrompt(), POSSIBLE_ACTIONS);
       if (
         !heatmapJson.some(
@@ -321,12 +322,11 @@ async function agentLoop() {
       } else if (i % 2 == 1) {
         console.log("Moving horizontally");
         await client.move("left");
-        console.log(heatmapJson);
       }
       await client.timer(TIMER);
     }
     console.log("Moving vertically");
-    await client.move("up");
+    await client.move("down");
     await client.timer(TIMER);
   }
   heatmapJson.push({
@@ -342,11 +342,22 @@ async function agentLoop() {
   heatmapJson.push({
     h: rawOnMap.height,
   });
-  c.push({
-    goal: `(${Math.abs(rawOnParcelsSensing[0].y - (rawOnMap.height - 1))},${
-      rawOnParcelsSensing[0].x
-    })`,
-  });
+  if (GOAL == "pickup") {
+    heatmapJson.push({
+      goal: `(${Math.abs(rawOnParcelsSensing[0].y - (rawOnMap.height - 1))},${
+        rawOnParcelsSensing[0].x
+      })`,
+    });
+  } else if (GOAL == "deliver") {
+    // find the delivery tile
+    const deliveryTile = rawOnMap.tiles.find((tile) => tile.delivery == true);
+    heatmapJson.push({
+      goal: `(${Math.abs(deliveryTile.y - (rawOnMap.height - 1))},${
+        deliveryTile.x
+      })`,
+    });
+  }
+
   // save the heatmapJson to a file
   fs.writeFileSync("heatmap.json", JSON.stringify(heatmapJson));
   // end the program

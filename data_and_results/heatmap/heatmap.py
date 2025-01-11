@@ -10,9 +10,11 @@ colors = {
     "S": "#f5a623"   # orange
 }
 
-def create_square_pie(ax, values, color):
+def create_square_pie(ax, values, color, x, y):
     total = sum(value for _, _, value in values)
     current_pos = 0
+    print(x, y)
+    print(values)
 
     for label, _, value in values:
         sector_size = value / total
@@ -44,13 +46,12 @@ def create_table_of_square_pies(data_list, width, length, color, title):
         axes = axes.flatten()
     elif length == 1 or width == 1:
         axes = [axes]  # Ensure it's always iterable
-
+    count = 0
     for i, data in enumerate(data_list):
         values = data['values']
-        print()
-        print(data['x'], data['y'])
-        print(values)
-        create_square_pie(axes[i], values, color)
+        create_square_pie(axes[i], values, color, data["x"], data["y"])
+        count += 1
+    print(count)
 
     fig.suptitle(title, fontsize=16)
     plt.tight_layout()
