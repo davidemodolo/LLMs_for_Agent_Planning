@@ -50,7 +50,7 @@ def create_table_of_square_pies(data_list, width, length, color, title):
 
     fig.suptitle(title, fontsize=16)
     plt.tight_layout()
-    plt.savefig(f"{title}.png")
+    # plt.savefig(f"{title}.png")
     plt.show()
 
 json_path = "heatmap.json"
@@ -103,7 +103,7 @@ for tile in tiles:
         if value[0] in correct_moves:
             percentage += value[2]
     print(percentage)
-    percentages.append((tile['x'], tile['y'], percentage))
+    percentages.append((tile['x'], tile['y'], percentage, tile['values'], correct_moves))
 
 # new function that just prints the percentages in the squares
 def create_square(ax, value, color, x, y):
@@ -144,7 +144,41 @@ def create_table_of_squares(data_list, width, length, color, title):
 
     fig.suptitle(title, fontsize=16)
     plt.tight_layout()
-    plt.savefig(f"{title}perc.png")
+    # plt.savefig(f"{title}perc.png")
     plt.show()
 
 create_table_of_squares(percentages, width, height, color='green', title=title)
+
+
+# Part 3:
+# For each tile, compute when a correct move is in the top1, top2 and top3 actions and count overall the percentage of correct moves in the top1, top2 and top3 actions
+count_top1 = 0
+count_top2 = 0
+count_top3 = 0
+for entry in percentages:
+    _,_,_,moves,correct_moves = entry
+    print(moves, correct_moves)
+    # is any of the correct moves in the first move?
+    found_top1, found_top2 = False, False
+    for correct_move in correct_moves:
+        if moves[0][0] == correct_move:
+            count_top1 += 1
+            count_top2 += 1
+            count_top3 += 1
+            found_top1 = True
+            break
+    if not found_top1 and len(moves) > 1:
+        for correct_move in correct_moves:
+            if moves[1][0] == correct_move:
+                count_top2 += 1
+                count_top3 += 1
+                found_top2 = True
+                break
+    if not found_top1 and not found_top2 and len(moves) > 2:
+        for correct_move in correct_moves:
+            if moves[2][0] == correct_move:
+                count_top3 += 1
+                break
+print(count_top1, count_top2, count_top3)
+print(count_top1/len(percentages), count_top2/len(percentages), count_top3/len(percentages))
+    

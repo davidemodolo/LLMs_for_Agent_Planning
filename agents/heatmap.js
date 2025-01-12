@@ -12,7 +12,7 @@ const openai = new OpenAI({
 const MODEL = "gpt-4o-mini";
 const USE_HISTORY = false;
 
-var GOAL = "deliver";
+var GOAL = "pickup";
 
 const conversationHistory = [];
 function addHistory(roleAdd, contentAdd) {
@@ -126,7 +126,7 @@ async function knowno_OpenAI(
   // console.log("Final: ", final);
   return final;
 }
-
+//node agents/heatmap.js
 const AgentLink = "http://localhost:8080/?name=raw_llm_agent";
 const AgentKey =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijc1ZDRlNzhlZDhlIiwibmFtZSI6InJhd19sbG1fYWdlbnQiLCJpYXQiOjE3MzAzODc4Njd9.4EQlPWKgOFGBUn0MpXOZQI2CkPHBjggnDKu76kpPrkI";
@@ -173,7 +173,6 @@ function generateText(filePath, variables) {
   }
 }
 
-//node agents/heatmap.js
 function getRawPrompt() {
   // TODO: prepare all the variables for all the blueprints
   const agentX = Math.abs(rawOnYou.y - (rawOnMap.height - 1));
