@@ -13,8 +13,6 @@ colors = {
 def create_square_pie(ax, values, color, x, y):
     total = sum(value for _, _, value in values)
     current_pos = 0
-    print(x, y)
-    print(values)
 
     for label, _, value in values:
         sector_size = value / total
@@ -46,12 +44,9 @@ def create_table_of_square_pies(data_list, width, length, color, title):
         axes = axes.flatten()
     elif length == 1 or width == 1:
         axes = [axes]  # Ensure it's always iterable
-    count = 0
     for i, data in enumerate(data_list):
         values = data['values']
         create_square_pie(axes[i], values, color, data["x"], data["y"])
-        count += 1
-    print(count)
 
     fig.suptitle(title, fontsize=16)
     plt.tight_layout()
@@ -84,5 +79,72 @@ for tile in tiles:
         tile['values'] = [tupla for tupla in tile['values'] if tupla[1] == True]
         # print(tile["values"])
 
-
 create_table_of_square_pies(tiles, width, height, color='green', title=title)
+
+# Part 2: 
+# For each tile, find which moves are correct and sum them
+
+percentages = []
+for tile in tiles:
+    delta_y = goal_y - tile['y']
+    delta_x = goal_x - tile['x']
+    correct_moves = []
+    if delta_x > 0:
+        correct_moves.append('D')
+    if delta_x < 0:
+        correct_moves.append('U')
+    if delta_y > 0:
+        correct_moves.append('R')
+    if delta_y < 0:
+        correct_moves.append('L')
+    print(tile['x'], tile['y'], correct_moves, tile['values'])
+    percentage = 0
+    for value in tile['values']:
+        if value[0] in correct_moves:
+            percentage += value[2]
+    print(percentage)
+    percentages.append((tile['x'], tile['y'], percentage))
+
+# new function that just prints the percentages in the squares
+def create_square(ax, value, color, x, y):
+    import matplotlib.colors as mcolors
+
+    norm = mcolors.Normalize(vmin=0, vmax=1)
+    cmap = plt.get_cmap('RdYlGn')
+    color = cmap(norm(value))
+    rect = patches.Rectangle(
+            (0, 0), 1, 1, linewidth=4, edgecolor='black', 
+            facecolor=color
+        )
+    rect.set_facecolor(mcolors.to_rgba(color, alpha=min(1, value*2)))
+
+    ax.add_patch(rect)
+
+    ax.text(
+        0.5, 0.5, f"{goal}" if x == goal_x and y == goal_y else f"{value:.2f}%", 
+        ha='center', va='center', fontsize=8, color='black'
+    )
+
+    ax.set_xlim(0, 1)
+    ax.set_ylim(0, 1)
+    ax.axis('off')
+
+def create_table_of_squares(data_list, width, length, color, title):
+    if len(data_list) > width * length:
+        raise ValueError("The number of data dictionaries exceeds the available table cells.")
+
+    fig, axes = plt.subplots(length, width, figsize=(min(width * 2, 10), min(length * 2, 10)))
+    if length > 1 and width > 1:
+        axes = axes.flatten()
+    elif length == 1 or width == 1:
+        axes = [axes]  # Ensure it's always iterable
+    for i, data in enumerate(data_list):
+        value = data[2]
+        create_square(axes[i], value, color, data[0], data[1])
+
+    fig.suptitle(title, fontsize=16)
+    plt.tight_layout()
+    plt.savefig(f"{title}perc.png")
+    plt.show()
+
+create_table_of_squares(percentages, width, height, color='green', title=title)
