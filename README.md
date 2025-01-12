@@ -31,9 +31,9 @@ FINAL GOAL: March 2025
 
 - [x] automatic heatmap creation
 - [ ] metrics for path/best path
-- [ ] **% of time the correct answer is in the topX selected actions**
+- [x] % of time the correct answer is in the topX selected actions
 - [ ] uncertainty in non-ambiguous situations
-- [ ] plot the ratio between distance_to_goal/uncertainty to see if the distance to the goal is source for uncertainty
+- [x] plot the ratio between distance_to_goal/uncertainty to see if the distance to the goal is source for uncertainty
 
 # MAYBE TODO:
 
