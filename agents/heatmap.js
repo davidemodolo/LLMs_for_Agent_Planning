@@ -173,7 +173,7 @@ function generateText(filePath, variables) {
   }
 }
 
-//node agents/modular_agent/agent_backbone.js
+//node agents/heatmap.js
 function getRawPrompt() {
   // TODO: prepare all the variables for all the blueprints
   const agentX = Math.abs(rawOnYou.y - (rawOnMap.height - 1));
@@ -217,7 +217,7 @@ function getRawPrompt() {
     variables = {
       width: rawOnMap.width,
       height: rawOnMap.height,
-      //tiles: tiles,
+      tiles: tiles,
       agentX: agentX,
       agentY: agentY,
     };

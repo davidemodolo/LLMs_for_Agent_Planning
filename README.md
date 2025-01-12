@@ -42,6 +42,10 @@ FINAL GOAL: March 2025
 - [ ] add image to the prompt
 - [ ] create a parcer for the map response that would work even if the API changes completely, and at the same time it reduces the size in the prompt for the map (keeping it human-readable)
 
+# TESTs TODO:
+
+- [ ] different position of the goal tile to see if its relative position in the prompt gives better or worse performance
+
 # Random Notes
 
 **Idea**: we give an agent the atomic actions, let's see if it is able to solve a goal without giving instructions.
