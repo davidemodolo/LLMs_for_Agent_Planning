@@ -50,7 +50,7 @@ def create_table_of_square_pies(data_list, width, length, color, title):
 
     fig.suptitle(title, fontsize=16)
     plt.tight_layout()
-    # plt.savefig(f"{title}.png")
+    plt.savefig(f"{title}.png")
     plt.show()
 
 json_path = "heatmap.json"
@@ -83,7 +83,7 @@ create_table_of_square_pies(tiles, width, height, color='green', title=title)
 
 # Part 2: 
 # For each tile, find which moves are correct and sum them
-
+# TODO: RESCALE THE PERCENTAGES
 percentages = []
 for tile in tiles:
     delta_y = goal_y - tile['y']
@@ -99,6 +99,7 @@ for tile in tiles:
         correct_moves.append('L')
     print(tile['x'], tile['y'], correct_moves, tile['values'])
     percentage = 0
+    # HERE RESCALE THE PERCENTAGES
     for value in tile['values']:
         if value[0] in correct_moves:
             percentage += value[2]
@@ -144,7 +145,7 @@ def create_table_of_squares(data_list, width, length, color, title):
 
     fig.suptitle(title, fontsize=16)
     plt.tight_layout()
-    # plt.savefig(f"{title}perc.png")
+    plt.savefig(f"{title}perc.png")
     plt.show()
 
 create_table_of_squares(percentages, width, height, color='green', title=title)

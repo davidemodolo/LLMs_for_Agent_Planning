@@ -12,7 +12,7 @@ const openai = new OpenAI({
 const MODEL = "gpt-4o-mini";
 const USE_HISTORY = false;
 
-var GOAL = "pickup";
+var GOAL = "best_tile";
 
 const conversationHistory = [];
 function addHistory(roleAdd, contentAdd) {
@@ -208,7 +208,7 @@ function getRawPrompt() {
   tiles = tiles.replace(/"|{|}|[|]/g, "");
 
   // TODO: choose the prompt blueprint
-  //GOAL = "best_tile";
+  GOAL = "best_tile";
   const promptBlueprint = `prompts/${GOAL}.txt`;
   var variables = null;
   if (GOAL == "deliver") {
@@ -247,10 +247,11 @@ function getRawPrompt() {
     if (agentX < rawOnMap.height - 1) {
       possibleTiles.push({ val: "D) ", x: agentX + 1, y: agentY });
     }
-    const possibleTilesText = possibleTiles.map(
-      (tile) => `${tile.val}(${tile.x}, ${tile.y})\n`
-    );
-    // console.log("Possible tiles: ", possibleTilesText);
+    var possibleTilesText = "";
+    for (let tile of possibleTiles) {
+      possibleTilesText += `${tile.val}(${tile.x}, ${tile.y})\n`;
+    }
+    console.log("Possible tiles: ", possibleTilesText);
     // (width, height, tiles, parcels, agentX, agentY, possibleTiles)
     variables = {
       width: rawOnMap.width,
@@ -358,7 +359,7 @@ async function agentLoop() {
   }
 
   // save the heatmapJson to a file
-  fs.writeFileSync("heatmap.json", JSON.stringify(heatmapJson));
+  fs.writeFileSync(`heatmap${GOAL}.json`, JSON.stringify(heatmapJson));
   // end the program
   process.exit();
 }

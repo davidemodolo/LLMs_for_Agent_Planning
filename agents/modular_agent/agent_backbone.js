@@ -212,7 +212,7 @@ function getRawPrompt() {
 
   // TODO: choose the prompt blueprint
   GOAL = numParcels > 0 ? "deliver" : "pickup";
-  //GOAL = "best_tile";
+  GOAL = "best_tile";
   const promptBlueprint = `prompts/${GOAL}.txt`;
   var variables = null;
   if (GOAL == "deliver") {
@@ -251,9 +251,10 @@ function getRawPrompt() {
     if (agentX < rawOnMap.height - 1) {
       possibleTiles.push({ val: "D) ", x: agentX + 1, y: agentY });
     }
-    const possibleTilesText = possibleTiles.map(
-      (tile) => `${tile.val}(${tile.x}, ${tile.y})\n`
-    );
+    var possibleTilesText = "";
+    for (let tile of possibleTiles) {
+      possibleTilesText += `${tile.val}(${tile.x}, ${tile.y})\n`;
+    }
     console.log("Possible tiles: ", possibleTilesText);
     // (width, height, tiles, parcels, agentX, agentY, possibleTiles)
     variables = {
