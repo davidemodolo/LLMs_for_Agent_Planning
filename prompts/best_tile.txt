@@ -5,7 +5,7 @@ Map height: {height}
 Tiles are arranged as {height} rows in {width} columns:
 {tiles}
 
-You have {numParcel} to deliver, if the number is 0, you must pick up a parcel, otherwise you must deliver it into a delivery tile.
+You have {numParcel} parcel/s to deliver, if the number is 0, you must pick up a parcel, otherwise you must deliver it into a delivery tile.
 This is the list of parcels you can see and their location:
 {parcels}
 

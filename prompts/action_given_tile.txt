@@ -4,13 +4,13 @@ Map width: {width}
 Map height: {height}
 Tiles are arranged as {height} rows in {width} columns:
 {tiles}
-You are on the spot ({agentX}, {agentY}) and your goal is to go to the spot ({goalX}, {goalY}) and Ship or Take based on the fact that the goal tile is a delivery or not.
+You are on the spot ({agentX}, {agentY}) and your goal is to reach the tile ({goalX}, {goalY}).
 
 The actions you can do are:
-U) move up (decrease your x by 1)
-D) move down (increase your x by 1)
-L) move left (decrease your y by 1)
-R) move right (increase your y by 1)
+U) move up
+D) move down
+L) move left
+R) move right
 T) take the parcel that is in your tile
 S) ship a parcel (you must be in a delivery=true tile)
 {RAG}

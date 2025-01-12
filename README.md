@@ -40,7 +40,7 @@ FINAL GOAL: March 2025
 > bold means ongoing
 
 - [ ] add image to the prompt
-- [ ] create a parcer for the map response that would work even if the API changes completely, and at the same time it reduces the size in the prompt for the map (keeping it human-readable)
+- [ ] create a parser for the map response that would work even if the API changes completely, and at the same time it reduces the size in the prompt for the map (keeping it human-readable)
 
 # TESTs TODO:
 

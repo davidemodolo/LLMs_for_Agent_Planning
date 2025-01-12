@@ -172,7 +172,10 @@ function generateText(filePath, variables) {
     return null;
   }
 }
-
+var possibleTiles = [];
+var goalX = -1;
+var goalY = -1;
+GOAL = "best_tile";
 function getRawPrompt() {
   // TODO: prepare all the variables for all the blueprints
   const agentX = Math.abs(rawOnYou.y - (rawOnMap.height - 1));
@@ -208,7 +211,7 @@ function getRawPrompt() {
   tiles = tiles.replace(/"|{|}|[|]/g, "");
 
   // TODO: choose the prompt blueprint
-  GOAL = "best_tile";
+
   const promptBlueprint = `prompts/${GOAL}.txt`;
   var variables = null;
   if (GOAL == "deliver") {
@@ -233,23 +236,23 @@ function getRawPrompt() {
       parcels: JSON.stringify(parcels),
     };
   } else if (GOAL == "best_tile") {
-    const possibleTiles = [];
+    possibleTiles = [];
     // add the left, right, up, down tiles wrt the agent position, if they exist
     if (agentY > 0) {
-      possibleTiles.push({ val: "L) ", x: agentX, y: agentY - 1 });
+      possibleTiles.push({ val: "L", x: agentX, y: agentY - 1 });
     }
     if (agentY < rawOnMap.width - 1) {
-      possibleTiles.push({ val: "R) ", x: agentX, y: agentY + 1 });
+      possibleTiles.push({ val: "R", x: agentX, y: agentY + 1 });
     }
     if (agentX > 0) {
-      possibleTiles.push({ val: "U) ", x: agentX - 1, y: agentY });
+      possibleTiles.push({ val: "U", x: agentX - 1, y: agentY });
     }
     if (agentX < rawOnMap.height - 1) {
-      possibleTiles.push({ val: "D) ", x: agentX + 1, y: agentY });
+      possibleTiles.push({ val: "D", x: agentX + 1, y: agentY });
     }
     var possibleTilesText = "";
     for (let tile of possibleTiles) {
-      possibleTilesText += `${tile.val}(${tile.x}, ${tile.y})\n`;
+      possibleTilesText += `${tile.val}) (${tile.x}, ${tile.y})\n`;
     }
     console.log("Possible tiles: ", possibleTilesText);
     // (width, height, tiles, parcels, agentX, agentY, possibleTiles)
@@ -263,8 +266,19 @@ function getRawPrompt() {
       agentY: agentY,
       possibleTiles: possibleTilesText,
     };
-    // GOAL = "action_given_tile";
+    GOAL = "action_given_tile";
   } else if (GOAL == "action_given_tile") {
+    variables = {
+      width: rawOnMap.width,
+      height: rawOnMap.height,
+      tiles: tiles,
+      agentX: agentX,
+      agentY: agentY,
+      goalX: goalX,
+      goalY: goalY,
+      RAG: "",
+    };
+    GOAL = "best_tile";
   } else {
     console.log("Error: the goal is not valid.");
   }
@@ -280,16 +294,6 @@ function getRawPrompt() {
   return prompt;
 }
 
-function getWeightedRandomIndex(weights) {
-  const totalWeight = weights.reduce((acc, weight) => acc + weight, 0);
-  let random = Math.random() * totalWeight;
-  for (let i = 0; i < weights.length; i++) {
-    if (random < weights[i]) {
-      return i;
-    }
-    random -= weights[i];
-  }
-}
 const TIMER = 80;
 const heatmapJson = [];
 async function agentLoop() {
@@ -300,6 +304,18 @@ async function agentLoop() {
   for (let i = 0; i < rawOnMap.height; i++) {
     for (let j = 0; j < rawOnMap.width; j++) {
       var response = await knowno_OpenAI(getRawPrompt(), POSSIBLE_ACTIONS);
+      if (GOAL == "action_given_tile") {
+        const choice = response[0][0];
+        possibleTiles.forEach((tile) => {
+          if (tile.val == choice) {
+            goalX = tile.x;
+            goalY = tile.y;
+          }
+        });
+        await client.timer(TIMER);
+        j -= 1;
+        continue;
+      }
       if (
         !heatmapJson.some(
           (entry) =>
@@ -350,7 +366,7 @@ async function agentLoop() {
         rawOnParcelsSensing[0].x
       })`,
     });
-  } else if (GOAL == "deliver") {
+  } else if (GOAL == "deliver" || GOAL == "best_tile") {
     // find the delivery tile
     const deliveryTile = rawOnMap.tiles.find((tile) => tile.delivery == true);
     heatmapJson.push({

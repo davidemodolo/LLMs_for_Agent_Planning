@@ -53,7 +53,7 @@ def create_table_of_square_pies(data_list, width, length, color, title):
     plt.savefig(f"{title}.png")
     plt.show()
 
-json_path = "heatmap.json"
+json_path = "heatmapbest_tile.json"
 import json
 with open(json_path, 'r') as f:
     data_list = json.load(f)
@@ -103,6 +103,8 @@ for tile in tiles:
     for value in tile['values']:
         if value[0] in correct_moves:
             percentage += value[2]
+    total_percentage = sum([value[2] for value in tile['values']])
+    percentage = percentage / total_percentage
     print(percentage)
     percentages.append((tile['x'], tile['y'], percentage, tile['values'], correct_moves))
 
@@ -122,7 +124,7 @@ def create_square(ax, value, color, x, y):
     ax.add_patch(rect)
 
     ax.text(
-        0.5, 0.5, f"{goal}" if x == goal_x and y == goal_y else f"{value:.2f}%", 
+        0.5, 0.5, f"{goal.upper()}" if x == goal_x and y == goal_y else f"{value*100:.2f}%", 
         ha='center', va='center', fontsize=8, color='black'
     )
 
@@ -145,7 +147,7 @@ def create_table_of_squares(data_list, width, length, color, title):
 
     fig.suptitle(title, fontsize=16)
     plt.tight_layout()
-    plt.savefig(f"{title}perc.png")
+    plt.savefig(f"{title}_PERC.png")
     plt.show()
 
 create_table_of_squares(percentages, width, height, color='green', title=title)
@@ -157,8 +159,11 @@ count_top1 = 0
 count_top2 = 0
 count_top3 = 0
 for entry in percentages:
-    _,_,_,moves,correct_moves = entry
+    x,y,_,moves,correct_moves = entry
     print(moves, correct_moves)
+    # if goal tile ignore
+    if x == goal_x and y == goal_y:
+        continue
     # is any of the correct moves in the first move?
     found_top1, found_top2 = False, False
     for correct_move in correct_moves:
@@ -181,5 +186,20 @@ for entry in percentages:
                 count_top3 += 1
                 break
 print(count_top1, count_top2, count_top3)
-print(count_top1/len(percentages), count_top2/len(percentages), count_top3/len(percentages))
-    
+num_tiles_not_goal = len(percentages) - 1
+print(count_top1/num_tiles_not_goal, count_top2/num_tiles_not_goal, count_top3/num_tiles_not_goal)
+
+results = {
+    "count_top1": count_top1,
+    "count_top2": count_top2,
+    "count_top3": count_top3,
+    "percentage_top1": count_top1 / num_tiles_not_goal,
+    "percentage_top2": count_top2 / num_tiles_not_goal,
+    "percentage_top3": count_top3 / num_tiles_not_goal
+}
+
+output_path = f"{title}_DATA.json"
+with open(output_path, 'w') as f:
+    json.dump(results, f, indent=4)
+
+print(f"Results saved to {output_path}")
