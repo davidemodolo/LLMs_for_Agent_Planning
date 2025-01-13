@@ -12,7 +12,7 @@ const openai = new OpenAI({
 const MODEL = "gpt-4o-mini";
 const USE_HISTORY = false;
 
-var GOAL = "best_tile";
+var GOAL = "deliver";
 
 const conversationHistory = [];
 function addHistory(roleAdd, contentAdd) {
@@ -208,7 +208,7 @@ function getRawPrompt() {
   tiles = tiles.replace(/"|{|}|[|]/g, "");
 
   // TODO: choose the prompt blueprint
-  GOAL = "best_tile";
+  //GOAL = "best_tile";
   const promptBlueprint = `prompts/${GOAL}.txt`;
   var variables = null;
   if (GOAL == "deliver") {

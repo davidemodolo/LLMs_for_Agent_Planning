@@ -10,7 +10,7 @@ const openai = new OpenAI({
 });
 
 const MODEL = "gpt-4o-mini";
-const USE_HISTORY = true;
+const USE_HISTORY = false;
 const POSSIBLE_LOGICS = ["raw", "random", "threshold"];
 const LOGIC = POSSIBLE_LOGICS[1];
 
@@ -65,7 +65,7 @@ async function knowno_OpenAI(
   const completion = await openai.chat.completions.create({
     model: MODEL,
     messages: USE_HISTORY
-      ? conversationHistory
+      ? conversationHistory.slice(-5)
       : [
           {
             role: "user",
@@ -192,7 +192,7 @@ function getRawPrompt() {
   var tiles = rawOnMap.tiles.map((tile) => ({
     x: Math.abs(tile.y - (rawOnMap.height - 1)),
     y: tile.x,
-    //delivery: tile.delivery,
+    delivery: tile.delivery,
   }));
   // the tile x = 4, y = 1 must be modified to have delivery = "blocked"
   tiles = tiles.filter((tile) => !(tile.x == 4 && tile.y == 1));
@@ -212,7 +212,6 @@ function getRawPrompt() {
 
   // TODO: choose the prompt blueprint
   GOAL = numParcels > 0 ? "deliver" : "pickup";
-  GOAL = "best_tile";
   const promptBlueprint = `prompts/${GOAL}.txt`;
   var variables = null;
   if (GOAL == "deliver") {
@@ -332,7 +331,7 @@ function uncertaintyLogic(response, threshold = null, logic = LOGIC) {
     return answer;
   }
 }
-
+const TIMER = 80;
 async function agentLoop() {
   var num_actions = 0;
   // get current time
@@ -359,7 +358,6 @@ async function agentLoop() {
     response = uncertaintyLogic(response);
     console.log("Action: ", response);
     console.log("Total tokens: ", total_tokens);
-    process.exit();
     switch (response) {
       case "U":
         await client.move("up");
@@ -385,8 +383,11 @@ async function agentLoop() {
     addHistory("assistant", response);
 
     num_actions++;
-    await client.timer(2000);
+    await client.timer(TIMER);
   }
+  conversationHistory.push({ total_tokens: total_tokens });
+  conversationHistory.push({ num_actions: num_actions });
+  conversationHistory.push({ time_elapsed: new Date().getTime() - start });
   // save the conversation history to a file
   fs.writeFileSync(
     "conversationHistory.json",

@@ -53,7 +53,7 @@ def create_table_of_square_pies(data_list, width, length, color, title):
     plt.savefig(f"{title}.png")
     plt.show()
 
-json_path = "heatmapbest_tile.json"
+json_path = "heatmapdeliver.json"
 import json
 with open(json_path, 'r') as f:
     data_list = json.load(f)
