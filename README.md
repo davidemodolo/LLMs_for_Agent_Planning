@@ -13,16 +13,16 @@ FINAL GOAL: March 2025
 > bold means ongoing
 
 - [x] rework the agent code to be even more modular -> not much modular, I think it's not needed anymore
-- [ ] **prepare the blueprint for all the prompts**
+- [ ] **prepare the blueprint for all the prompts** (missing RAG and choose goal, even if in best tile the goal is inferred)
 - [x] module for encoded map (base64) -> it uses more tokens, it could work (https://arxiv.org/abs/2305.18396) but it may be outside of the scope of this project since they encode for safe transmission
 - [x] ask for best tile to move on -> if it's blocked, should I ignore it or should the LLM infer from tile list?
-- [ ] **ask for action to the best tile**
+- [x] ask for action to the best tile
 - [x] visualize attention for prompt -> results in `data_and_results\attention_visualizer\attention_visualize.ipynb` -> need to study the plots
 - [ ] RAG implementation for artificially added categories to parcels
 - [ ] RAG implementation for blocked tiles workaround
   > The last time you were on (5, 1) you tried to move up but the path was blocked.
   > problem: if the map is not necessary, this becomes a trial and error with RAG as history
-- [ ] full flow
+- [x] full flow
 - [ ] full flow with best cell approach
 
 # LIST OF TODOs EVALUATION (code update):
@@ -32,7 +32,6 @@ FINAL GOAL: March 2025
 - [x] automatic heatmap creation
 - [ ] metrics for path/best path
 - [x] % of time the correct answer is in the topX selected actions
-- [ ] uncertainty in non-ambiguous situations
 - [x] plot the ratio between distance_to_goal/uncertainty to see if the distance to the goal is source for uncertainty
 
 # MAYBE TODO:
