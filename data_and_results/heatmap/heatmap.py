@@ -1,5 +1,8 @@
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
+import json
+import time
+import os
 
 colors = {
     "U": "#4a90e2",  # blue
@@ -35,7 +38,7 @@ def create_square_pie(ax, values, color, x, y):
     ax.axis('off')
 
 
-def create_table_of_square_pies(data_list, width, length, color, title):
+def create_table_of_square_pies(data_list, width, length, color, title, save_path):
     if len(data_list) > width * length:
         raise ValueError("The number of data dictionaries exceeds the available table cells.")
 
@@ -50,11 +53,10 @@ def create_table_of_square_pies(data_list, width, length, color, title):
 
     fig.suptitle(title, fontsize=16)
     plt.tight_layout()
-    plt.savefig(f"{title}.png")
+    plt.savefig(os.path.join(save_path, f"{title}.png"))
     plt.show()
 
-json_path = "heatmapdeliver.json"
-import json
+json_path = "heatmapAzure.json"
 with open(json_path, 'r') as f:
     data_list = json.load(f)
 goal = data_list[-5]['goal']
@@ -62,7 +64,9 @@ model = data_list[-4]['model']
 width = data_list[-3]['w']
 height = data_list[-2]['h']
 goal_x, goal_y = int(data_list[-1]['goal'][1:].split(',')[0]), int(data_list[-1]['goal'][:-1].split(',')[1])
-title = f"{model}, {width}x{height} {goal}"
+current_time = time.strftime("%Y%m%d-%H%M%S")
+path_to_save_data = f"data_and_results/heatmap/heatmaps/{model}/{width}x{height}_map/{goal}/{current_time}/"
+os.makedirs(path_to_save_data, exist_ok=True)
 print(width, height, goal_x, goal_y)
 tiles = data_list[:-5]
 print(tiles[0])
@@ -74,12 +78,9 @@ for tile in tiles:
         tile['values'] = [(goal.upper(), True, 1)]
     else:
         # keep only the values where values[1] == True
-        # print(tile["values"])
-        # print(tile["values"][0][1])
         tile['values'] = [tupla for tupla in tile['values'] if tupla[1] == True]
-        # print(tile["values"])
 
-create_table_of_square_pies(tiles, width, height, color='green', title=title)
+create_table_of_square_pies(tiles, width, height, color='green', title="actions_heatmap", save_path=path_to_save_data)
 
 # Part 2: 
 # For each tile, find which moves are correct and sum them
@@ -132,7 +133,7 @@ def create_square(ax, value, color, x, y):
     ax.set_ylim(0, 1)
     ax.axis('off')
 
-def create_table_of_squares(data_list, width, length, color, title):
+def create_table_of_squares(data_list, width, length, color, title, save_path):
     if len(data_list) > width * length:
         raise ValueError("The number of data dictionaries exceeds the available table cells.")
 
@@ -147,11 +148,10 @@ def create_table_of_squares(data_list, width, length, color, title):
 
     fig.suptitle(title, fontsize=16)
     plt.tight_layout()
-    plt.savefig(f"{title}_PERC.png")
+    plt.savefig(os.path.join(save_path, f"{title}_PERC.png"))
     plt.show()
 
-create_table_of_squares(percentages, width, height, color='green', title=title)
-
+create_table_of_squares(percentages, width, height, color='green', title="correct_actions_percentage", save_path=path_to_save_data)
 
 # Part 3:
 # For each tile, compute when a correct move is in the top1, top2 and top3 actions and count overall the percentage of correct moves in the top1, top2 and top3 actions
@@ -198,7 +198,7 @@ results = {
     "percentage_top3": count_top3 / num_tiles_not_goal
 }
 
-output_path = f"{title}_DATA.json"
+output_path = os.path.join(path_to_save_data, "topX_values.json")
 with open(output_path, 'w') as f:
     json.dump(results, f, indent=4)
 

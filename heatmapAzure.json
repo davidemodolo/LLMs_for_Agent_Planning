@@ -1320,7 +1320,7 @@
     ]
   },
   { "goal": "pickup" },
-  { "model": "gpt-4o-mini" },
+  { "model": "gpt-4o" },
   { "w": 10 },
   { "h": 11 },
   { "goal": "(0,9)" }
