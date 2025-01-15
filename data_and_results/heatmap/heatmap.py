@@ -56,7 +56,7 @@ def create_table_of_square_pies(data_list, width, length, color, title, save_pat
     plt.savefig(os.path.join(save_path, f"{title}.png"))
     plt.show()
 
-json_path = "heatmapAzure.json"
+json_path = "heatmap.json"
 with open(json_path, 'r') as f:
     data_list = json.load(f)
 goal = data_list[-5]['goal']
@@ -65,7 +65,7 @@ width = data_list[-3]['w']
 height = data_list[-2]['h']
 goal_x, goal_y = int(data_list[-1]['goal'][1:].split(',')[0]), int(data_list[-1]['goal'][:-1].split(',')[1])
 current_time = time.strftime("%Y%m%d-%H%M%S")
-path_to_save_data = f"data_and_results/heatmap/heatmaps/{model}/{width}x{height}_map/{goal}/{current_time}/"
+path_to_save_data = f"data_and_results/heatmap/heatmaps/{model}/{width}x{height}_map/{goal}/pos_{goal_x}_{goal_y}/{current_time}/"
 os.makedirs(path_to_save_data, exist_ok=True)
 print(width, height, goal_x, goal_y)
 tiles = data_list[:-5]

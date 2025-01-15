@@ -70,6 +70,7 @@ async function knowno_OpenAI(
             content: prompt,
           },
         ],
+    temperature: 0,
     max_tokens: max_tokens,
     logprobs: true,
     top_logprobs: LOGIT_BIAS,
@@ -361,7 +362,7 @@ async function agentLoop() {
   }
 
   // save the heatmapJson to a file
-  fs.writeFileSync(`heatmap${GOAL}.json`, JSON.stringify(heatmapJson));
+  fs.writeFileSync(`heatmap.json`, JSON.stringify(heatmapJson));
   // end the program
   process.exit();
 }
