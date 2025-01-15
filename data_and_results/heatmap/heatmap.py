@@ -42,7 +42,7 @@ def create_table_of_square_pies(data_list, width, length, color, title, save_pat
     if len(data_list) > width * length:
         raise ValueError("The number of data dictionaries exceeds the available table cells.")
 
-    fig, axes = plt.subplots(length, width, figsize=(min(width * 2, 10), min(length * 2, 10)))
+    fig, axes = plt.subplots(length, width, figsize=(min(width * 2, 20), min(length * 2, 20)))
     if length > 1 and width > 1:
         axes = axes.flatten()
     elif length == 1 or width == 1:
@@ -137,7 +137,7 @@ def create_table_of_squares(data_list, width, length, color, title, save_path):
     if len(data_list) > width * length:
         raise ValueError("The number of data dictionaries exceeds the available table cells.")
 
-    fig, axes = plt.subplots(length, width, figsize=(min(width * 2, 10), min(length * 2, 10)))
+    fig, axes = plt.subplots(length, width, figsize=(min(width * 2, 20), min(length * 2, 20)))
     if length > 1 and width > 1:
         axes = axes.flatten()
     elif length == 1 or width == 1:
