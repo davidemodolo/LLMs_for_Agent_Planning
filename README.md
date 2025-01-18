@@ -49,8 +49,8 @@ FINAL GOAL: March 2025
 
 - [ ] show that symbols get much attention
 - [ ] is there a paper that shows that removing special characters results in better performance?
-- [ ] test with "origin" in bottom left and see if performance change (bias versus developing origin or geometric origin)
-- [ ] "reach tile X,Y" without delivery stuff and see how it performs with no pickup and putdown(NEED NEW PROMPT, path_finding.txt)
+- [x] test with "origin" in bottom left and see if performance change (bias versus developing origin or geometric origin)
+- [x] "reach tile X,Y" without delivery stuff and see how it performs with no pickup and putdown(NEED NEW PROMPT, path_finding.txt)
 - [ ] do again closest tile test
 
 Perpendicular to goal get more uncertainty since there are less correct options
