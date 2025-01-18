@@ -30,7 +30,7 @@ FINAL GOAL: March 2025
 > bold means ongoing
 
 - [x] automatic heatmap creation
-- [ ] metrics for path/best path
+- [ ] **metrics for path/best path**
 - [x] % of time the correct answer is in the topX selected actions
 - [x] plot the ratio between distance_to_goal/uncertainty to see if the distance to the goal is source for uncertainty
 
@@ -39,11 +39,22 @@ FINAL GOAL: March 2025
 > bold means ongoing
 
 - [ ] add image to the prompt
-- [ ] create a parser for the map response that would work even if the API changes completely, and at the same time it reduces the size in the prompt for the map (keeping it human-readable)
+- [x] create a parser for the map response that would work even if the API changes completely, and at the same time it reduces the size in the prompt for the map (keeping it human-readable)
 
 # TESTs TODO:
 
-- [ ] different position of the goal tile to see if its relative position in the prompt gives better or worse performance
+- [x] different position of the goal tile to see if its relative position in the prompt gives better or worse performance
+
+# Last Notes before writing thesis
+
+- [ ] show that symbols get much attention
+- [ ] is there a paper that shows that removing special characters results in better performance?
+- [ ] test with "origin" in bottom left and see if performance change (bias versus developing origin or geometric origin)
+- [ ] "reach tile X,Y" without delivery stuff and see how it performs with no pickup and putdown(NEED NEW PROMPT, path_finding.txt)
+- [ ] do again closest tile test
+
+Perpendicular to goal get more uncertainty since there are less correct options
+Result: cannot split the prompt in sub goals
 
 # Random Notes
 
