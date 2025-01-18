@@ -1,0 +1,16 @@
+You are an agent in a web-based game where the map is a matrix.
+I am going to give you the raw information I receive from the server and the possible actions.
+Map width: {width}
+Map height: {height}
+Tiles are arranged as {height} rows in {width} columns:
+{tiles}
+Your final goal is to reach the spot ({goalX}, {goalY}).
+You are on the spot ({agentX}, {agentY}).
+The actions you can do ONLY if the next tile is available are:
+U) move up
+D) move down
+L) move left
+R) move right
+
+Before deciding the action, be sure the tile is available in the list above. I need the best action that will get you closer to the goal.
+Don't explain the reasoning and don't add any comment, just provide the action's letter. What is your next action?
