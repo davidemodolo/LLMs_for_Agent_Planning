@@ -176,26 +176,30 @@ function generateText(filePath, variables) {
 
 function getRawPrompt() {
   // TODO: prepare all the variables for all the blueprints
-  const agentX = Math.abs(rawOnYou.y - (rawOnMap.height - 1));
-  const agentY = rawOnYou.x;
+  const ORIENT = false;
+  var agentX = rawOnYou.x;
+  var agentY = rawOnYou.y;
+  if (ORIENT) {
+    agentX = Math.abs(rawOnYou.y - (rawOnMap.height - 1));
+    agentY = rawOnYou.x;
+  }
 
   const parcels = [];
   for (let parcel of rawOnParcelsSensing) {
     const newParcel = { x: parcel.x, y: parcel.y };
-    newParcel.x = Math.abs(parcel.y - (rawOnMap.height - 1));
-    newParcel.y = parcel.x;
+    if (ORIENT) {
+      newParcel.x = Math.abs(parcel.y - (rawOnMap.height - 1));
+      newParcel.y = parcel.x;
+    }
     parcels.push(newParcel);
   }
 
   var tiles = rawOnMap.tiles.map((tile) => ({
-    x: Math.abs(tile.y - (rawOnMap.height - 1)),
-    y: tile.x,
+    x: ORIENT ? Math.abs(tile.y - (rawOnMap.height - 1)) : tile.x,
+    y: ORIENT ? tile.x : tile.y,
     delivery: tile.delivery,
   }));
-  // the tile x = 4, y = 1 must be modified to have delivery = "blocked"
-  tiles = tiles.filter((tile) => !(tile.x == 4 && tile.y == 1));
   // still going up
-
   tiles.sort((a, b) => {
     if (a.x == b.x) {
       return a.y - b.y;
@@ -265,7 +269,17 @@ function getRawPrompt() {
       possibleTiles: possibleTilesText,
     };
     // GOAL = "action_given_tile";
-  } else if (GOAL == "action_given_tile") {
+  } else if (GOAL == "path_finding") {
+    // (width, height, tiles, parcels, agentX, agentY)
+    variables = {
+      width: rawOnMap.width,
+      height: rawOnMap.height,
+      tiles: tiles,
+      agentX: agentX,
+      agentY: agentY,
+      goalX: 6,
+      goalY: 6,
+    };
   } else {
     console.log("Error: the goal is not valid.");
   }
