@@ -10,11 +10,12 @@ const openai = new OpenAI({
 });
 
 const MODEL = "gpt-4o-mini";
-const USE_HISTORY = false;
+const USE_HISTORY = true;
 const POSSIBLE_LOGICS = ["raw", "random", "threshold"];
 const LOGIC = POSSIBLE_LOGICS[1];
 
 var GOAL = "pickup";
+const CELLS = [];
 
 const conversationHistory = [];
 function addHistory(roleAdd, contentAdd) {
@@ -269,7 +270,7 @@ function getRawPrompt() {
   } else {
     console.log("Error: the goal is not valid.");
   }
-
+  CELLS.push({ x: agentX, y: agentY });
   const prompt = generateText(promptBlueprint, variables);
   console.log("Prompt: ", prompt);
   // if (PARCEL_CATEGORIZATION) {
@@ -393,6 +394,8 @@ async function agentLoop() {
     "conversationHistory.json",
     JSON.stringify(conversationHistory, null, 2)
   );
+  // save the cells to a file
+  fs.writeFileSync("cells.json", JSON.stringify(CELLS, null, 2));
   // end the program
   process.exit();
 }
