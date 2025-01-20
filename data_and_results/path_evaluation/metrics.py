@@ -1,16 +1,20 @@
 import json
+import networkx as nx
 
+# with open('data_and_results/path_evaluation/path.json') as f:
+#     path = json.load(f)
 
+# print(path)
 
-with open('data_and_results/path_evaluation/path.json') as f:
-    path = json.load(f)
+width, length = 7, 7
 
-print(path)
+G = nx.grid_2d_graph(width, length)
+# Relabel nodes to use integer coordinates
+G = nx.convert_node_labels_to_integers(G, first_label=0, ordering="sorted")
+# Print the edges to verify the graph
+print(list(G.edges))
 
-# TODO: Implement the function dfs(matrix, x, y, path, paths, visited) that will find all possible paths from the start to the end of the matrix (without going multiple times in the same cell).
-def dfs(matrix, x, y, path, paths, visited):
-    pass
-
-w, l = 7, 7
-
-# TODO: keep only the paths with the shortest length
+# visualize the graph
+import matplotlib.pyplot as plt
+nx.draw(G, with_labels=True)
+plt.show()
