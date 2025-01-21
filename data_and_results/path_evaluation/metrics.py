@@ -97,7 +97,42 @@ ratio = shared_nodes / total_nodes
 print(f"Ratio of shared nodes between agent's path and best path: {ratio:.2f}")
 print(f"Ratio of shared nodes between agent's set and best set: {len(set(agent_path_xy))/len(set(best_path_xy))}")
 
+best_path = [xy_to_node(tile[0], tile[1]) for tile in best_path_xy]
+# Draw the graph with the agent's path highlighted
+import os
+import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
+
+# Ensure the directory exists
+os.makedirs("data_and_results/path_evaluation", exist_ok=True)
+
+# Create a figure and axes explicitly
+fig, ax = plt.subplots(figsize=(width+1, length+1))
+
 # Draw the graph with the agent's path highlighted
 colors = nx.get_node_attributes(H, 'color')
-nx.draw(H, pos, node_color=[colors[node] for node in H.nodes()], with_labels=True, labels={node: f"({abs(y - (width - 1))},{x})" for node, (x, y) in pos.items()})
-plt.show()
+nx.draw(H, pos, ax=ax, node_color=[colors[node] for node in H.nodes()], with_labels=True,
+    labels={node: f"({abs(y - (width - 1))},{x})" for node, (x, y) in pos.items()})
+
+# Highlight the best path with a different color
+best_path_edges = list(zip(best_path[:-1], best_path[1:]))
+nx.draw_networkx_edges(H, pos, edgelist=best_path_edges, edge_color='blue', width=2, ax=ax)
+
+# Add legend
+blue_line = mpatches.Patch(color='blue', label='Optimal Path')
+green_node = mpatches.Patch(color='#A0FFA0', label='Agent Path')
+pink_node = mpatches.Patch(color='#FF7AA0', label='Agent Path (Repeated)')
+plt.legend(handles=[blue_line, green_node, pink_node], loc='upper center', bbox_to_anchor=(0.5, -0.05), ncol=3)
+
+title = f"Ratio of shared nodes (path): {ratio*100:.2f}%, Ratio of shared nodes (set): {len(set(agent_path_xy))/len(set(best_path_xy))*100:.2f}%"
+model = "gpt-4o-mini"
+goal = "deliver"
+title += f"\nModel: {model}, Goal: {goal}"
+ax.set_title(title, fontsize=12)
+
+fig.tight_layout()
+
+# Save and display the plot
+fig.savefig(f"data_and_results/path_evaluation/{model}_{goal}_path.png")
+# plt.show()
+plt.close()
