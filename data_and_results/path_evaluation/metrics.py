@@ -19,7 +19,7 @@ for node in G.nodes(data=True):
 
 # Visualize the graph with node labels as (x, y) coordinates
 pos = nx.get_node_attributes(G, 'pos')
-nx.draw(G, pos, with_labels=True, labels={node: f"({abs(y - (width - 1))},{x})" for node, (x, y) in pos.items()})
+# nx.draw(G, pos, with_labels=True, labels={node: f"({abs(y - (width - 1))},{x})" for node, (x, y) in pos.items()})
 # plt.show()
 
 # find all the paths from 0,0 to 6,6 without cycles
@@ -59,6 +59,43 @@ for node, count in node_counts.items():
         H.nodes[node]['color'] = '#FF7AA0' 
     else:
         H.nodes[node]['color'] = '#A0FFA0'
+
+# Find the paths that share the most nodes with the agent's path
+max_shared_nodes = 0
+shared_paths = []
+
+# convert a path to x,y coordinates
+def node_to_xy(node):
+    x = node // width
+    y = node % width
+    return x, y
+
+agent_path_xy = [(tile["x"], tile["y"]) for tile in agent_path]
+for path in paths:
+    path_xy = [node_to_xy(node) for node in path]
+    shared_nodes = len(set(path_xy) & set(agent_path_xy))
+    if shared_nodes > max_shared_nodes:
+        max_shared_nodes = shared_nodes
+        shared_paths = [path]
+        print("New path found")
+        print(agent_path_xy)
+        print(path_xy)
+    elif shared_nodes == max_shared_nodes:
+        shared_paths.append(path)
+
+print(f"Maximum shared nodes: {max_shared_nodes}")
+best_path = shared_paths[0]
+best_path_xy = [node_to_xy(node) for node in best_path]
+print("Path found:\t",best_path_xy)
+print("Agent's path:\t",agent_path_xy)
+
+# Calculate the ratio of shared nodes between the agent's path and the best path
+shared_nodes = len(set(agent_path_xy) & set(best_path_xy))
+total_nodes = len(agent_path_xy)
+ratio = shared_nodes / total_nodes
+
+print(f"Ratio of shared nodes between agent's path and best path: {ratio:.2f}")
+print(f"Ratio of shared nodes between agent's set and best set: {len(set(agent_path_xy))/len(set(best_path_xy))}")
 
 # Draw the graph with the agent's path highlighted
 colors = nx.get_node_attributes(H, 'color')
