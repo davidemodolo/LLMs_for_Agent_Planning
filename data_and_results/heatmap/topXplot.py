@@ -10,6 +10,8 @@ deliver = {} # key = map_size, value: (top1, top2, top3)
 for path in all_paths:
     with open(path, 'r') as f:
         data = json.load(f)
+    if "path_finding" in path:
+        continue
     pt1, pt2, pt3 = data['percentage_top1'], data['percentage_top2'], data['percentage_top3']
     pt2 = pt2 - pt1
     pt3 = pt3 - pt2 - pt1
