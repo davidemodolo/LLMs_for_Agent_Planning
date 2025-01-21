@@ -13,7 +13,7 @@ FINAL GOAL: March 2025
 > bold means ongoing
 
 - [x] rework the agent code to be even more modular -> not much modular, I think it's not needed anymore
-- [ ] **prepare the blueprint for all the prompts** (missing RAG and choose goal, even if in best tile the goal is inferred)
+- [x] prepare the blueprint for all the prompts -> missing RAG and choose goal, even if in best tile the goal is inferred; not needed anymore
 - [x] module for encoded map (base64) -> it uses more tokens, it could work (https://arxiv.org/abs/2305.18396) but it may be outside of the scope of this project since they encode for safe transmission
 - [x] ask for best tile to move on -> if it's blocked, should I ignore it or should the LLM infer from tile list?
 - [x] ask for action to the best tile
@@ -30,7 +30,7 @@ FINAL GOAL: March 2025
 > bold means ongoing
 
 - [x] automatic heatmap creation
-- [ ] **metrics for path/best path**
+- [x] metrics for path/best path
 - [x] % of time the correct answer is in the topX selected actions
 - [x] plot the ratio between distance_to_goal/uncertainty to see if the distance to the goal is source for uncertainty
 
