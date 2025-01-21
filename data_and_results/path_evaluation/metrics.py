@@ -170,7 +170,7 @@ blue_line = mpatches.Patch(color='blue', label='Optimal Path')
 red_arrow = mpatches.Patch(color='red', label='Agent Path Direction')
 plt.legend(handles=[green_node, pink_node, blue_line, red_arrow], loc='upper center', bbox_to_anchor=(0.5, -0.05), ncol=4)
 
-title = f"Ratio of shared nodes (path): {ratio*100:.2f}%, Ratio of shared nodes (set): {len(set(agent_path_xy))/len(set(best_path_xy))*100:.2f}%"
+title = f"Ratio of shared nodes (path): {ratio*100:.2f}%, Ratio of shared nodes (set): {len(set(best_path_xy))/len(set(agent_path_xy))*100:.2f}%"
 model = "gpt-4o-mini"
 goal = "deliver"
 title += f"\nModel: {model}, Goal: {goal}"
