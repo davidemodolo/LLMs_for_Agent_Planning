@@ -36,6 +36,7 @@ Experiment setting (deliveroo.js, GPT, no LLAMA)
 # Chapter 3
 
 First approach, give everything (no decomposition of the problem)
+Stateless & Stateful
 
 # Chapter 4
 
