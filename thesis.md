@@ -55,3 +55,5 @@ Heatmaps
 
 > thesis objectives, achieved results, limitations, future developments
 > 59 mins
+
+limitation: token for context limit in stateful

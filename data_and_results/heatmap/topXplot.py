@@ -10,7 +10,7 @@ deliver = {} # key = map_size, value: (top1, top2, top3)
 for path in all_paths:
     with open(path, 'r') as f:
         data = json.load(f)
-    if "path_finding" in path:
+    if "path_finding" in path or "21x21" in path:
         continue
     pt1, pt2, pt3 = data['percentage_top1'], data['percentage_top2'], data['percentage_top3']
     pt2 = pt2 - pt1
@@ -28,7 +28,7 @@ for path in all_paths:
 
 for deli in deliver:
     top1, top2, top3 = deliver[deli]
-    deliver[deli] = (top1/4, top2/4, top3/4)
+    deliver[deli] = (top1/6, top2/6, top3/6)
 import matplotlib.pyplot as plt
 import seaborn as sns
 
