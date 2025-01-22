@@ -6,7 +6,7 @@ import fs from "fs";
 const MODEL = "gpt-4o";
 const USE_HISTORY = false;
 
-var GOAL = "pickup";
+var GOAL = "deliver";
 
 const conversationHistory = [];
 function addHistory(roleAdd, contentAdd) {
@@ -315,7 +315,7 @@ function getWeightedRandomIndex(weights) {
     random -= weights[i];
   }
 }
-const TIMER = 500;
+const TIMER = 100;
 const heatmapJson = [];
 async function agentLoop() {
   while (!rawOnMap) {

@@ -39,7 +39,7 @@ for deli in deliver:
     available_cells = (deli_val*deli_val-1)*6
     print("Top1 total:", count1/available_cells)
     print("Top2 total:", count2/available_cells)
-    print("Top3 total:", count3/available_cells)
+    print("Top3 total:", (available_cells-count3)/available_cells)
     # deliver[deli] = (top1/6, top2/6, top3/6)
 
 
