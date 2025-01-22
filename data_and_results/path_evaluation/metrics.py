@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import os
 import matplotlib.patches as mpatches
 
-width, length = 7, 7
+width, length = 13, 13
 
 G = nx.grid_2d_graph(width, length)
 # Relabel nodes to use integer coordinates
@@ -19,10 +19,14 @@ for node in G.nodes():
 pos = nx.get_node_attributes(G, 'pos')
 
 # Find all the paths from 0,0 to 6,6 without cycles
+def xy_to_node(x, y):
+    x_flipped = (length - 1) - x  # Flip the y-axis
+    return x_flipped * width + y
 source_node = 0
-target_node = width * length - 1
-paths = list(nx.all_simple_paths(G, source=source_node, target=target_node, cutoff=width + length - 2))
-
+target_node = xy_to_node(6, 6)
+print("start finding paths")
+paths = list(nx.all_simple_paths(G, source=source_node, target=target_node, cutoff=width + 2))
+print("paths found")
 # Find the paths with minimum length
 min_length = min(len(path) for path in paths)
 shortest_paths = [path for path in paths if len(path) == min_length]
@@ -30,9 +34,7 @@ shortest_paths = [path for path in paths if len(path) == min_length]
 with open("data_and_results/path_evaluation/path.json", "r") as f:
     agent_path = json.load(f)
 
-def xy_to_node(x, y):
-    x_flipped = (length - 1) - x  # Flip the y-axis
-    return x_flipped * width + y
+
 
 agents_node_path = [xy_to_node(tile["x"], tile["y"]) for tile in agent_path]
 
@@ -141,7 +143,7 @@ plt.legend(handles=[green_node, pink_node, blue_line, red_arrow], loc='upper cen
 
 title = f"Ratio of shared nodes (path): {ratio*100:.2f}%, Ratio of shared nodes (set): {len(set(best_path_xy))/len(set(agent_path_xy))*100:.2f}%"
 model = "gpt-4o-mini"
-goal = "deliver"
+goal = "pickup"
 title += f"\nModel: {model}, Goal: {goal}"
 ax.set_title(title, fontsize=12)
 

@@ -343,7 +343,7 @@ async function agentLoop() {
       await client.timer(100);
       continue;
     }
-    if (rawOnYou.score > 0) {
+    if (rawOnYou.score > 0 || GOAL == "deliver") {
       console.log(
         "Time elapsed:",
         (new Date().getTime() - start) / 1000,
