@@ -1,3 +1,7 @@
+# Abstract
+
+TODO: at the end
+
 # Introduction (2/3 pages)
 
 > context, problem, state-of-the-art, specific problem of the thesis, objective/objectives, expected results, structure
@@ -5,7 +9,7 @@
 ## context, problem, state-of-the-art, specific problem of the thesis, objective/objectives
 
 context: AI, Generative systems
-problem: Generative AI system are capable of planning and reaching a goal. Are LLM capable?
+problem: AI system are capable of planning and reaching a goal. Are LLM capable?
 state-of-the-art: LLM applied to similar problems
 specific problem of the thesis:
 objective/objectives: show the effectiveness of an LLM of a typical AI problem (logistics)
@@ -22,39 +26,58 @@ This can be faced in a classic way with PDDL (time intensive), RL. We want to ad
 
 ## structure (to be done at the end of the thesis)
 
-# Chapter 1
+# Chapter 1 - Background
 
 > state-of-the-art, background
 
-SOTA: PDDL, RL
-bg: uncertainty for LLMs papers, conformal prediction, BD, agents,
+## Background
 
-# Chapter 2
+- LLMs
+  - Focus on Attention mechanism
+  - Few shot learners
+- Uncertainty in LLMs
+  - KnowNo framework
+    - Spain?
+  - Other approaches
+- BDI Agents
+- SotA: PDDL
+  - pros and cons
+- SotA: Reinforcement Learning
+  - pros and cons
 
-Experiment setting (deliveroo.js, GPT, no LLAMA)
+# Chapter 2 - Experiment setting
+
+- Problem definition: This is a generative approach, there is no reasoning, no planning, no pathfinding
+- Deliveroo.js
+- GPT models
+  - why GPT
+  - why not LLAMA or other open source/open weight models
+  - OpenAI API
+- Prompts
 
 # Chapter 3
 
-First approach, give everything (no decomposition of the problem)
-Stateless & Stateful
+- First approach: parsing server info + helping parameters -> going in the wrong direction
+- Second approach: stateless full raw + stateful
+- Final agent: new prompt, new data, still bad results
 
 # Chapter 4
 
-Attention visualizer
-Better prompts
-Prompt creation accordingly to papers (give a role, where to put the goal, knowno, few-shot working means the prompt is correct)
-Attetion, encoding base64
-Last approach, find the closest cell
+- Stateless & Stateful, why stateful works better
+- Attention visualizer in BERT
+- encoding the map (base64) to reduce the number of characters
+- Better prompt creation accordingly to papers (give a role, where to put the goal, knowno, few-shot working means the prompt is correct)
+- Heatmap creation
+- Last chance, find the closest cell
 
 # Results discussion
 
-This is a generative approach.
-Path accuracy
-Heatmaps
+- Stateful: path evaluation
+- Stateless: heatmaps
+- Stateless: closest cell
 
 # Conclusions (2 pages)
 
 > thesis objectives, achieved results, limitations, future developments
-> 59 mins
 
 limitation: token for context limit in stateful
