@@ -3,10 +3,10 @@
 > context, problem, state-of-the-art, specific problem of the thesis, objective/objectives, expected results, structure
 
 context: AI, Generative systems
-problem: There are AI system capable of planning and reaching a goal. Are LLM capable?
-state-of-the-art: LLM applied to similar problems (paper with "EXPLORING AND BENCHMARKING PLANNING CAPABILITIES OF LARGE LANGUAGE MODELS", "PDDL PLANNING WITH PRETRAINED LARGE LANGUAGE MODELS")
-specific problem of the thesis:
-objective/objectives: show the effectiveness of an LLM of a typical AI problem (logistics)
+problem: What is the level of AI in planning and reaching a goal. Are LLM capable?
+state-of-the-art: LLM applied to similar problems (paper with "EXPLORING AND BENCHMARKING PLANNING CAPABILITIES OF LARGE LANGUAGE MODELS", "PDDL PLANNING WITH PRE-TRAINED LARGE LANGUAGE MODELS")
+specific problem of the thesis: use an LLM "naked" to solve a problem of logistics
+objective/objectives: check the effectiveness of an LLM of a typical AI problem (logistics)
 expected results: a generative system without any reasoning capabilities is able to solve a problem of this type? And to what extent?
 
 Everyone says LLM are incredible for everything.
@@ -66,7 +66,6 @@ This can be faced in a classic way with PDDL (time intensive), RL. We want to ad
 - Stateless: heatmaps
 - Stateless: closest cell
 - Difference between different models (3.5, 4o, 4o-mini)
-- Price and CO2 required to run this system (?)
 
 # Conclusions (2 pages)
 
