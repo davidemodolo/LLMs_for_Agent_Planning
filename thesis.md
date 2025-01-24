@@ -1,16 +1,10 @@
-# Abstract
-
-TODO: at the end
-
 # Introduction (2/3 pages)
 
 > context, problem, state-of-the-art, specific problem of the thesis, objective/objectives, expected results, structure
 
-## context, problem, state-of-the-art, specific problem of the thesis, objective/objectives
-
 context: AI, Generative systems
-problem: AI system are capable of planning and reaching a goal. Are LLM capable?
-state-of-the-art: LLM applied to similar problems
+problem: There are AI system capable of planning and reaching a goal. Are LLM capable?
+state-of-the-art: LLM applied to similar problems (paper with "EXPLORING AND BENCHMARKING PLANNING CAPABILITIES OF LARGE LANGUAGE MODELS", "PDDL PLANNING WITH PRETRAINED LARGE LANGUAGE MODELS")
 specific problem of the thesis:
 objective/objectives: show the effectiveness of an LLM of a typical AI problem (logistics)
 expected results: a generative system without any reasoning capabilities is able to solve a problem of this type? And to what extent?
@@ -24,20 +18,16 @@ My thesis: let's try to apply them to the delivery problem. A very simple proble
 
 This can be faced in a classic way with PDDL (time intensive), RL. We want to address this with LLMs.
 
-## structure (to be done at the end of the thesis)
-
 # Chapter 1 - Background
 
 > state-of-the-art, background
-
-## Background
 
 - LLMs
   - Focus on Attention mechanism
   - Few shot learners
 - Uncertainty in LLMs
   - KnowNo framework
-    - Spain?
+    - Spain (?)
   - Other approaches
 - BDI Agents
 - SotA: PDDL
@@ -51,17 +41,17 @@ This can be faced in a classic way with PDDL (time intensive), RL. We want to ad
 - Deliveroo.js
 - GPT models
   - why GPT
-  - why not LLAMA or other open source/open weight models
+  - why not LLAMA or other open source/open weight models -> no logit bias, not logprobs, worse understanding of the prompt (no answering with the action)
   - OpenAI API
 - Prompts
 
-# Chapter 3
+# Chapter 3 - Agent development
 
 - First approach: parsing server info + helping parameters -> going in the wrong direction
 - Second approach: stateless full raw + stateful
 - Final agent: new prompt, new data, still bad results
 
-# Chapter 4
+# Chapter 4 - How data has been collected
 
 - Stateless & Stateful, why stateful works better
 - Attention visualizer in BERT
@@ -75,6 +65,8 @@ This can be faced in a classic way with PDDL (time intensive), RL. We want to ad
 - Stateful: path evaluation
 - Stateless: heatmaps
 - Stateless: closest cell
+- Difference between different models (3.5, 4o, 4o-mini)
+- Price and CO2 required to run this system (?)
 
 # Conclusions (2 pages)
 

@@ -1,0 +1,11 @@
+- `6_pddl_planning_with_pretrained.pdf`: PDDL PLANNING WITH PRETRAINED LARGE LANGUAGE MODELS
+- `1706.03762v7.pdf`: Attention Is All You Need
+- `2305.18396v3.pdf`: LLMs Can Understand Encrypted Prompt: Towards Privacy-Computing Friendly Transformers
+- `2306.13063v2.pdf`: CAN LLMS EXPRESS THEIR UNCERTAINTY? AN EMPIRICAL EVALUATION OF CONFIDENCE ELICITATION IN LLMS
+- `2307.01928v2.pdf`: Robots That Ask For Help: Uncertainty Alignment for Large Language Model Planners
+- `2307.10236v4.pdf`: Look Before You Leap: An Exploratory Study of Uncertainty Analysis for Large Language Models
+- `2311.02017v2.pdf`: DELIVERAI: A DISTRIBUTED PATH-SHARING NETWORK BASED SOLUTION FOR THE LAST MILE FOOD DELIVERY PROBLEM
+- `2401.12794v3.pdf`: Benchmarking LLMs via Uncertainty Quantification
+- `2406.13094v2.pdf`: EXPLORING AND BENCHMARKING PLANNING CAPABILITIES OF LARGE LANGUAGE MODELS
+- `125977151.pdf`: An AI Planning Approach to Emergency Material Scheduling Using Numerical PDDL
+- `needle_in_a_haystack_test.pdf`: The Needle In a Haystack Test
