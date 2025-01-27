@@ -1,6 +1,6 @@
 # Introduction (2/3 pages)
 
-Exploring uncertainty in raw LLMs as agents in a logistics problem
+Exploring uncertainty in raw LLMs as an agent in a logistics problem
 
 > context, problem, state-of-the-art, specific problem of the thesis, objective/objectives, expected results, structure
 
@@ -68,7 +68,7 @@ Describe how the data has been collected, the tests done, the results collected,
 
 # Results discussion
 
-- Stateless: show cosa le heatmap hanno in comune se grandi o piccole (tipo l'avere problemi nelle celle orizzontali e verticali) cercando di dare una spiegazione
+- Stateless: show cosa le heatmap hanno in comune se grandi o piccole (tipo l'avere problemi nelle celle orizzontali e verticali) cercando di dare una spiegazione, sottolineare che le stesse celle in mappe grandi hanno diversi valori
 - Stateful: path visualization, show that with the increasing size of the map, the agent would have more problems in reaching the goal and due to the limitation of the number of tokens in the context (and the prompt being quite big due to it containing the map), wasting actions by looping would stop the system; evaluate some examples by comparing the path taken by the agent with the optimal path
 - Stateless & Stateful: stateful works better due to "LLMs are few-shot learners" and the history of action-effect helps the LLM to understand the map and the goal; inoltre, come vediamo nella stateless, in certi casi l'agente si incanta in certi punti della mappa e lì le azioni rischiano di loopare
 - Extra: closest cell: bias in the orientation of the map that can be seen from the heatmaps. The problem here is that, due to that bias, the LLM was prone to give the wrong tile as answer and then all actions would have moved the agent further away from the goal.
