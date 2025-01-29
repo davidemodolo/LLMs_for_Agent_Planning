@@ -123,3 +123,21 @@ Information for the _possible title_:
 > Leila Takayama, Fei Xia, Jake Varley, Zhenjia Xu, Dorsa Sadigh, Andy Zeng, Anirudha Majumdar  
 > _2023_.  
 > [arXiv:2307.01928](https://arxiv.org/abs/2307.01928)
+
+# Random Links that can be useful
+
+- https://outlook.office.com/mail/
+- https://teams.microsoft.com/v2/
+- https://llava-vl.github.io/
+- https://github.com/luca-medeiros/lang-segment-anything
+- https://github.com/davidemodolo/KnowNo-Implementation/commits
+- https://arxiv.org/list/cs.AI/recent
+- https://ice.eurecat.org/gitlab/robotics-automation
+- https://github.com/jxzhangjhu/Awesome-LLM-Uncertainty-Reliability-Robustness?tab=readme-ov-file#uncertainty
+- https://github.com/xiatingyu/ProbDiff/blob/main/alpaca_eval/get_loglikehood.py
+- https://arxiv.org/pdf/2406.02543
+- https://lilianweng.github.io/posts/2023-06-23-agent/#proof-of-concept-examples
+- https://community.openai.com/t/prompt-engineering-for-rag/621495/6
+
+- https://github.com/jxzhangjhu/Awesome-LLM-Uncertainty-Reliability-Robustness?tab=readme-ov-file#uncertainty
+- github.com/xiatingyu/ProbDiff/blob/main/alpaca_eval/get_loglikehood.py
