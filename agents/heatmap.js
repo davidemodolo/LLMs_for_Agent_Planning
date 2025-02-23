@@ -297,7 +297,7 @@ async function agentLoop() {
   while (!rawOnMap) {
     await client.timer(100);
   }
-  // FOR TOMORROW FIX HERE
+
   for (let i = 0; i < rawOnMap.height; i++) {
     for (let j = 0; j < rawOnMap.width; j++) {
       var response = await knowno_OpenAI(getRawPrompt(), POSSIBLE_ACTIONS);
