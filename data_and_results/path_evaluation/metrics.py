@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import os
 import matplotlib.patches as mpatches
 
-width, length = 13, 13
+width, length = 7, 7
 
 G = nx.grid_2d_graph(width, length)
 # Relabel nodes to use integer coordinates
@@ -23,9 +23,10 @@ def xy_to_node(x, y):
     x_flipped = (length - 1) - x  # Flip the y-axis
     return x_flipped * width + y
 source_node = 0
-target_node = xy_to_node(6, 6)
+target_node = 48
+print(target_node)
 print("start finding paths")
-paths = list(nx.all_simple_paths(G, source=source_node, target=target_node, cutoff=width + 2))
+paths = list(nx.all_simple_paths(G, source=source_node, target=target_node, cutoff=12))
 print("paths found")
 # Find the paths with minimum length
 min_length = min(len(path) for path in paths)
@@ -33,8 +34,6 @@ shortest_paths = [path for path in paths if len(path) == min_length]
 
 with open("data_and_results/path_evaluation/path.json", "r") as f:
     agent_path = json.load(f)
-
-
 
 agents_node_path = [xy_to_node(tile["x"], tile["y"]) for tile in agent_path]
 
