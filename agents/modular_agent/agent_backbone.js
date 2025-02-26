@@ -10,7 +10,7 @@ const openai = new OpenAI({
 });
 
 const MODEL = "gpt-4o-mini";
-const USE_HISTORY = true;
+const USE_HISTORY = false;
 const POSSIBLE_LOGICS = ["raw", "random", "threshold"];
 const LOGIC = POSSIBLE_LOGICS[1];
 

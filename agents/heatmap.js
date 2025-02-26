@@ -9,10 +9,10 @@ const openai = new OpenAI({
   apiKey: apiKey,
 });
 
-const MODEL = "gpt-4o-mini";
+const MODEL = "gpt-3.5-turbo";
 const USE_HISTORY = false;
 
-var GOAL = "deliver";
+var GOAL = "pickup";
 
 const conversationHistory = [];
 function addHistory(roleAdd, contentAdd) {

@@ -56,7 +56,7 @@ def create_table_of_square_pies(data_list, width, length, color, title, save_pat
     plt.savefig(os.path.join(save_path, f"{title}.png"))
     plt.show()
 
-json_path = "heatmapAzure.json"
+json_path = "heatmap.json"
 with open(json_path, 'r') as f:
     data_list = json.load(f)
 goal = data_list[-5]['goal']
