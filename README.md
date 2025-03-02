@@ -1,120 +1,18 @@
-# MASTER THESIS PROJECT - LLM uncertainty with log-probability as Agent in Deliveroo.js
+# MASTER THESIS PROJECT - Exploring the Use of LLMs for Agent Planning: Strengths and Weaknesses
 
-FINAL GOAL: March 2025
+Project for the Master Thesis in Artificial Intelligence Systems at the University of Trento, Italy.
 
-## Deliveroo.js code
+# Abstract
 
-[Deliveroo Agent](https://github.com/unitn-ASA/DeliverooAgent.js)
+With the recent advancements in Large Language Models, there has been a growing interest in developing agents capable of understanding and executing complex tasks. In this work, we explore the use of LLMs as agents that can navigate and complete logistics tasks, primarily focused on picking up and delivering parcels, within a web-based environment.
 
-[Deliveroo Server](https://github.com/unitn-ASA/Deliveroo.js)
+Our approach aims to evaluate the raw performance of an LLM without integrating additional frameworks or specialized optimization techniques, allowing us to assess its inherent generative capabilities in problem-solving. We analyze how effectively the agent can navigate different map layouts and complete assigned objectives, testing its adaptability across various goal configurations. A key aspect of our evaluation is the use of LLM uncertainty measures, derived from tokens' log probabilities, to gain deeper insights into the model's confidence in its decision-making process. These measures help us understand when the agent is uncertain and how that uncertainty correlates with performance in different parts of the scenario.
 
-# LIST OF TODOs IMPLEMENTATION:
+We demonstrate that the agent's performance improves when using newer LLM versions, reflecting the continuous advancements in these models. However, we also observe a decline in performance as the map size increases, suggesting that larger environments pose challenges that the model struggles to overcome. To structure our approach effectively, we design the prompt based on established literature, ensuring alignment with best practices in prompt engineering.
 
-> bold means ongoing
-
-- [x] rework the agent code to be even more modular -> not much modular, I think it's not needed anymore
-- [x] prepare the blueprint for all the prompts -> missing RAG and choose goal, even if in best tile the goal is inferred; not needed anymore
-- [x] module for encoded map (base64) -> it uses more tokens, it could work (https://arxiv.org/abs/2305.18396) but it may be outside of the scope of this project since they encode for safe transmission
-- [x] ask for best tile to move on -> if it's blocked, should I ignore it or should the LLM infer from tile list?
-- [x] ask for action to the best tile
-- [x] visualize attention for prompt -> results in `data_and_results\attention_visualizer\attention_visualize.ipynb` -> need to study the plots
-- [ ] RAG implementation for artificially added categories to parcels
-- [ ] RAG implementation for blocked tiles workaround
-  > The last time you were on (5, 1) you tried to move up but the path was blocked.
-  > problem: if the map is not necessary, this becomes a trial and error with RAG as history
-- [x] full flow
-- [ ] full flow with best cell approach
-
-# LIST OF TODOs EVALUATION (code update):
-
-> bold means ongoing
-
-- [x] automatic heatmap creation
-- [x] metrics for path/best path
-- [x] % of time the correct answer is in the topX selected actions
-- [x] plot the ratio between distance_to_goal/uncertainty to see if the distance to the goal is source for uncertainty
-
-# MAYBE TODO:
-
-> bold means ongoing
-
-- [ ] add image to the prompt
-- [x] create a parser for the map response that would work even if the API changes completely, and at the same time it reduces the size in the prompt for the map (keeping it human-readable)
-
-# TESTs TODO:
-
-- [x] different position of the goal tile to see if its relative position in the prompt gives better or worse performance
-
-# Last Notes before writing thesis
-
-- [ ] show that symbols get much attention
-- [ ] is there a paper that shows that removing special characters results in better performance?
-- [x] test with "origin" in bottom left and see if performance change (bias versus developing origin or geometric origin)
-- [x] "reach tile X,Y" without delivery stuff and see how it performs with no pickup and putdown(NEED NEW PROMPT, path_finding.txt)
-- [ ] do again closest tile test
-
-Perpendicular to goal get more uncertainty since there are less correct options
-Result: cannot split the prompt in sub goals
-
-# Random Notes
-
-**Idea**: we give an agent the atomic actions, let's see if it is able to solve a goal without giving instructions.
-Generative AI solving general problem with not previous information.
-
-Started with raw input and raw output with llama 3.2 and Mistral.
-
-1. The idea is to give the raw output as seen in the prompt [prompt] and parse the raw
-   output to get the action selected by the LLM.
-
-2. inside the prompt, filter out the actions in two ways:
-
-   - by a priori removing non-legal actions
-
-   - by performing the action and checking if the state changed, if not, repurpose the
-     prompt without that action.
-
-Selecting only the top choice is called “greedy sampling” and actually doesn’t produce language that seems as human, despite being more reliable.
-
-_DeprecationWarning_: The `punycode` module is deprecated. Please use a userland alternative instead. -> IGNORED
-
----
-
-I cannot use batch API (50% discount) since I need to perform everything and I need to check the state of the environment after each action.
-
-Automatic prompt caching - not under 1000 tokens - but when using conversation history it is being used.
-
-OLD TODO:
-
-- [x] parametrize helping levels
-- [x] use chat history (parametrize)
-- [x] using the server configuration infos, reduce the dimension of the map given to the LLM depending on the max(PARCELS_OBSERVATION_DISTANCE, AGENTS_OBSERVATION_DISTANCE)
-- [x] using the server configuration infos, better map the parcel reward to H, M, L
-- [x] if no delivery point in sight, append the distance and the direction to the nearest one
-- [x] use server output as raw input for the LLM
-- [x] random weighted choice
-- [ ] ~~test uncertainty in obvious situations~~ Included to metrics todo
-- [ ] ~~DFS to find the best path to the goal given the map~~ Included to metrics todo
-- [ ] ~~test as steps vs DFS steps~~ Included to metrics todo
-- [ ] ~~basic RAG implementation to add preferences (randomly assign ["pears", "apples", "bananas"] to the parcels and give a preference to the agent, to be recalled via RAG)~~ Included in RAG todo
-- [ ] ~~custom server to select where to put the parcel (maybe using "god" mode)~~ Already possible in god mode
-- [ ] ~~Add the image to the prompt~~ Included in implementation todo
-- [x] Add cost in $$$ and token of every run: added token count, will calculate the price automatically **at the end**;
-
-LAST MEETING NOTES:
-
-Using 'full raw' output makes the goal impossible to achieve due to some tiles where the best action is perceived as uniform probability between all actions -> Using the random choice weighted by probability, the agent will reach the goal.
-
-Example on "Attention visualization": https://github.com/jessevig/bertviz - it can be use to see if my idea is correct (the attentions flats out due to the long map description, but it should be needed to keep the project robust even if the Deliveroojs server API response changes).
-
-There are a couple of well known LLM benchmarks that are basically multi-choice quiz answers. This may be included in the thesis.
-
-Information for the _possible title_:
-
-- stateless prompt: if no history is used, the prompt contains all the information for the current request
-- LLM as choice selector
-- conformal prediction, logprobs based uncertainty
-- web-based game environment
-- confidence based choice
+Furthermore, we experiment with two distinct agent configurations: a stateless agent, which makes decisions solely based on the current state of the environment, and a stateful agent, which retains memory of past interactions. By comparing
+these approaches, we highlight the strengths and limitations of each. The stateless agent benefits from simplicity and avoids memory-related constraints, but it may struggle in scenarios where the environment description requires too much
+attention. Conversely, the stateful agent provides improved continuity in decision-making but faces challenges related to context length limitations and potential inconsistencies in stored information.
 
 # Resources
 
@@ -124,20 +22,6 @@ Information for the _possible title_:
 > _2023_.  
 > [arXiv:2307.01928](https://arxiv.org/abs/2307.01928)
 
-# Random Links that can be useful
+> [Deliveroo Default Agents](https://github.com/unitn-ASA/DeliverooAgent.js)
 
-- https://outlook.office.com/mail/
-- https://teams.microsoft.com/v2/
-- https://llava-vl.github.io/
-- https://github.com/luca-medeiros/lang-segment-anything
-- https://github.com/davidemodolo/KnowNo-Implementation/commits
-- https://arxiv.org/list/cs.AI/recent
-- https://ice.eurecat.org/gitlab/robotics-automation
-- https://github.com/jxzhangjhu/Awesome-LLM-Uncertainty-Reliability-Robustness?tab=readme-ov-file#uncertainty
-- https://github.com/xiatingyu/ProbDiff/blob/main/alpaca_eval/get_loglikehood.py
-- https://arxiv.org/pdf/2406.02543
-- https://lilianweng.github.io/posts/2023-06-23-agent/#proof-of-concept-examples
-- https://community.openai.com/t/prompt-engineering-for-rag/621495/6
-
-- https://github.com/jxzhangjhu/Awesome-LLM-Uncertainty-Reliability-Robustness?tab=readme-ov-file#uncertainty
-- github.com/xiatingyu/ProbDiff/blob/main/alpaca_eval/get_loglikehood.py
+> [Deliveroo Server](https://github.com/unitn-ASA/Deliveroo.js)
